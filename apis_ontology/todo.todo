@@ -1,0 +1,45 @@
+Music
+=====
+
+- Add music genres to MusicWork
+
+
+
+Foundations
+===========
+
+- should be part of institution (or money given to institution)..
+
+
+money
+≠≠≠≠≠
+
+Needs to have currency and not be integer field!
+
+
+
+Interface
+=========
+
+Make Book icon bigger
+
+
+Textual Works
+=============
+
+Allusion to person (possibly outside context of Maximilian, e.g. Socrates)
+Name dropping of real perosn
+
+
+Physical objects
+================
+
+no connection to creation act
+
+
+New type: #Depiction 
+artwork --> person/object
+
+
+# Battle <<-- event type
+# Tournament <<-- event type

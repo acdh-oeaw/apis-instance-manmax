@@ -1,0 +1,8 @@
+name: deploy
+on:
+  push:
+
+jobs:
+  deploy:
+    uses: acdh-oeaw/prosnet-workflows/.github/workflows/deploy-apis-instance.yml@dev
+    secrets: inherit
