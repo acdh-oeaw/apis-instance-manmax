@@ -31,8 +31,7 @@
 		"DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/postgres",
 		"DJANGO_SETTINGS_MODULE": "apis_ontology.settings.server_settings", //make sure this is the correct settings module
 		"DEVELOP": "true", //setting to override the start of the gunicorn server (used in production)
-		"APIS_BIBSONOMY_USER": "oculardexterity",
-		"APIS_BIBSONOMY_PASSWORD": "Q7p5EuMiDh8bIrPEQ4xQ6VYK",
+		
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [

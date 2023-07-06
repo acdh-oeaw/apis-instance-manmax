@@ -89,7 +89,25 @@ unicodecsv = "^0.14.1"
 type = "git"
 url = "https://github.com/acdh-oeaw/apis-core-rdf.git"
 reference = "manmax"
-resolved_reference = "01407b69b79b8455af3aa8d3b8ef359cf0616765"
+resolved_reference = "66c1327ca89f75d2f85f9f9993ab11d04cb71882"
+
+[[package]]
+name = "apis-override-select2js"
+version = "0.1"
+description = "Override select2js files in APIS Django projects"
+optional = false
+python-versions = ">=3.11, <3.12"
+files = []
+develop = false
+
+[package.dependencies]
+django = "^4"
+
+[package.source]
+type = "git"
+url = "https://github.com/acdh-oeaw/apis-override-select2js"
+reference = "HEAD"
+resolved_reference = "393c8c7844d9dd67e8f1ec6bf62be1acfdbfe047"
 
 [[package]]
 name = "asgiref"
@@ -1376,4 +1394,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "1e2262a4968893e10959ddadb9f178ca4e68c2ffa571bceccd99589ed70dbd69"
+content-hash = "13bcbed138febaa16ec5dda17afaac9ffecc69c074e08d26dc6b1fe3970ca341"

@@ -70,7 +70,7 @@ MAIN_TEXT_NAME = "ÖBL Haupttext"
 
 LANGUAGE_CODE = "de"
 
-INSTALLED_APPS += ["apis_bibsonomy"]
+INSTALLED_APPS = ["apis_override_select2js"] + INSTALLED_APPS + ["apis_bibsonomy"]
 
 
 MIDDLEWARE += ["apis_ontology.middleware.get_request.RequestMiddleware"]
