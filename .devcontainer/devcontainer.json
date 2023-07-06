@@ -1,0 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.194.3/containers/python-3
+{
+	"name": "APIS-RDF devops",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.languageServer": "Pylance",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": true,
+		"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
+		"python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+		"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
+		"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
+		"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
+		"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
+		"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
+		"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
+		"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
+	},
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance"
+	],
+	"remoteEnv": {
+		"APIS_RDF_ONTOLOGY": "manmax", //set the ontology you are actually using here
+		"DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/postgres",
+		"DJANGO_SETTINGS_MODULE": "apis_ontology.settings.server_settings", //make sure this is the correct settings module
+		"DEVELOP": "true", //setting to override the start of the gunicorn server (used in production)
+		"APIS_BIBSONOMY_USER": "oculardexterity",
+		"APIS_BIBSONOMY_PASSWORD": "Q7p5EuMiDh8bIrPEQ4xQ6VYK",
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		5432, //postgres
+		8000, //port for the dev server
+	],
+	"postCreateCommand": "poetry config virtualenvs.create false && poetry lock && poetry install --with dev && bash start.sh",
+	"remoteUser": "app"
+}
