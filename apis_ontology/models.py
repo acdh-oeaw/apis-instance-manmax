@@ -202,6 +202,8 @@ class GenericStatement(ManMaxTempEntityClass):
 
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
+    
+    head_statement = models.BooleanField(default=True)
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
