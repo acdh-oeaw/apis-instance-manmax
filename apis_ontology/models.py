@@ -57,14 +57,18 @@ class ManMaxTempEntityClass(TempEntityClass):
     created_when = models.DateTimeField(auto_now_add=True, editable=False)
     modified_by = models.CharField(max_length=300, blank=True, editable=False)
     modified_when = models.DateTimeField(auto_now=True, editable=False)
-    search_notes = models.TextField(blank=True)
+    internal_notes = models.TextField(blank=True, help_text="Internal searchable text, for disambiguation. Store information as statements!")
+    schuh_index_id = models.CharField(max_length=500, blank=True, editable=False)
 
     
-    def save(self, *args, **kwargs):
-        if not self.created_by:
-            self.created_by = current_request().user.username
-        self.modified_by = current_request().user.username
-        super().save(*args, **kwargs)
+    def save(self, auto_created=False, *args, **kwargs):
+        if auto_created:
+            super().save(*args, **kwargs)
+        else:
+            if not self.created_by:
+                self.created_by = current_request().user.username
+            self.modified_by = current_request().user.username
+            super().save(*args, **kwargs)
 
 
 
@@ -206,6 +210,16 @@ class GenericStatement(ManMaxTempEntityClass):
     __entity_type__ = STATEMENT
     
     head_statement = models.BooleanField(default=True)
+    
+    
+@reversion.register(follow=["genericstatement_ptr"])
+class CommunicatesWith(GenericStatement):
+    """A Person or Organisation communicating with another"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+    
+    method = models.CharField(max_length=50, choices=(("verbal", "Verbal"), ("written", "Written")), blank=True)
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -536,9 +550,6 @@ class Election(GenericStatement):
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
 
-    position = models.CharField(
-        max_length=200, blank=True, verbose_name="Position elected to"
-    )
 
 
 @reversion.register(follow=["activity_ptr"])
@@ -656,12 +667,12 @@ class Order(GenericStatement):
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
-
+""" DUPLICATE OF OWNERSHIP TRANSFER
 @reversion.register(follow=["genericstatement_ptr"])
 class Acquisition(GenericStatement):
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
-
+"""
 
 # Art Statements
 
@@ -947,6 +958,7 @@ def construct_properties():
             CreationAct,
             PhysicalObject,
             OwnershipTransfer,
+            *subclasses(Activity)
         ],
     )
     payment_by_person = build_property(
@@ -958,6 +970,7 @@ def construct_properties():
         Payment,
         [Person, *subclasses(Organisation)],
     )
+    payment_source_of_money = build_property("source of money", "was source of money for payment", Payment, [Person, *subclasses(Organisation), Family])
 
     order_for = build_property(
         "thing ordered",
@@ -1028,3 +1041,12 @@ def construct_properties():
     
     participation_in_battle_battle = build_property("battle participated in", "has participation", ParticipationInBattle, Battle)
     participation_in_battle_person = build_property("participating", "has participation", ParticipationInBattle, [Person, Organisation, Family])
+    
+    
+    statement_has_related_statement = build_property("has related statement", "has related statement", subclasses(GenericStatement), subclasses(GenericStatement))
+    
+    
+    communicates_with_sender = build_property("sender of communication", "is sender of communication", CommunicatesWith, [Person, *subclasses(Organisation)])
+    communicates_with_recipient = build_property("receiver of communication", "is receiver of communication", CommunicatesWith, [Person, *subclasses(Organisation)])
+    communicates_with_statement = build_property("subject of communication", "is subject of commuication", CommunicatesWith, subclasses(GenericStatement))
+    communicates_with_sender_place = build_property("communication sent from", "is origin place of communication", CommunicatesWith, Place)
