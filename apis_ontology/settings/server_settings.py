@@ -86,8 +86,8 @@ APIS_RELATIONS_FILTER_EXCLUDE += ["annotation", "annotation_set_relation"]
 
 # INSTALLED_APPS.append("apis_highlighter")
 APIS_ENTITIES = {
-    "Factoid": {"search": ["name"]},
-    "Person": {"search": ["name"]},
+    "Factoid": {"search": ["name", "search_notes"]},
+    "Person": {"search": ["name", "search_notes"]},
     "Place": {"search": ["name"]},
     "GroupOfPersons": {"search": ["name"]},
     "Organisation": {"search": ["name"]},

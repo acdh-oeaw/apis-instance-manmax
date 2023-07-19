@@ -1,9 +1,24 @@
 from collections import defaultdict
+from functools import lru_cache
+
+from django.utils.html import format_html
 
 from apis_core.utils.caching import get_all_entity_classes
-from apis_ontology.models import group_order
+from apis_ontology.models import group_order, ManMaxTempEntityClass
 
+@lru_cache
+def get_parents(cls):
+    parents = []
+    for parent in cls.__mro__:
+        if parent is ManMaxTempEntityClass:
+            print("end")
+            parents.reverse()
+            return parents
+        if parent is not cls:
+            parents.append(parent._meta.verbose_name_plural.title())
+    
 
+@lru_cache
 def get_entity_groups():
     entity_groups = defaultdict(lambda: defaultdict(list))
     for cls in get_all_entity_classes():
@@ -11,11 +26,11 @@ def get_entity_groups():
         entity_type = getattr(cls, "__entity_type__", "Entity")
         is_abstract = cls.__dict__.get("__abstract__", False)
         if not is_abstract:
-            entity_groups[group][entity_type].append((cls.__name__.lower(), cls._meta.verbose_name_plural.title(), cls.__doc__))
+            entity_groups[group][entity_type].append((cls.__name__.lower(), cls._meta.verbose_name_plural.title(), cls.__doc__, format_html(" ➡ ".join(get_parents(cls)))))
     return entity_groups
 
 
-
+@lru_cache
 def grouped_menus(request):
     entity_groups = get_entity_groups()
     groups = {}
