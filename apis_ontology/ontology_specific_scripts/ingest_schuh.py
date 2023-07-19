@@ -9,10 +9,13 @@ def ingest_schuh():
     
     for entity_model, entity_type in [(Person, "person"), (Place, "place"), (Family, "family"), (Organisation, "org"), (GroupOfPersons, "group")]:
         for entity_data in data[entity_type]:
-            
-            print("Ingesting", entity_data)
-            entity = entity_model(name=entity_data["label"][:240])
-            entity.save()
+            try:
+                e = entity_model.objects.get(schuh_index_id=entity_data["id"])
+                print("Alredy exists", entity_type, e)
+            except entity_model.DoesNotExist:
+                print("Ingesting", entity_type, entity_data)
+                entity = entity_model(name=entity_data["label"][:240], created_by="schuh_index", modified_by="schuh_index", schuh_index_id=entity_data["id"])
+                entity.save(auto_created=True)
       
             
 
