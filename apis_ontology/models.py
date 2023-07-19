@@ -38,10 +38,11 @@ group_order = [
     #PHYSICAL_OBJECTS,
     LIFE_FAMILY,
     ROLE_ORGANISATIONS,
-    ART,
-    MUSIC,
-    ARMOURING,
     TEXT,
+    ART,
+    ARMOURING,
+    MUSIC,
+    
     OTHER,
 ]
 
@@ -56,6 +57,7 @@ class ManMaxTempEntityClass(TempEntityClass):
     created_when = models.DateTimeField(auto_now_add=True, editable=False)
     modified_by = models.CharField(max_length=300, blank=True, editable=False)
     modified_when = models.DateTimeField(auto_now=True, editable=False)
+    search_notes = models.TextField(blank=True)
 
     
     def save(self, *args, **kwargs):
