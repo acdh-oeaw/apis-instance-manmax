@@ -22,7 +22,7 @@ def ingest_schuh():
             except entity_model.DoesNotExist:
                 print("Ingesting", entity_type, entity_data)
                 entity = entity_model(
-                    name=entity_data["label"],
+                    name=entity_data["label"] + f" [{entity_type}]",
                     created_by="schuh_index",
                     modified_by="schuh_index",
                     schuh_index_id=entity_data["id"],
