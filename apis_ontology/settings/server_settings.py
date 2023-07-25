@@ -148,10 +148,17 @@ APIS_ENTITIES = {
     "TextualWork": {"search": ["name", "internal_notes"]},
     "ArtisticWork": {"search": ["name", "internal_notes"]},
     "Battle": {"search": ["name", "internal_notes"]},
-    "UseInBattle": {"search": ["name", "internal_notes"]},
-    "ParticipationInBattle": {"search": ["name", "internal_notes"]},
-    "Cannon": {"search": ["name", "internal_notes"]},
+ 
+    "Arms": {"search": ["name", "internal_notes"]},
     "CommunicatesWith": {"search": ["name", "internal_notes"]},
+    "MilitaryCampaign": {"search": ["name", "internal_notes"]},
+    "Tournament": {"search": ["name", "internal_notes"]},
+    "Festivity": {"search": ["name", "internal_notes"]},
+    "ParticipationInEvent": {"search": ["name", "internal_notes"]},
+    "UtilisationInEvent": {"search": ["name", "internal_notes"]},
+    "DecorationOfObject": {"search": ["name", "internal_notes"]},
+    "TransportationOfObject": {"search": ["name", "internal_notes"]},
+    "RepairOfObject": {"search": ["name", "internal_notes"]},
 }
 
 

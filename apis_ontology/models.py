@@ -84,24 +84,7 @@ class Person(ManMaxTempEntityClass):
     __entity_group__ = GENERIC
     __entity_type__ = ENTITY
 
-    def update_label_from_namings(self):
-        """Get all Naming objects which are subjects of Triples where self is the object, and combine the values"""
-        naming_triples = self.triple_set_from_obj.filter(
-            prop__name="is naming of",
-            subj__self_contenttype=caching.get_contenttype_of_class(Naming),
-        ).all()
-        if "|" in self.name:
-            new_label = self.name.split(" | ")[0]
-        else:
-            new_label = self.name
-        other_names = " | ".join(
-            f"{nt.subj.forename} {nt.subj.surname} {nt.subj.role_name} {nt.subj.add_name}"
-            for nt in naming_triples
-        )
-        if other_names:
-            new_label += " | " + other_names
-        self.name = remove_extra_spaces(new_label)
-        self.save()
+    
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -116,6 +99,10 @@ class Place(ManMaxTempEntityClass):
 @reversion.register(follow=["tempentityclass_ptr"])
 class GroupOfPersons(ManMaxTempEntityClass):
     """Group of persons identified by a label and URIs."""
+    
+    class Meta:
+        verbose_name = "Group of Persons"
+        verbose_name_plural = "Groups of Persons"
 
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = ENTITY
@@ -143,6 +130,10 @@ class Family(ManMaxTempEntityClass):  # TODO: should be group of persons subclas
     
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = ENTITY
+    
+    class Meta:
+        verbose_name = "Family"
+        verbose_name_plural = "Families"
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -220,6 +211,10 @@ class CommunicatesWith(GenericStatement):
     __entity_type__ = STATEMENT
     
     method = models.CharField(max_length=50, choices=(("verbal", "Verbal"), ("written", "Written")), blank=True)
+    
+    class Meta:
+        verbose_name = "Communication With"
+        verbose_name_plural = "Communications With"
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -245,12 +240,11 @@ class OwnershipTransfer(Activity):
     __entity_type__ = STATEMENT
 
 
-"""
-@reversion.register(follow=["tempentityclass_ptr"])
+
+@reversion.register(follow=["ownershiptransfer_ptr"])
 class GiftGiving(OwnershipTransfer):
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
-"""
 
 
 @reversion.register(follow=["activity_ptr"])
@@ -312,6 +306,10 @@ class CreationAct(Activity):
 class CreationOfOrganisation(CreationAct):
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Creation of Organisations"
+        verbose_name_plural = "Creations of Organisations"
 
 
 @reversion.register(follow=["creationact_ptr"])
@@ -319,7 +317,9 @@ class AssemblyOfCompositeObject(CreationAct):
     __entity_group__ = OTHER
     __entity_type__ = STATEMENT
 
-
+    class Meta:
+        verbose_name = "Assembly of Composite Object"
+        verbose_name_plural = "Assemblies of Composite Objects"
 # ARMOUR TYPES
 
 
@@ -337,29 +337,95 @@ class ArmourSuit(CompositePhysicalObject):
     __entity_type__ = ENTITY
     
 @reversion.register(follow=["physicalobject_ptr"])
-class Cannon(PhysicalObject):
+class Arms(PhysicalObject):
     """Suit of armour, comprising possibly many pieces"""
+
+    __entity_group__ = ARMOURING
+    __entity_type__ = ENTITY
+    
+    arms_type = models.CharField(max_length=300)
+    
+    class Meta:
+        verbose_name = "Arms"
+        verbose_name_plural = "Arms"
+
+@reversion.register(follow=["event_ptr"])
+class Battle(GenericEvent):
+    """A named battle"""
 
     __entity_group__ = ARMOURING
     __entity_type__ = ENTITY
 
 @reversion.register(follow=["event_ptr"])
-class Battle(GenericEvent):
-    """Suit of armour, comprising possibly many pieces"""
+class MilitaryCampaign(GenericEvent):
+    """A named military campaign"""
 
     __entity_group__ = ARMOURING
     __entity_type__ = ENTITY
+    
+@reversion.register(follow=["event_ptr"])
+class Tournament(GenericEvent):
+    """A specific, named tournament, in which Persons participate"""
+
+    __entity_group__ = ARMOURING
+    __entity_type__ = ENTITY
+    
+@reversion.register(follow=["event_ptr"])
+class Festivity(GenericEvent):
+    """A specific, named festivity, in which Persons participate"""
+
+    __entity_group__ = ARMOURING
+    __entity_type__ = ENTITY
+    
+    class Meta:
+        verbose_name = "Festivity"
+        verbose_name_plural = "Festivities"
 
 
 @reversion.register(follow=["genericstatement_ptr"])
-class ParticipationInBattle(GenericStatement):
-    __entity_group__ = ARMOURING
+class ParticipationInEvent(GenericStatement):
+    __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Participation in Event"
+        verbose_name_plural = "Participations in Events"
 
 @reversion.register(follow=["genericstatement_ptr"])
-class UseInBattle(GenericStatement):
+class UtilisationInEvent(GenericStatement):
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Utilisation in Event"
+        verbose_name_plural = "Utilisations in Events"
+    
+@reversion.register(follow=["genericstatement_ptr"])
+class DecorationOfObject(CreationAct):
     __entity_group__ = ARMOURING
     __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Decoration of Object"
+        verbose_name_plural = "Decorations of Objects"
+    
+@reversion.register(follow=["genericstatement_ptr"])
+class TransportationOfObject(GenericStatement):
+    __entity_group__ = ARMOURING
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Transportation of Object"
+        verbose_name_plural = "Transportations of Objects"
+    
+@reversion.register(follow=["genericstatement_ptr"])
+class RepairOfObject(CreationAct):
+    __entity_group__ = ARMOURING
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Repair of Object"
+        verbose_name_plural = "Repair of Objects"
 
 @reversion.register(follow=["creationact_ptr"])
 class ArmourCreationAct(CreationAct):
@@ -502,23 +568,6 @@ class ArtisticWork(PhysicalObject):
     __entity_group__ = ART
     __entity_type__ = ENTITY
 
-
-@receiver(post_save, sender=Triple)
-def update_person_label_on_adding_naming_triple(sender, instance: Triple, **kwargs):
-    """On saving of a triple where subj=Naming and obj=Person, call Person.update_label_from_names
-    to update the Person label"""
-    if isinstance(instance.subj, Naming) and isinstance(instance.obj, Person):
-        instance.obj.update_label_from_namings()
-
-
-@receiver(post_save, sender=Naming)
-def update_person_label_on_naming_change(sender, instance: Naming, **kwargs):
-    """On saving of a naming, get all related Persons and call Person.update_label_from_names
-    to update the Person label"""
-    naming_triples = instance.triple_set_from_subj.all()
-    for nt in naming_triples:
-        person: Person = nt.obj
-        person.update_label_from_namings()
 
 
 @reversion.register(follow=["genericstatement_ptr"])
@@ -754,6 +803,10 @@ def construct_properties():
         subclasses(CreationAct),
         [Person, Organisation],
     )
+    
+
+    
+    creation_act_thing_created = build_property("thing created", "was created in", subclasses(CreationAct), [*subclasses(PhysicalObject), *subclasses(ConceptualObject)])
 
     text_authored = build_property(
         "text authored", "was authored in", Authoring, subclasses(TextualWork)
@@ -1036,12 +1089,17 @@ def construct_properties():
         [Person, Organisation, GroupOfPersons],
     )
 
-    use_in_battle_battle = build_property("battle used in", "has use in", UseInBattle, Battle)
-    use_in_battle_item = build_property("item used", "had use in", UseInBattle, [ArmourPiece, ArmourSuit, Cannon])
+    use_in_battle_battle = build_property("battle used in", "has use in", UtilisationInEvent, Battle)
+    use_in_battle_item = build_property("item used", "had use in", UtilisationInEvent, [ArmourPiece, ArmourSuit, Arms])
     
-    participation_in_battle_battle = build_property("battle participated in", "has participation", ParticipationInBattle, Battle)
-    participation_in_battle_person = build_property("participating", "has participation", ParticipationInBattle, [Person, Organisation, Family])
+    participation_in_battle_battle = build_property("battle participated in", "has participation", ParticipationInEvent, subclasses(GenericEvent))
+    participation_in_battle_person = build_property("participating", "has participation", ParticipationInEvent, [Person, Organisation, Family])
     
+    decoration_of_object_object = build_property("object repaired", "was repaired in", RepairOfObject, subclasses(PhysicalObject))
+    decoration_of_object_person = build_property("object repaired by", "was involved in repair", RepairOfObject, [Person, Organisation])
+    
+    decoration_of_object_object = build_property("object decorated", "was decorated in", RepairOfObject, subclasses(PhysicalObject))
+    decoration_of_object_person = build_property("object decorated by", "was involved in decoration", RepairOfObject, [Person, Organisation])
     
     statement_has_related_statement = build_property("has related statement", "has related statement", subclasses(GenericStatement), subclasses(GenericStatement))
     
@@ -1050,3 +1108,6 @@ def construct_properties():
     communicates_with_recipient = build_property("receiver of communication", "is receiver of communication", CommunicatesWith, [Person, *subclasses(Organisation)])
     communicates_with_statement = build_property("subject of communication", "is subject of commuication", CommunicatesWith, subclasses(GenericStatement))
     communicates_with_sender_place = build_property("communication sent from", "is origin place of communication", CommunicatesWith, Place)
+    
+    transportation_of_object_object = build_property("object transported", "was transported in", TransportationOfObject, subclasses(PhysicalObject))
+    transportation_of_object_by = build_property("transported by", "was involved in transportation", TransportationOfObject, [Person, *subclasses(Organisation), Family])
