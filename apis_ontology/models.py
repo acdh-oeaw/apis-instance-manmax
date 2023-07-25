@@ -327,14 +327,19 @@ class AssemblyOfCompositeObject(CreationAct):
 class ArmourPiece(PhysicalObject):
     __entity_group__ = ARMOURING
     __entity_type__ = ENTITY
+    
+    armour_type = models.CharField(max_length=300)
+
 
 
 @reversion.register(follow=["compositephysicalobject_ptr"])
-class ArmourSuit(CompositePhysicalObject):
+class Armour(CompositePhysicalObject):
     """Suit of armour, comprising possibly many pieces"""
 
     __entity_group__ = ARMOURING
     __entity_type__ = ENTITY
+    
+    armour_type = models.CharField(max_length=300)
     
 @reversion.register(follow=["physicalobject_ptr"])
 class Arms(PhysicalObject):
@@ -1057,7 +1062,7 @@ def construct_properties():
     )
 
     armour_creation_act_armour = build_property(
-        "armour created", "was created in", ArmourCreationAct, [ArmourPiece, ArmourSuit]
+        "armour created", "was created in", ArmourCreationAct, [ArmourPiece, Armour]
     )
     armour_assembly_act_armour_pieces = build_property(
         "armour assembled from",
@@ -1066,7 +1071,7 @@ def construct_properties():
         ArmourPiece,
     )
     armour_assembly_act_armour_suit = build_property(
-        "assembled into", "was assembled in", ArmourAssemblyAct, ArmourSuit
+        "assembled into", "was assembled in", ArmourAssemblyAct, Armour
     )
 
     creation_commission_creation_act_commissions = build_property(
@@ -1090,7 +1095,7 @@ def construct_properties():
     )
 
     use_in_battle_battle = build_property("battle used in", "has use in", UtilisationInEvent, Battle)
-    use_in_battle_item = build_property("item used", "had use in", UtilisationInEvent, [ArmourPiece, ArmourSuit, Arms])
+    use_in_battle_item = build_property("item used", "had use in", UtilisationInEvent, [ArmourPiece, Armour, Arms])
     
     participation_in_battle_battle = build_property("battle participated in", "has participation", ParticipationInEvent, subclasses(GenericEvent))
     participation_in_battle_person = build_property("participating", "has participation", ParticipationInEvent, [Person, Organisation, Family])
