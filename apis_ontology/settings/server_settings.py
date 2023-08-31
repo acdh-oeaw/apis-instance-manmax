@@ -3,6 +3,8 @@ import re
 import dj_database_url
 import os
 
+ROOT_URLCONF = "apis_ontology.urls"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # REDMINE_ID = "14590"
@@ -70,7 +72,7 @@ MAIN_TEXT_NAME = "ÖBL Haupttext"
 
 LANGUAGE_CODE = "de"
 
-INSTALLED_APPS = ["apis_override_select2js"] + INSTALLED_APPS + ["apis_bibsonomy"]
+INSTALLED_APPS = ["apis_override_select2js"] + INSTALLED_APPS + ["apis_bibsonomy", "django_extensions"]
 
 
 MIDDLEWARE += ["apis_ontology.middleware.get_request.RequestMiddleware"]

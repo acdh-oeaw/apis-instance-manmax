@@ -1,0 +1,77 @@
+{
+    "has_statement": [
+        {
+            "__object_type__": "birth",
+            "name": "Birth of Toby Jones",
+            "start_date_written": null,
+            "end_date_written": null,
+            "notes": "",
+            "internal_notes": "",
+            "head_statement": true,
+            "has_birth_event": [
+                {
+                    "__object_type__": "person",
+                    "id": 65350,
+                    "label": "Toby Jones"
+                }
+            ]
+        },
+        {
+            "__object_type__": "order",
+            "name": "KM orders JS to do something",
+            "start_date_written": null,
+            "end_date_written": null,
+            "notes": "",
+            "internal_notes": "",
+            "head_statement": true,
+            "thing_ordered": [
+                {
+                    "__object_type__": "payment",
+                    "name": "John Morton pays some money to",
+                    "start_date_written": null,
+                    "end_date_written": null,
+                    "notes": "",
+                    "internal_notes": "",
+                    "head_statement": false,
+                    "amount": "123",
+                    "currency": "123",
+                    "payment_to": [
+                        {
+                            "__object_type__": "person",
+                            "id": 49913,
+                            "label": " François de Valois, Gf von (ab 1515 s. Frankreich, Kg Franz I.) < Gft  < Angoulême [Angolemi]/Frankreich [Schuh-Index \\angouleme/frankreich:\\03*]"
+                        }
+                    ],
+                    "payment_by": [
+                        {
+                            "__object_type__": "person",
+                            "id": 50618,
+                            "label": "Ebf John Morton (1486-1500), Gesandter Englands < Canterbury/Großbritannien  [Schuh-Index \\canterbury/england:\\01*]"
+                        }
+                    ],
+                    "source_of_money": [
+                        {
+                            "__object_type__": "person",
+                            "id": 53555,
+                            "label": "Maximilian I., Röm. Kg, Erwählter Röm. Kr (1486/1508-1519) [Schuh-Index \\maximilian i., rom. kg, kr:]"
+                        }
+                    ]
+                }
+            ],
+            "order_given_by": [
+                {
+                    "__object_type__": "person",
+                    "id": 53555,
+                    "label": "Maximilian I., Röm. Kg, Erwählter Röm. Kr (1486/1508-1519) [Schuh-Index \\maximilian i., rom. kg, kr:]"
+                }
+            ],
+            "order_received_by": [
+                {
+                    "__object_type__": "person",
+                    "id": 50618,
+                    "label": "Ebf John Morton (1486-1500), Gesandter Englands < Canterbury/Großbritannien  [Schuh-Index \\canterbury/england:\\01*]"
+                }
+            ]
+        }
+    ]
+}

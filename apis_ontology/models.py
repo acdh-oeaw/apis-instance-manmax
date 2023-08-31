@@ -70,6 +70,10 @@ class ManMaxTempEntityClass(TempEntityClass):
             self.modified_by = current_request().user.username
             super().save(*args, **kwargs)
 
+@reversion.register(follow=["tempentityclass_ptr"])
+class Factoid(ManMaxTempEntityClass):
+    class Meta:
+        pass
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -436,6 +440,8 @@ class RepairOfObject(CreationAct):
 class ArmourCreationAct(CreationAct):
     __entity_group__ = ARMOURING
     __entity_type__ = STATEMENT
+    
+    __omit_rels__ = {"thing_created"}
 
 
 @reversion.register(follow=["assemblyofcompositeobject_ptr"])
@@ -797,6 +803,8 @@ def subclasses(model: TempEntityClass):
 
 def construct_properties():
     # Generic Statement attached to Factoid
+    
+    factoid_has_statement = build_property("has_statement", "is_statement_of", Factoid, subclasses(GenericStatement))
 
     activity_has_place = build_property(
         "location of activity", "activity took place in", subclasses(Activity), Place
