@@ -11,7 +11,7 @@ def get_parents(cls):
     parents = []
     for parent in cls.__mro__:
         if parent is ManMaxTempEntityClass:
-            print("end")
+      
             parents.reverse()
             return parents
         if parent is not cls:
