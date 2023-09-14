@@ -1,4 +1,12 @@
 {
+    "label": "NewFactoid1",
+    "source": {
+        "bibs_url": "https://api.zotero.org/groups/2556736/items/5T25JFNC",
+        "pages_start": 1,
+        "pages_end": 2,
+        "folio": "1r",
+        "notes": "There are some notes about this"
+    },
     "has_statement": [
         {
             "__object_type__": "birth",
