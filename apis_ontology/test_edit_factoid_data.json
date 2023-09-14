@@ -1,0 +1,29 @@
+{
+    "id": 65574,
+    "name": "KM orders JS to author something",
+    "source": {
+        "id": "https://api.zotero.org/groups/2556736/items/Q32VA8MX",
+        "text": "Der Krieg Kaiser Maximilians I. mit Venedig 1509., 1"
+    },
+    "has_statements": [
+        {
+            "__object_type__": "naming",
+            "id": null,
+            "name": "[NAMING] KM orders JS to author something",
+            "start_date_written": null,
+            "end_date_written": null,
+            "internal_notes": null,
+            "forename": "Kaiser",
+            "surname": "Maximilian",
+            "role_name": "asdf",
+            "add_name": "asdf",
+            "person_named": [
+                {
+                    "label": "Maximilian I., Röm. Kg, Erwählter Röm. Kr (1486/1508-1519) [Schuh-Index \\maximilian i., rom. kg, kr:]",
+                    "id": 53555,
+                    "__object_type__": "person"
+                }
+            ]
+        }
+    ]
+}

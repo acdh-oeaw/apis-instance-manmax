@@ -57,7 +57,7 @@ class ManMaxTempEntityClass(TempEntityClass):
     created_when = models.DateTimeField(auto_now_add=True, editable=False)
     modified_by = models.CharField(max_length=300, blank=True, editable=False)
     modified_when = models.DateTimeField(auto_now=True, editable=False)
-    internal_notes = models.TextField(blank=True, help_text="Internal searchable text, for disambiguation. Store information as statements!")
+    internal_notes = models.TextField(blank=True, null=True, help_text="Internal searchable text, for disambiguation. Store information as statements!")
     schuh_index_id = models.CharField(max_length=500, blank=True, editable=False)
 
     
@@ -130,7 +130,7 @@ class Foundation(Organisation):
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class Family(ManMaxTempEntityClass):  # TODO: should be group of persons subclass
-    family_name = models.CharField(max_length=200, blank=True)
+    family_name = models.CharField(max_length=200, blank=True) # TODO: remove this... it's just label
     
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = ENTITY
@@ -265,22 +265,26 @@ class Naming(GenericStatement):
     forename = models.CharField(
         max_length=200,
         blank=True,
+        null=True,
         verbose_name="Forename",
         help_text="contains a forename, given or baptismal name (for multiple, separate with a space)",
     )
     surname = models.CharField(
         max_length=200,
         blank=True,
+        null=True,
         help_text="contains a family (inherited) name, as opposed to a given, baptismal, or nick name (for multiple, separate with a space)",
     )
     role_name = models.CharField(
         max_length=200,
         blank=True,
+        null=True,
         help_text="contains a name component which indicates that the referent has a particular role or position in society, such as an official title or rank.",
     )
     add_name = models.CharField(
         max_length=200,
         blank=True,
+        null=True,
         help_text="(additional name) contains an additional name component, such as a nickname, epithet, or alias, or any other descriptive phrase used within a personal name.",
     )
 
@@ -593,13 +597,13 @@ class Death(GenericStatement):
     __entity_type__ = STATEMENT
 
 
-@reversion.register(follow="genericstatement_ptr")
+@reversion.register(follow=["genericstatement_ptr"])
 class OrganisationLocation(GenericStatement):
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
 
 
-@reversion.register(follow="genericstatement_ptr")
+@reversion.register(follow=["genericstatement_ptr"])
 class AcceptanceOfStatement(GenericStatement):
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
@@ -758,6 +762,7 @@ class MusicPerformance(GenericStatement):
     __entity_type__ = STATEMENT
 
 
+
 def build_property(
     name: str,
     name_reverse: str,
@@ -811,8 +816,8 @@ def construct_properties():
     )
 
     creation_act_carried_out_by_person_or_org = build_property(
-        "carried out by person",
-        "person carried out",
+        "carried out by",
+        "person/org carrying out act",
         subclasses(CreationAct),
         [Person, Organisation],
     )
@@ -1013,8 +1018,8 @@ def construct_properties():
         "family member", "is member of family", Family, Person
     )
 
-    payment_for_entity = build_property(
-        "payment for",
+    payment_for_act = build_property(
+        "payment for act",
         "was paid for in",
         Payment,
         [
@@ -1022,7 +1027,6 @@ def construct_properties():
             PerformanceOfWork,
             RoleOccupation,
             CreationAct,
-            PhysicalObject,
             OwnershipTransfer,
             *subclasses(Activity)
         ],
@@ -1043,11 +1047,6 @@ def construct_properties():
         "was ordered in",
         subclasses(Order),
         [
-            Poem,
-            Preface,
-            DedicatoryText,
-            MusicWork,
-            *subclasses(PhysicalObject),
             PerformanceOfTask,
             MusicPerformance,
             *subclasses(CreationAct),
@@ -1114,7 +1113,7 @@ def construct_properties():
     decoration_of_object_object = build_property("object decorated", "was decorated in", RepairOfObject, subclasses(PhysicalObject))
     decoration_of_object_person = build_property("object decorated by", "was involved in decoration", RepairOfObject, [Person, Organisation])
     
-    statement_has_related_statement = build_property("has related statement", "has related statement", subclasses(GenericStatement), subclasses(GenericStatement))
+    #statement_has_related_statement = build_property("has related statement", "has related statement", subclasses(GenericStatement), subclasses(GenericStatement))
     
     
     communicates_with_sender = build_property("sender of communication", "is sender of communication", CommunicatesWith, [Person, *subclasses(Organisation)])

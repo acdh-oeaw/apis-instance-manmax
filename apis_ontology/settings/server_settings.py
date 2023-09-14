@@ -3,6 +3,10 @@ import re
 import dj_database_url
 import os
 
+
+STATIC_URL = "/static/"
+
+
 ROOT_URLCONF = "apis_ontology.urls"
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -72,10 +76,11 @@ MAIN_TEXT_NAME = "ÖBL Haupttext"
 
 LANGUAGE_CODE = "de"
 
-INSTALLED_APPS = ["apis_override_select2js"] + INSTALLED_APPS + ["apis_bibsonomy", "django_extensions"]
+INSTALLED_APPS = ["apis_override_select2js"] + INSTALLED_APPS + ["apis_bibsonomy", "django_extensions", "corsheaders"]
 
 
-MIDDLEWARE += ["apis_ontology.middleware.get_request.RequestMiddleware"]
+MIDDLEWARE += ["apis_ontology.middleware.get_request.RequestMiddleware", 'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',]
 
 # STATICFILES_DIRS = [BASE_DIR + "/member_images"]
 
@@ -174,3 +179,5 @@ for template in TEMPLATES:
     template["OPTIONS"]["context_processors"].append(
         "apis_ontology.custom_context_processors.grouped_menus"
     )
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
