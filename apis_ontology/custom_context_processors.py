@@ -4,17 +4,18 @@ from functools import lru_cache
 from django.utils.html import format_html
 
 from apis_core.utils.caching import get_all_entity_classes
-from apis_ontology.models import group_order, ManMaxTempEntityClass
+from apis_ontology.models import group_order, ManMaxTempEntityClass, TempEntityClass
 
 @lru_cache
 def get_parents(cls):
     parents = []
     for parent in cls.__mro__:
-        if parent is ManMaxTempEntityClass:
+        if parent is ManMaxTempEntityClass or parent is TempEntityClass:
       
             parents.reverse()
             return parents
-        if parent is not cls:
+        if parent is not cls and hasattr(parent, "_meta"):
+            #print(parent)
             parents.append(parent._meta.verbose_name_plural.title())
     
 

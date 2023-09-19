@@ -1,6 +1,24 @@
 import json
-from apis_ontology.models import Person, Place, Family, Organisation, GroupOfPersons
+from apis_ontology.models import Person, Place, Family, Organisation, GroupOfPersons, Battle, GenericEvent, Tournament, Role
 from apis_core.apis_metainfo.models import Uri
+"""
+'aspell',
+            'battle',
+            'callname',
+            'comptext',
+            'corr',
+            'event',
+            'family',
+            'group',
+            'keyword',
+            'org',
+            'person',
+            'place',
+            'ref',
+            'role',
+            'role ',
+          
+            'tournament'"""
 
 
 def ingest_schuh():
@@ -14,6 +32,9 @@ def ingest_schuh():
         (Family, "family"),
         (Organisation, "org"),
         (GroupOfPersons, "group"),
+        (Battle, "battle"),
+        (Tournament, "tournament"),
+        (Role, "role")
     ]:
         for entity_data in data[entity_type]:
             try:
@@ -26,6 +47,7 @@ def ingest_schuh():
                     created_by="schuh_index",
                     modified_by="schuh_index",
                     schuh_index_id=entity_data["id"],
+                    alternative_schuh_ids=entity_data["additional_ids"]
                 )
                 entity.save(auto_created=True)
 
