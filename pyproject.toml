@@ -24,6 +24,7 @@ apis-core = { git = "https://github.com/acdh-oeaw/apis-core-rdf.git", branch = "
 webpage = { git = "https://github.com/acdh-oeaw/apis-webpage.git", branch = "main" }
 apis-bibsonomy = { git = "https://github.com/acdh-oeaw/apis-bibsonomy.git", branch = "main" }
 apis-override-select2js = { git="https://github.com/acdh-oeaw/apis-override-select2js" }
+icecream = "^2.1.3"
 
 [tool.poetry.group.dev.dependencies]
 icecream = "^2.1.3"
