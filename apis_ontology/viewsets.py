@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from apis_core.apis_relations.models import TempTriple, Property
-from apis_ontology.models import Factoid
+from apis_ontology.models import Factoid, Gendering, Naming, Person
 from django.forms.models import model_to_dict
 from apis_core.utils.caching import get_contenttype_of_class, get_entity_class_of_name
 from apis_bibsonomy.models import Reference
@@ -42,7 +42,7 @@ def get_unpack_statement(obj):
 def get_unpack_factoid(pk):
     obj = Factoid.objects.get(pk=pk)
     ref = Reference.objects.get(object_id=pk)
-    ic(ref.__dict__)
+    #ic(ref.__dict__)
     reference = {"id": ref.bibs_url, "text": ref.bibtex, "pages_start": ref.pages_start, "pages_end": ref.pages_end, "folio": ref.folio}
     
     #print(str(ref), ref.bibtex)
@@ -96,7 +96,7 @@ def create_parse_statements(statements):
 
 def create_parse_factoid(data):
     factoid = Factoid(name=data["name"])
-    factoid.save() #TODO: change auto_created to false for API
+    factoid.save()
     statements = create_parse_statements(data["has_statements"])
     for statement in statements:
         statement_class = statement.__class__
@@ -105,7 +105,7 @@ def create_parse_factoid(data):
         tt.save()
  
     reference_data = data["source"]
-    ic(reference_data)
+    #ic(reference_data)
     ref = Reference(bibs_url=reference_data["id"], 
                     bibtex=reference_data["text"],
                     pages_start=reference_data.get("pages_start", None), 
@@ -117,7 +117,7 @@ def create_parse_factoid(data):
     # TODO add notes field!
     
     ref.save()
-    ic(ref.__dict__)
+    #ic(ref.__dict__)
         
     return factoid
 
@@ -151,7 +151,7 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                 #print(k, v)
                 setattr(tt.obj, k, v)
             #print(tt.obj)
-            tt.obj.save(auto_created=True) # TODO: save this now
+            tt.obj.save() # TODO: save this now
             
             # do related entities once updating new...related_entities 
             # If statement already exists, we need to update related entities for each field
@@ -218,14 +218,14 @@ def edit_parse_factoid(data, pk):
         raise Exception
     factoid = Factoid.objects.get(pk=data["id"])
     factoid.name = data["name"]
-    factoid.save(auto_created=True)
+    factoid.save()
     
     reference_data = data["source"]
     print(reference_data)
     reference = Reference.objects.get(object_id=factoid.pk)
     reference.bibs_url=reference_data["id"]
-    reference.pages_start=int(reference_data.get("pages_start", None))
-    reference.pages_end=int(reference_data.get("pages_end", None))
+    reference.pages_start=reference_data.get("pages_start", None)
+    reference.pages_end=reference_data.get("pages_end", None)
     reference.bibtex = reference_data["text"]
     reference.save()
     has_statement_prop = Property.objects.get(subj_class=get_contenttype_of_class(Factoid), name_forward="has_statement")
@@ -245,11 +245,11 @@ from rest_framework.decorators import authentication_classes, permission_classes
 
 
 
-@authentication_classes([])
-@permission_classes([])
+
 class AutocompleteViewSet(viewsets.ViewSet):
     
     def list(self, request, subj_entity_type=None, relation_name=None):
+        print(subj_entity_type, model_config[subj_entity_type]["relations_to_entities"])
         relatable_type_names = model_config[subj_entity_type]["relations_to_entities"][relation_name]["allowed_types"]
         
         if filter_by_type := request.query_params.get("filter_by_type", None):
@@ -257,7 +257,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
         else:
             relatable_models = [model_config[name]["model_class"] for name in relatable_type_names]
         
-        q = request.query_params["q"]
+        q = request.query_params["q"].lower()
         #print(q)
         results = []
         for model in relatable_models:
@@ -269,8 +269,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
         
         return Response(results)
     
-@authentication_classes([])
-@permission_classes([])    
+  
 class FactoidViewSet(viewsets.ViewSet):
     def list(self, request):
         factoids = Factoid.objects.filter(name__icontains=request.query_params["q"])
@@ -292,16 +291,132 @@ class FactoidViewSet(viewsets.ViewSet):
     
 class SolidJsView(TemplateView):
     template_name = "apis_ontology/solid_index.html"
+   
+   
+   
+   
     
-@authentication_classes([])
-@permission_classes([])
+
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
+        object_model_config = model_config[entity_type]
+        fields = {k: v for k, v in request.data.items() if k in object_model_config["fields"]}
+        related_entities = {k: v for k, v in request.data.items() if k in object_model_config["relations_to_entities"]}
         entity_class = get_entity_class_of_name(entity_type)
-        new_entity = entity_class(**request.data)
+        new_entity = entity_class(**fields)
         new_entity.save()
-        return Response({"__object_type__": new_entity.__class__.__name__.lower(), "label": new_entity.name, "id": new_entity.id})
+    
+        for relationName, relationObjects in related_entities.items():
+            subj_contenttype = get_contenttype_of_class(object_model_config["model_class"])
+            property = Property.objects.get(subj_class=subj_contenttype, name_forward=relationName.replace("_", " "))
+            for relationObject in relationObjects:
+                obj_model = model_config[relationObject["__object_type__"]]["model_class"]
+                obj = obj_model.objects.get(pk=relationObject["id"])
+                tt = TempTriple(subj=new_entity, obj=obj, prop=property)
+                tt.save()
         
+        return Response({"__object_type__": new_entity.__class__.__name__.lower(), "label": new_entity.name, "id": new_entity.id})
+
+
+
+class PersonViewSet(viewsets.ViewSet):
+    def create(self, request):
+        #ic("creating person")
+    
+        object_model_config = model_config["person"]
+        
+        fields = {k: v for k, v in request.data.items() if k in object_model_config["fields"]}
+        related_entities = {k: v for k, v in request.data.items() if k in object_model_config["relations_to_entities"]}
+        
+       
+        
+        entity_class = get_entity_class_of_name("person")
+        new_entity = entity_class(**fields)
+        new_entity.save()
+        
+        gendering_info = request.data.get("gendering", None) if request.data.get("gendering", {}).get("gender") else None
+        naming_info = request.data.get("naming", None) if request.data.get("naming", None) and any(request.data["naming"][subfield] for subfield in ["forename", "surname", "role_name", "add_name"]) else None
+        # If there is a gendering, or if there is a naming and any of the fields have been filled out...
+        if gendering_info or naming_info:
+            # Create a factoid...
+            
+            factoid_name = f"{new_entity.name}"
+            if naming_info:
+                names = ""#.join(request.data["naming"][subfield] for subfield in ["forename", "surname", "role_name", "add_name"]).strip()
+                if request.data['naming']['forename']:
+                    names += f"{request.data['naming']['forename']}"
+                if request.data['naming']['add_name']:
+                    names += f''' "{request.data['naming']['add_name']}"'''
+                if request.data['naming']['surname']:
+                    names += f" {request.data['naming']['surname']}"
+                if request.data['naming']['role_name']:
+                    names += f", {request.data['naming']['role_name']}"
+                
+                factoid_name += f" heißt {names}"
+                
+            if gendering_info and naming_info:
+                factoid_name += " und"
+                
+            if gendering_info:
+                if gendering_info["gender"] in {"männlich", "weiblich"}:
+                    factoid_name += f" ist {gendering_info['gender']}"
+                else:
+                    factoid_name += " hat unbekanntes Geschlecht"
+            
+            factoid_name = factoid_name.strip()
+            factoid = Factoid(name=factoid_name)
+            factoid.save()
+            
+            has_statement_property = Property.objects.get(subj_class=get_contenttype_of_class(Factoid), name_forward="has_statement")
+            if gendering_info:
+                gendering_name = f"[GENDERING] {new_entity.name} ist {gendering_info['gender']}" if gendering_info["gender"] in {"männlich", "weiblich"} else f"[GENDERING] {new_entity.name} hat unbekanntes Geschlecht"
+                gendering = Gendering(name=gendering_name, gender=gendering_info["gender"])
+                gendering.save()
+                
+                gendering_to_person_property = Property.objects.get(subj_class=get_contenttype_of_class(Gendering), obj_class=get_contenttype_of_class(Person))
+                
+                gendering_to_person_tt = TempTriple(subj=gendering, obj=new_entity, prop=gendering_to_person_property)
+                gendering_to_person_tt.save()
+                
+                
+                
+                
+                factoid_to_gendering_tt = TempTriple(subj=factoid, obj=gendering, prop=has_statement_property)
+                factoid_to_gendering_tt.save()
+                
+            if naming_info:
+                names = ""#.join(request.data["naming"][subfield] for subfield in ["forename", "surname", "role_name", "add_name"]).strip()
+                if request.data['naming']['forename']:
+                    names += f"{request.data['naming']['forename']}"
+                if request.data['naming']['add_name']:
+                    names += f''' "{request.data['naming']['add_name']}"'''
+                if request.data['naming']['surname']:
+                    names += f" {request.data['naming']['surname']}"
+                if request.data['naming']['role_name']:
+                    names += f", {request.data['naming']['role_name']}"
+                naming_name = f"[NENNUNG] {new_entity.name} heißt {names}"
+                naming = Naming(name=naming_name, **request.data["naming"])
+                
+                naming.save()
+                
+                naming_to_person_property = Property.objects.get(subj_class=get_contenttype_of_class(Naming), obj_class=get_contenttype_of_class(Person))
+                naming_to_person_tt = TempTriple(subj=naming, obj=new_entity, prop=naming_to_person_property)
+                naming_to_person_tt.save()
+                
+                factoid_to_naming_tt = TempTriple(subj=factoid, obj=naming, prop=has_statement_property)
+                factoid_to_naming_tt.save()
+        
+    
+        for relationName, relationObjects in related_entities.items():
+            subj_contenttype = get_contenttype_of_class(object_model_config["model_class"])
+            property = Property.objects.get(subj_class=subj_contenttype, name_forward=relationName.replace("_", " "))
+            for relationObject in relationObjects:
+                obj_model = model_config[relationObject["__object_type__"]]["model_class"]
+                obj = obj_model.objects.get(pk=relationObject["id"])
+                tt = TempTriple(subj=new_entity, obj=obj, prop=property)
+                tt.save()
+        
+        return Response({"__object_type__": new_entity.__class__.__name__.lower(), "label": new_entity.name, "id": new_entity.id})
     
 if __name__ == "__main__":
     with open("apis_ontology/test_edit_factoid_data.json") as f:

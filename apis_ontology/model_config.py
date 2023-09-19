@@ -12,9 +12,12 @@ from icecream import ic
 from apis_core.utils.caching import get_all_ontology_classes, get_contenttype_of_class, get_entity_class_of_name
 from apis_core.apis_relations.models import Property
 
-from apis_ontology.models import Factoid
+from apis_ontology.models import Factoid, Typology, construct_properties, overridden_properties
 
-model_config = dict()
+
+from django.contrib.postgres.fields import ArrayField
+
+
 
 INTERNAL_FIELDS = {"review", "status", "references", "published"}
 
@@ -33,13 +36,14 @@ def build_field_dict(model_class):
     field_dict = {}
     for field in model_class._meta.get_fields():
         
-        if isinstance(field, Field) and not isinstance(field, (RelatedField)) and field.attname not in INTERNAL_FIELDS and field.editable:
-            
+        if isinstance(field, Field) and not isinstance(field, (RelatedField, ArrayField)) and field.attname not in INTERNAL_FIELDS and field.editable:
+           
             field_dict[field.attname] = {
                 "field_type": TYPE_LOOKUP[type(field)].__name__,
                 "blank": field.blank,
                 "default": field.get_default(),
                 "verbose_name": field.verbose_name,
+                "help_text": field.help_text
                 
             }
             if field.max_length:
@@ -53,18 +57,20 @@ def build_field_dict(model_class):
 
 def build_relations_dict(model_class):
     
-    
     properties = Property.objects.filter(subj_class=get_contenttype_of_class(model_class))
- 
+    properties_to_override = set()
+    if model_class in overridden_properties:
+        properties_to_override = {prop.name.replace(" ", "_") for prop in overridden_properties[model_class]}
+        #ic(model_class, properties_to_override)
     
     relations_dict = {}
     for property in properties:
-        property_name = property.name_forward.replace(" ", "_")
+        property_name = property.name_forward.replace(" ", "_").replace("/", "")
         omit_rels = getattr(model_class, "__omit_rels__", set())
         
      
-        
-        if property.name_forward != "has related statement" and property_name not in omit_rels:
+        #ic(model_class, property)
+        if property.name_forward != "has related statement" and property_name not in properties_to_override:
             relations_dict[property_name] = {"property_class": property, "allowed_types": [cls_contentttype.model_class().__name__.lower() for cls_contentttype in property.obj_class.all()]}
     return relations_dict
 
@@ -101,16 +107,23 @@ def build_model_config_dict(model_class):
     }
     
 
+def build_model_config():
+    
+    model_config = dict()
+    for model in get_all_ontology_classes():
+        if model not in [Factoid, Typology]:
+            model_config[model.__name__.lower()] = build_model_config_dict(model)
+    
+    return model_config
 
-for model in get_all_ontology_classes():
-    if model is not Factoid:
-        model_config[model.__name__.lower()] = build_model_config_dict(model)
-    
-    
 
-    
+model_config = build_model_config()
 
 if __name__ == "__main__":
+    construct_properties()
+    #ic(overridden_properties)
+    model_config = build_model_config()
+
     with open("model_config.json", "w") as f:
         f.write(json.dumps(model_config, default=lambda x: None))
     #build_relation_to_entity_dict(get_entity_class_of_name("order"))

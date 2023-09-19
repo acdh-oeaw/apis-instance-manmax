@@ -89,7 +89,7 @@ MIDDLEWARE += ["apis_ontology.middleware.get_request.RequestMiddleware", 'corshe
 # APIS_BLAZEGRAPH = ('https://blazegraph.herkules.arz.oeaw.ac.at/metaphactory-play/sparql', 'metaphactory-play', 'KQCsD24treDY')
 
 
-APIS_RELATIONS_FILTER_EXCLUDE += ["annotation", "annotation_set_relation"]
+APIS_RELATIONS_FILTER_EXCLUDE += ["annotation", "annotation_set_relation", "alternative_schuh_ids"]
 
 # INSTALLED_APPS.append("apis_highlighter")
 APIS_ENTITIES = {

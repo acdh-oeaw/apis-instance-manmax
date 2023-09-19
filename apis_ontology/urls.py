@@ -1,8 +1,8 @@
 from apis.urls import urlpatterns
 
 
-from .viewsets import FactoidViewSet, AutocompleteViewSet, SolidJsView, EntityViewSet
-from django.urls import path
+from .viewsets import FactoidViewSet, AutocompleteViewSet, SolidJsView, EntityViewSet, PersonViewSet
+from django.urls import path, re_path
 
 from django.shortcuts import render
 from django.templatetags.static import static
@@ -17,13 +17,16 @@ def frontend(request):
     
 
 custom_url_patterns = [
-    path("manmax/factoids", FactoidViewSet.as_view({"get": "list"}), name="list_factoid"),
-    path("manmax/factoids/edit/<int:pk>", FactoidViewSet.as_view({"post": "update"}), name="factoid"),
-    path("manmax/factoids/<int:pk>", FactoidViewSet.as_view({"get": "retrieve"}), name="factoid"),
-    path("manmax/factoids/create", FactoidViewSet.as_view({"post": "create"}), name="create_factoid"),
-    path("manmax/<str:entity_type>/create", EntityViewSet.as_view({"post": "create"}), name="create_entity"),
+    path("manmax/factoids", login_required(FactoidViewSet.as_view({"get": "list"})), name="list_factoid"),
+    path("manmax/factoids/edit/<int:pk>", login_required(FactoidViewSet.as_view({"post": "update"})), name="factoid"),
+    path("manmax/factoids/<int:pk>", login_required(FactoidViewSet.as_view({"get": "retrieve"})), name="factoid"),
+    path("manmax/factoids/create", login_required(FactoidViewSet.as_view({"post": "create"})), name="create_factoid"),
+    path("manmax/person/create", login_required(PersonViewSet.as_view({"post": "create"})), name="create_entity"),
+    path("manmax/<str:entity_type>/create/", login_required(EntityViewSet.as_view({"post": "create"})), name="create_entity"),
+    re_path(r"manmax/factoid-builder/create", login_required(SolidJsView.as_view()), name="solidcreate"),
+    re_path(r"manmax/factoid-builder/edit/\d*", login_required(SolidJsView.as_view()), name="solidedit"),
     path("manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"),
-    path("manmax/autocomplete/<str:subj_entity_type>/<str:relation_name>", AutocompleteViewSet.as_view({"get": "list"}), name="autocomplete"),
+    path("manmax/autocomplete/<str:subj_entity_type>/<str:relation_name>", login_required(AutocompleteViewSet.as_view({"get": "list"})), name="autocomplete"),
     
 ]
 
