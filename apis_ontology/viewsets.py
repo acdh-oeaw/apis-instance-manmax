@@ -570,6 +570,19 @@ class PersonViewSet(viewsets.ViewSet):
                     subj=factoid, obj=naming, prop=has_statement_property
                 )
                 factoid_to_naming_tt.save()
+                
+            reference_data = request.data["source"]
+            print(reference_data)
+            ref = Reference(
+                bibs_url=reference_data["id"],
+                bibtex=reference_data["text"],
+                pages_start=reference_data.get("pages_start", None),
+                pages_end=reference_data.get("pages_end", None),
+                folio=reference_data.get("folio", None),
+                object_id=factoid.pk,
+                content_type=get_contenttype_of_class(Factoid),
+            )
+            ref.save()
 
         for relationName, relationObjects in related_entities.items():
             subj_contenttype = get_contenttype_of_class(
