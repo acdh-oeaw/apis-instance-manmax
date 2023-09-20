@@ -51,6 +51,7 @@ ALLOWED_HOSTS = re.sub(
 
 ALLOWED_CIDR_NETS = ["10.0.0.0/8", "127.0.0.0/8"]
 
+
 REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = (
     # "rest_framework.permissions.DjangoModelPermissions",
     "rest_framework.permissions.IsAuthenticated",
