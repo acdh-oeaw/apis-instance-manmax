@@ -31,6 +31,24 @@ def login_required(view):
 
 custom_url_patterns = [
     path(
+        "manmax/factoid-builder/create",
+        login_required(SolidJsView.as_view()),
+        name="solidcreate",
+    ),
+    re_path(
+        r"manmax/factoid-builder/edit/\d*",
+        login_required(SolidJsView.as_view()),
+        name="solidedit",
+    ),
+    path(
+        "manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"
+    ),
+    path(
+        "manmax/autocomplete/<str:subj_entity_type>/<str:relation_name>",
+        login_required(AutocompleteViewSet.as_view({"get": "list"})),
+        name="autocomplete",
+    ),
+    path(
         "manmax/factoids",
         login_required(FactoidViewSet.as_view({"get": "list"})),
         name="list_factoid",
@@ -60,24 +78,7 @@ custom_url_patterns = [
         login_required(EntityViewSet.as_view({"post": "create"})),
         name="create_entity",
     ),
-    re_path(
-        r"manmax/factoid-builder/create",
-        login_required(SolidJsView.as_view()),
-        name="solidcreate",
-    ),
-    re_path(
-        r"manmax/factoid-builder/edit/\d*",
-        login_required(SolidJsView.as_view()),
-        name="solidedit",
-    ),
-    path(
-        "manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"
-    ),
-    path(
-        "manmax/autocomplete/<str:subj_entity_type>/<str:relation_name>",
-        login_required(AutocompleteViewSet.as_view({"get": "list"})),
-        name="autocomplete",
-    ),
+    
 ]
 
 urlpatterns += custom_url_patterns
