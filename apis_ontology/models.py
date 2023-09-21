@@ -1459,6 +1459,8 @@ def construct_properties():
             RemovalFromRole,
             Payment,
             Order,
+            OwnershipTransfer,
+            
         ],
     )
     ordered_by = build_property(
