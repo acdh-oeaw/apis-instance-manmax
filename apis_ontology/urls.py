@@ -24,7 +24,7 @@ def frontend(request):
 
 
 def login_required(view):
-    if settings.DEBUG == True:
+    if settings.DEV_VERSION == True:
         return view
     return django_login_required(view)
 

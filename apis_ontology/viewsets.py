@@ -3,6 +3,7 @@ import apis_ontology.django_init
 import json
 from collections import defaultdict
 
+from django.db import transaction
 from django.views.generic import TemplateView
 
 from rest_framework import viewsets
@@ -90,7 +91,13 @@ def get_unpack_factoid(pk):
 def create_parse_statements(statements):
     created_statements = []
     for statement in statements:
-        object_type_config = model_config[statement["__object_type__"]]
+        try:
+            
+            object_type_config = model_config[statement["__object_type__"]]
+        except Exception as e:
+            continue
+        
+        
         fields = {
             k: v for k, v in statement.items() if k in object_type_config["fields"]
         }
@@ -148,8 +155,14 @@ def create_parse_statements(statements):
 def create_parse_factoid(data):
     factoid = Factoid(name=data["name"])
     factoid.save()
+    
+    for statement in data["has_statements"]:
+        if not statement.get("__object_type__"):
+            raise Exception("A statement type must be selected")
+    
     statements = create_parse_statements(data["has_statements"])
     for statement in statements:
+        
         statement_class = statement.__class__
         property_class = Property.objects.get(
             subj_class=get_contenttype_of_class(Factoid),
@@ -205,6 +218,11 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
     incoming_statements = {
         st.get("id"): st for st in related_entities if st.get("id", None)
     }
+    
+    for id, statement in incoming_statements.items():
+        if not statement.get("__object_type__"):
+            raise Exception("No statement type selected")
+    
     for tt in temp_triples_in_db:
         object_type_config = model_config[tt.obj.__class__.__name__.lower()]
 
@@ -397,12 +415,23 @@ class FactoidViewSet(viewsets.ViewSet):
         return Response(get_unpack_factoid(pk=pk))
 
     def create(self, request):
-        factoid = create_parse_factoid(request.data)
-        return Response(get_unpack_factoid(pk=factoid.pk))
+        with transaction.atomic():
+            try:
+                factoid = create_parse_factoid(request.data)
+            except Exception as e:
+                print("error", e)
+                return Response({"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"}, status=400)
+            
+            return Response(get_unpack_factoid(pk=factoid.pk))
 
     def update(self, request, pk=None):
-        factoid = edit_parse_factoid(request.data, pk)
-        return Response(get_unpack_factoid(pk=factoid.pk))
+        with transaction.atomic():
+            try:
+                factoid = edit_parse_factoid(request.data, pk)
+            except Exception as e:
+                print("error", e)
+                return Response({"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"}, status=400)
+            return Response(get_unpack_factoid(pk=factoid.pk))
 
 
 class SolidJsView(TemplateView):
