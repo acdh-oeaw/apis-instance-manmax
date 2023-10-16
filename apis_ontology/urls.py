@@ -7,6 +7,8 @@ from .viewsets import (
     SolidJsView,
     EntityViewSet,
     PersonViewSet,
+    EdiarumPersonViewset,
+    EdiarumPlaceViewset
 )
 from django.urls import path, re_path
 
@@ -30,6 +32,14 @@ def login_required(view):
 
 
 custom_url_patterns = [
+    path(
+        "ediarum/person/",
+        EdiarumPersonViewset.as_view({"get": "list"}, name="ediarum-person"),
+    ),
+    path(
+        "ediarum/place/",
+        EdiarumPlaceViewset.as_view({"get": "list"}, name="ediarum-place"),
+    ),
     path(
         "manmax/factoid-builder/create",
         login_required(SolidJsView.as_view()),
@@ -78,7 +88,6 @@ custom_url_patterns = [
         login_required(EntityViewSet.as_view({"post": "create"})),
         name="create_entity",
     ),
-    
 ]
 
 urlpatterns += custom_url_patterns

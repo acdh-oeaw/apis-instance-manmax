@@ -10,12 +10,12 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from apis_core.apis_relations.models import TempTriple, Property
-from apis_ontology.models import Factoid, Gendering, Naming, Person
+from apis_ontology.models import Factoid, Gendering, Naming, Person, Place
 from django.forms.models import model_to_dict
 from apis_core.utils.caching import get_contenttype_of_class, get_entity_class_of_name
 from apis_bibsonomy.models import Reference
 
-
+from django.shortcuts import render
 from apis_ontology.model_config import model_config
 
 
@@ -92,12 +92,10 @@ def create_parse_statements(statements):
     created_statements = []
     for statement in statements:
         try:
-            
             object_type_config = model_config[statement["__object_type__"]]
         except Exception as e:
             continue
-        
-        
+
         fields = {
             k: v for k, v in statement.items() if k in object_type_config["fields"]
         }
@@ -155,14 +153,13 @@ def create_parse_statements(statements):
 def create_parse_factoid(data):
     factoid = Factoid(name=data["name"])
     factoid.save()
-    
+
     for statement in data["has_statements"]:
         if not statement.get("__object_type__"):
             raise Exception("A statement type must be selected")
-    
+
     statements = create_parse_statements(data["has_statements"])
     for statement in statements:
-        
         statement_class = statement.__class__
         property_class = Property.objects.get(
             subj_class=get_contenttype_of_class(Factoid),
@@ -218,11 +215,11 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
     incoming_statements = {
         st.get("id"): st for st in related_entities if st.get("id", None)
     }
-    
+
     for id, statement in incoming_statements.items():
         if not statement.get("__object_type__"):
             raise Exception("No statement type selected")
-    
+
     for tt in temp_triples_in_db:
         object_type_config = model_config[tt.obj.__class__.__name__.lower()]
 
@@ -420,8 +417,11 @@ class FactoidViewSet(viewsets.ViewSet):
                 factoid = create_parse_factoid(request.data)
             except Exception as e:
                 print("error", e)
-                return Response({"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"}, status=400)
-            
+                return Response(
+                    {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
+                    status=400,
+                )
+
             return Response(get_unpack_factoid(pk=factoid.pk))
 
     def update(self, request, pk=None):
@@ -430,7 +430,10 @@ class FactoidViewSet(viewsets.ViewSet):
                 factoid = edit_parse_factoid(request.data, pk)
             except Exception as e:
                 print("error", e)
-                return Response({"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"}, status=400)
+                return Response(
+                    {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
+                    status=400,
+                )
             return Response(get_unpack_factoid(pk=factoid.pk))
 
 
@@ -599,7 +602,7 @@ class PersonViewSet(viewsets.ViewSet):
                     subj=factoid, obj=naming, prop=has_statement_property
                 )
                 factoid_to_naming_tt.save()
-                
+
             reference_data = request.data["source"]
             print(reference_data)
             ref = Reference(
@@ -635,6 +638,26 @@ class PersonViewSet(viewsets.ViewSet):
                 "id": new_entity.id,
             }
         )
+
+
+class EdiarumPersonViewset(viewsets.ViewSet):
+    def list(self, request):
+        if not request.query_params.get("q", None):
+            return Response({"message": "A query parameter must be provided"}, status=401)
+        persons = (model_to_dict(p) for p in Person.objects.filter(name__icontains=request.query_params["q"])[0:100])
+        response =  render(request, "ediarum/list.xml", context={"persons": persons})
+        response["content-type"] = "application/xml"
+        return response
+    
+class EdiarumPlaceViewset(viewsets.ViewSet):
+    def list(self, request):
+        if not request.query_params.get("q", None):
+            return Response({"message": "A query parameter must be provided"}, status=401)
+        persons = (model_to_dict(p) for p in Place.objects.filter(name__icontains=request.query_params["q"])[0:100])
+        response =  render(request, "ediarum/list.xml", context={"persons": persons})
+        response["content-type"] = "application/xml"
+        return response
+        
 
 
 if __name__ == "__main__":
