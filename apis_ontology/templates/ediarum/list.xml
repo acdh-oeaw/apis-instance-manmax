@@ -1,7 +1,7 @@
 <ul xmlns:telota="http://www.telota.de" telota:doctype="ri_13_register_readonly">
-    {% for person in persons %}
-        <li id="{{person.id}}">
-            <span>{{person.name}}</span>
+    {% for item in data %}
+        <li id="{{item.id}}">
+            <span>{{item.name}}</span>
         </li>
     {% endfor %}
 </ul>

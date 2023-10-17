@@ -638,6 +638,13 @@ class PersonViewSet(viewsets.ViewSet):
                 "id": new_entity.id,
             }
         )
+        
+
+
+def sort_func(q, match):
+    q_index = match["name"].lower().index(q) + ord(match["name"][0])
+    return q_index
+    
 
 @authentication_classes([])
 @permission_classes([])
@@ -645,8 +652,11 @@ class EdiarumPersonViewset(viewsets.ViewSet):
     def list(self, request):
         if not request.query_params.get("q", None):
             return Response({"message": "A query parameter must be provided"}, status=401)
-        persons = (model_to_dict(p) for p in Person.objects.filter(name__icontains=request.query_params["q"])[0:100])
-        response =  render(request, "ediarum/list.xml", context={"persons": persons})
+        q = request.query_params["q"].lower()
+        persons = [model_to_dict(p) for p in Person.objects.filter(name__icontains=q)[0:100]]
+     
+        persons.sort(key=lambda match: sort_func(q, match))
+        response =  render(request, "ediarum/list.xml", context={"data": persons})
         response["content-type"] = "application/xml"
         return response
 
@@ -656,8 +666,12 @@ class EdiarumPlaceViewset(viewsets.ViewSet):
     def list(self, request):
         if not request.query_params.get("q", None):
             return Response({"message": "A query parameter must be provided"}, status=401)
-        persons = (model_to_dict(p) for p in Place.objects.filter(name__icontains=request.query_params["q"])[0:100])
-        response =  render(request, "ediarum/list.xml", context={"persons": persons})
+        
+        q = request.query_params["q"].lower()
+        places = [model_to_dict(p) for p in Place.objects.filter(name__icontains=q)[0:100]]
+
+        places.sort(key=lambda match: match["name"].lower().index(q))
+        response = render(request, "ediarum/list.xml", context={"data": places})
         response["content-type"] = "application/xml"
         return response
         
