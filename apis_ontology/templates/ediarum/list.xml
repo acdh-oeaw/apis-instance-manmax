@@ -1,4 +1,4 @@
-<ul xmlns:telota="http://www.telota.de" telota:doctype="ri_42_register_readonly">
+<ul xmlns:telota="http://www.telota.de" telota:doctype="ri_13_register_readonly">
     {% for person in persons %}
         <li id="{{person.id}}">
             <span>{{person.name}}</span>

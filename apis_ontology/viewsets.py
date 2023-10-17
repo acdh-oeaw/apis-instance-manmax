@@ -639,7 +639,8 @@ class PersonViewSet(viewsets.ViewSet):
             }
         )
 
-
+@authentication_classes([])
+@permission_classes([])
 class EdiarumPersonViewset(viewsets.ViewSet):
     def list(self, request):
         if not request.query_params.get("q", None):
@@ -648,7 +649,9 @@ class EdiarumPersonViewset(viewsets.ViewSet):
         response =  render(request, "ediarum/list.xml", context={"persons": persons})
         response["content-type"] = "application/xml"
         return response
-    
+
+@authentication_classes([])
+@permission_classes([])   
 class EdiarumPlaceViewset(viewsets.ViewSet):
     def list(self, request):
         if not request.query_params.get("q", None):
