@@ -19,7 +19,7 @@ from apis_bibsonomy.utils import get_bibtex_from_url
 from django.shortcuts import render
 from apis_ontology.model_config import model_config
 from apis_ontology.utils import create_html_citation_from_csl_data_string
-
+from django.db.models import Q
 
 
 FIELDS_TO_EXCLUDE = [
@@ -384,8 +384,15 @@ class AutocompleteViewSet(viewsets.ViewSet):
                 model_config[name]["model_class"] for name in relatable_type_names
             ]
 
-        q = request.query_params["q"].lower()
-        # print(q)
+        search_items = request.query_params["q"].lower().split(" ")
+        
+        q = Q()
+        for si in search_items:
+            q &= Q(name__icontains=si)
+        
+        
+        
+        
         results = []
         for model in relatable_models:
             matches = [
@@ -394,12 +401,12 @@ class AutocompleteViewSet(viewsets.ViewSet):
                     "id": match.id,
                     "__object_type__": model.__name__.lower(),
                 }
-                for match in model.objects.filter(name__icontains=q)
+                for match in model.objects.filter(q)
             ]
             results += matches
 
         # TODO: figure out why this sort does not work...
-        results.sort(key=lambda match: match["label"].lower().index(q))
+        results.sort(key=lambda match: match["label"].lower().index(search_items[0]))
 
         return Response(results)
 
