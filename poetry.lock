@@ -285,6 +285,20 @@ files = [
 ]
 
 [[package]]
+name = "citeproc-py"
+version = "0.6.0"
+description = "Citations and bibliography formatter"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "citeproc-py-0.6.0.tar.gz", hash = "sha256:d9e3a224f936fe2e5033b5d9ffdacab769cedb61d96c4e0cf2f0b488f1d24b4e"},
+    {file = "citeproc_py-0.6.0-py3-none-any.whl", hash = "sha256:ca4c7a5158d6f68cb00a89bb47d9aa0eec7b89b18e574eb08a061b011b602bbe"},
+]
+
+[package.dependencies]
+lxml = "*"
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -1480,4 +1494,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "a4c4e56045784fa370d3b1ad7e0bdf21d33fa8ef7fe71c33483b0d932ddb0be8"
+content-hash = "a4e94ad6f3201f9a12a4864ff0e96e52e595e2989a373de847cb6d3cc6cc5b53"
