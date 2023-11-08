@@ -14,9 +14,12 @@ from apis_ontology.models import Factoid, Gendering, Naming, Person, Place
 from django.forms.models import model_to_dict
 from apis_core.utils.caching import get_contenttype_of_class, get_entity_class_of_name
 from apis_bibsonomy.models import Reference
+from apis_bibsonomy.utils import get_bibtex_from_url
 
 from django.shortcuts import render
 from apis_ontology.model_config import model_config
+from apis_ontology.utils import create_html_citation_from_csl_data_string
+
 
 
 FIELDS_TO_EXCLUDE = [
@@ -66,7 +69,7 @@ def get_unpack_factoid(pk):
     # ic(ref.__dict__)
     reference = {
         "id": ref.bibs_url,
-        "text": ref.bibtex,
+        "text": create_html_citation_from_csl_data_string(ref.bibtex),
         "pages_start": ref.pages_start,
         "pages_end": ref.pages_end,
         "folio": ref.folio,
@@ -173,7 +176,7 @@ def create_parse_factoid(data):
     # ic(reference_data)
     ref = Reference(
         bibs_url=reference_data["id"],
-        bibtex=reference_data["text"],
+        bibtex=get_bibtex_from_url(reference_data["id"]),
         pages_start=reference_data.get("pages_start", None),
         pages_end=reference_data.get("pages_end", None),
         folio=reference_data.get("folio", None),
@@ -334,13 +337,22 @@ def edit_parse_factoid(data, pk):
     factoid.save()
 
     reference_data = data["source"]
-    print(reference_data)
+  
+    # When updating a reference, get the old references
     reference = Reference.objects.get(object_id=factoid.pk)
-    reference.bibs_url = reference_data["id"]
+    
+    # And then change the start and end pages and folio
     reference.pages_start = reference_data.get("pages_start", None)
     reference.pages_end = reference_data.get("pages_end", None)
-    reference.bibtex = reference_data["text"]
+    reference.folio = reference_data.get("folio", None)
+
+    # If in fact we have selected a different source, update the id and bibtex
+    if reference.bibs_url != reference_data["id"]:
+        reference.bibs_url = reference_data["id"]
+        reference.bibtex = get_bibtex_from_url(reference_data["id"])
     reference.save()
+    
+    
     has_statement_prop = Property.objects.get(
         subj_class=get_contenttype_of_class(Factoid), name_forward="has_statement"
     )

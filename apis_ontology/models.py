@@ -95,7 +95,7 @@ class ManMaxTempEntityClass(TempEntityClass):
     )
     schuh_index_id = models.CharField(max_length=500, blank=True, editable=False)
     alternative_schuh_ids = ArrayField(
-        models.CharField(max_length=500, blank=True, editable=False), default=list
+        models.CharField(max_length=500, blank=True, editable=False), default=list, editable=False
     )
 
     def save(self, auto_created=False, *args, **kwargs):
