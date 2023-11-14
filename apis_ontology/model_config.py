@@ -130,6 +130,7 @@ def build_model_config_dict(model_class):
         "model_class": model_class,
         "verbose_name": model_class._meta.verbose_name,
         "verbose_name_plural": model_class._meta.verbose_name_plural,
+        "description": model_class.__doc__
     }
 
 
