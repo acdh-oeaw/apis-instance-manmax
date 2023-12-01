@@ -16,6 +16,12 @@ In VSCode, install the `Dev Containers` plugin.
 6. Once built, migrate the database with `django-admin migrate`
 7. Build relationship-type objects with `django-admin create_relationships`
 8. Run `python apis_ontology/model_config.py`
-9. To run the application, run `django-admin runserver`
 
 
+APIS_BIBSONOMY settings are not added automatically, so you will need to add two environment variables.
+These are not here, for reasons of secrecy! Ask Richard!
+
+`export APIS_BIBSONOMY_USER=<THE_USER_NAME>`
+`export APIS_BIBSONOMY_PASSWORD=<THE_PASSWORD>`
+
+To run the application, run `django-admin runserver`
