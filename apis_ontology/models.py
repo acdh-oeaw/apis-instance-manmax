@@ -179,6 +179,7 @@ class Foundation(Organisation):
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class Family(ManMaxTempEntityClass):  # TODO: should be group of persons subclass
+    """A Family of Persons, identified by a label and URIs."""
     family_name = models.CharField(
         max_length=200, blank=True
     )  # TODO: remove this... it's just label
@@ -197,6 +198,7 @@ class ConceptualObject(ManMaxTempEntityClass):
 
     __entity_group__ = OTHER
     __entity_type__ = ENTITY
+    __zotero_reference__ = True
 
     class Meta:
         verbose_name = "Konzeptionelles Objekt"
@@ -265,6 +267,18 @@ class Task(ManMaxTempEntityClass):
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class FictionalPerson(ConceptualObject):
+    """A Fictional Person contained in e.g. a work of literature"""
+    __entity_type__ = ENTITY
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Fiktiver Ort"
+        verbose_name_plural = "Fiktive Orte"
+        
+        
+@reversion.register(follow=["tempentityclass_ptr"])
+class FictionalPlace(ConceptualObject):
+    """A Fictional Place contained in e.g. a work of literature"""
     __entity_type__ = ENTITY
     __entity_group__ = GENERIC
 
@@ -286,8 +300,8 @@ class GenericStatement(ManMaxTempEntityClass):
     head_statement = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Do not use"
-        verbose_name_plural = "Definitely do not use"
+        verbose_name = "Generic Statement"
+        verbose_name_plural = "Generic Statements"
 
 
 @reversion.register(follow=["genericstatement_ptr"])
@@ -322,16 +336,18 @@ class GenericEvent(ManMaxTempEntityClass):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Activity(GenericStatement):
+    """Describes the carrying out of any activity by a Person. This is a top-level class: more specific Statements should be used where possible."""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
     class Meta:
-        verbose_name = "Handlung"
-        verbose_name_plural = "Handlungen"
+        verbose_name = "Generic Activity"
+        verbose_name_plural = "Generic Activities"
 
 
 @reversion.register(follow=["activity_ptr"])
 class OwnershipTransfer(Activity):
+    """Describes the transfer of the ownership of an entity from one person/group to another"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -342,6 +358,7 @@ class OwnershipTransfer(Activity):
 
 @reversion.register(follow=["ownershiptransfer_ptr"])
 class GiftGiving(OwnershipTransfer):
+    """Describes the giving of an entity as a gift from one person to another"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -352,6 +369,7 @@ class GiftGiving(OwnershipTransfer):
 
 @reversion.register(follow=["activity_ptr"])
 class CreationCommission(Activity):
+    """Describes the commissioning of a Person/Group to create something e.g. an Artwork, by another Person/Group"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -362,6 +380,7 @@ class CreationCommission(Activity):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Naming(GenericStatement):
+    """Describes the attribution of a name to a Person (e.g. Maximilian is refered to as "Der Kaiser" in a source)"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -401,6 +420,7 @@ class Naming(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Gendering(GenericStatement):
+    """Describes the attribution of a gender to a Person"""
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
 
@@ -416,6 +436,7 @@ class Gendering(GenericStatement):
 
 @reversion.register(follow=["activity_ptr"])
 class CreationAct(Activity):
+    """Describes any activity leading to the creation of an object. Where possible, use more specific classes (Creation of Artwork, Authoring, Creation of Armour, etc.)"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -426,6 +447,7 @@ class CreationAct(Activity):
 
 @reversion.register(follow=["creationact_ptr"])
 class CreationOfOrganisation(CreationAct):
+    """Describes the creation of an Organisation by a Person (e.g. the Order of the Golden Fleece was created by Philip, Duke of Burgundy)"""
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
 
@@ -436,6 +458,7 @@ class CreationOfOrganisation(CreationAct):
 
 @reversion.register(follow=["creationact_ptr"])
 class AssemblyOfCompositeObject(CreationAct):
+    """Describes the assembly of any object from its constituent parts; use a more specific class (e.g. Armour Assembly) where possible"""
     __entity_group__ = OTHER
     __entity_type__ = STATEMENT
 
@@ -449,6 +472,7 @@ class AssemblyOfCompositeObject(CreationAct):
 
 @reversion.register(follow=["physicalobject_ptr"])
 class ArmourPart(PhysicalObject):
+    """A single piece of armour (e.g. an arm guard), which can be part of a suit of armour"""
     __entity_group__ = ARMOURING
     __entity_type__ = ENTITY
 
@@ -475,7 +499,7 @@ class Armour(CompositePhysicalObject):
 
 @reversion.register(follow=["physicalobject_ptr"])
 class Arms(PhysicalObject):
-    """Suit of armour, comprising possibly many pieces"""
+    """A weapon of any sort"""
 
     __entity_group__ = ARMOURING
     __entity_type__ = ENTITY
@@ -535,6 +559,7 @@ class Festivity(GenericEvent):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class ParticipationInEvent(GenericStatement):
+    """Describes the participation of a Person/Group in any kind of event"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -547,6 +572,7 @@ class ParticipationInEvent(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class UtilisationInEvent(GenericStatement):
+    """Describes the utilisation of any object in an event"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -557,6 +583,7 @@ class UtilisationInEvent(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class DecorationOfArmour(CreationAct):
+    """Describes the activity of decorating a piece of armour"""
     __entity_group__ = ARMOURING
     __entity_type__ = STATEMENT
 
@@ -567,6 +594,7 @@ class DecorationOfArmour(CreationAct):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class TransportationOfObject(GenericStatement):
+    """Describes the transportation of an object from one Place and/or Person to another Place and/or Person"""
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
@@ -577,6 +605,7 @@ class TransportationOfObject(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class TransportationOfArmour(TransportationOfObject):
+    """Describes the transportation of any kind of Armour from one Place and/or Person to another Place and/or Person"""
     __entity_group__ = ARMOURING
     __entity_type__ = STATEMENT
 
@@ -625,6 +654,7 @@ class ArmourAssemblyAct(AssemblyOfCompositeObject):
 
 @reversion.register(follow=["conceptualobject_ptr"])
 class Image(ConceptualObject):
+    """A ideal image, which can be manifested in several physical manifestations"""
     __entity_type__ = GENERIC
     __entity_type__ = ENTITY
 
@@ -635,6 +665,7 @@ class Image(ConceptualObject):
 
 @reversion.register(follow=["image_ptr"])
 class Woodcut(Image):
+    """ """
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
 
@@ -656,6 +687,7 @@ class PrintedWork(CompositePhysicalObject):
 
 @reversion.register(follow=["printedwork_ptr"])
 class Leaflet(PrintedWork):
+    """A leaflet"""
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
 
@@ -666,6 +698,7 @@ class Leaflet(PrintedWork):
 
 @reversion.register(follow=["printedwork_ptr"])
 class Book(PrintedWork):
+    """A book"""
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
 
@@ -676,6 +709,7 @@ class Book(PrintedWork):
 
 @reversion.register(follow=["compositephysicalobject_ptr"])
 class Manuscript(CompositePhysicalObject):
+    """A manuscript"""
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
 
@@ -719,6 +753,7 @@ class CompositeTextualWork(CompositeConceptualObject):
 
 @reversion.register(follow=["textualwork_ptr"])
 class Preface(TextualWork):
+    """A piece of text serving as the preface to a book"""
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
 
@@ -729,6 +764,7 @@ class Preface(TextualWork):
 
 @reversion.register(follow=["textualwork_ptr"])
 class DedicatoryText(TextualWork):
+    """A piece of text which serves as a dedication to a Person"""
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
 
@@ -739,7 +775,7 @@ class DedicatoryText(TextualWork):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Dedication(GenericStatement):
-    """Describes the action of dedicating a Dedicatory Text to a Person"""
+    """Describes the dedication of a Dedicatory Text to a Person (e.g. "The Dedidcation in Book X is dedicated to Maximilian")"""
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
 
@@ -785,6 +821,7 @@ class Printing(TextualCreationAct):
 
 @reversion.register(follow=["textualcreationact_ptr"])
 class SecretarialAct(TextualCreationAct):
+    """Describes any secretarial activity involved in the creation of a text"""
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
 
@@ -931,11 +968,23 @@ class RoleOccupation(GenericStatement):
     class Meta:
         verbose_name = "Bekleidung eines Amtes"
         verbose_name_plural = "Bekleidung von Ämtern"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class GroupMembership(GenericStatement):
+    """Describes the membership of a Person to a particular Group/Organisation"""
+    __entity_group__ = ROLE_ORGANISATIONS
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Mitgliedschaft in einer Organisation/Gruppe"
+        verbose_name_plural = "Mitgliedschaften in Organisationen/Gruppen"
 
 
 @reversion.register(follow=["genericstatement_ptr"])
 class AssignmentToRole(GenericStatement):
-    """Describes the assignment of a Role to a Person (assignee), by an Person (assigner)"""
+    """Describes the assignment of a Role to a Person (assignee), by an Person (assigner). 
+    
+    A role can be any identifiable Role in any kind of Organisation; it is not limited to official roles/offices"""
 
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
@@ -949,10 +998,10 @@ class AssignmentToRole(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class RemovalFromRole(GenericStatement):
-    """Describes the removal from a Role of a Person (role occupier), by an Person (remover)"""
+    """Describes the removal from a Role of a Person (role occupier), by an Person (remover). 
+    
+    A role can be any identifiable Role in any kind of Organisation; it is not limited to official roles/offices"""
 
-    class Meta:
-        verbose_name_plural = "Removals from Role"
 
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
@@ -964,6 +1013,11 @@ class RemovalFromRole(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class FamilialRelation(GenericStatement):
+    """Describes a generic familial relation between two Persons. Use more specific types (Parental Relation, Sibling Relation) where possible. In general, it is preferable to be explicit: e.g. "Albert VI, Archduke of Austria, was the uncle of Maximilian" should be treated as
+    two familial relation statements ("Frederick III is father of Maximilian", "Albert VI is brother of Frederick III"). If necessary, create 
+    new persons: e.g. "John Smith's uncle on his father's side is called Bill Smith": If we do not know the father of John, create a new Person ("Father of John Smith"),
+    who is the father of John Smith and brother of Bill Smith.
+    """
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
 
@@ -1097,6 +1151,7 @@ class Acquisition(GenericStatement):
 
 @reversion.register(follow=["creationact_ptr"])
 class ArtworkCreationAct(CreationAct):
+    """Describes the act of creating an Art Work"""
     __entity_group__ = ART
     __entity_type__ = STATEMENT
 
@@ -1111,11 +1166,24 @@ class ArtworkAcquisition(Acquisition):
     __entity_group__ = ART_STATEMENTS
 """
 
+
+@reversion.register(follow=["genericstatement_ptr"])
+class TextualPerformance(PerformanceOfWork):
+    """Describes the performance of a Textual Work (e.g. a play; a poetry reading; a speech) by a Person at a Place, to any number of Persons"""
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Textaufführung"
+        verbose_name_plural = "Textausführungen"
+
+
 # Music Statements
 
 
 @reversion.register(follow=["genericstatement_ptr"])
 class MusicPerformance(GenericStatement):
+    """Describes the performance of a piece of Music by a Person at a Place, to any number of Persons"""
     __entity_group__ = MUSIC
     __entity_type__ = STATEMENT
 
@@ -1132,7 +1200,16 @@ class Verschreibung(GenericStatement):
     class Meta:
         verbose_name = "Verschreibung"
         verbose_name_plural = "Verschreibungen"
-        
+
+@reversion.register(follow=["genericstatement_ptr"])
+class GenericRelationship(GenericStatement):  
+    """Describes an arbitrary relationship between two persons. Use more specific types where possible (e.g. Familial Relationship, Sibling Relationship)"""
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+      
+    class Meta:
+        verbose_name = "Generic Relationship"
+        verbose_name_plural = "Generic Relationships"
         
 
 
@@ -1163,9 +1240,14 @@ def build_property(
 
                 if isinstance(overrides, Iterable):
                     for override in overrides:
+                        
                         overridden_properties[sclass].add(override)
+                        for subclass in subclasses(sclass):
+                            overridden_properties[subclass].add(override)
                 else:
                     overridden_properties[sclass].add(overrides)
+                    for subclass in subclasses(sclass):
+                        overridden_properties[subclass].add(overrides)
 
     else:
         prop.subj_class.add(ContentType.objects.get_for_model(subj_class))
@@ -1173,8 +1255,12 @@ def build_property(
             if isinstance(overrides, Iterable):
                 for override in overrides:
                     overridden_properties[subj_class].add(override)
+                    for subclass in subclasses(subj_class):
+                        overridden_properties[subclass].add(override)
             else:
                 overridden_properties[subj_class].add(overrides)
+                for subclass in subclasses(subj_class):
+                    overridden_properties[subclass].add(overrides)
 
     prop.obj_class.clear()
     if isinstance(obj_class, Iterable):
@@ -1196,6 +1282,11 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 def construct_properties():
     # Generic Statement attached to Factoid
+    
+    genericrelationship_person = build_property("Verwandte Personen", "has relationship", GenericRelationship, Person)
+    
+    membership_of_group_person = build_property("Mitglied", "has membership", GroupMembership, Person)
+    membership_of_group_group = build_property("Organisation oder Gruppe", "has membership", GroupMembership, [*subclasses(GroupOfPersons), Organisation])
 
     armour_has_armour_type = build_property(
         "Harnisches-Waffentyp",
@@ -1249,7 +1340,7 @@ def construct_properties():
     )
 
     text_authored = build_property(
-        "verfasster Text", "was authored in", Authoring, subclasses(TextualWork)
+        "verfasster Text", "was authored in", Authoring, subclasses(TextualWork), overrides=creation_act_thing_created
     )
 
     printed_work_printed = build_property(
@@ -1364,18 +1455,34 @@ def construct_properties():
         "Ausführende",
         "involved in task performance",
         PerformanceOfTask,
-        [Person, *subclasses(Organisation), GroupOfPersons],
+        [Person, *subclasses(Organisation), GroupOfPersons]
     )
 
     performance_of_work_work = build_property(
         "aufgeführtes Werk", "was performed in", PerformanceOfWork, [MusicWork, Poem]
     )
+    
+    performance_of_work_place = build_property(
+        "Ort der Aufführung", "is location of performance", PerformanceOfWork, Place, overrides=[activity_has_place]
+    )
+    
+    
+    
+    text_performance_work = build_property(
+        "aufgeführtes Text", "was performed in", TextualPerformance, subclasses(TextualWork), overrides=[performance_of_work_work])
+    
     performance_of_work_person_group = build_property(
         "Aufführende",
         "involved in performance of work",
         PerformanceOfWork,
-        [Person, *subclasses(Organisation)],
+        [Person, *subclasses(Organisation)], overrides=[activity_carried_out_by],
     )
+    
+    performance_of_work_attendees = build_property(
+        "Aufführungsteilnehmer", "attended performance", PerformanceOfWork, [Person, GroupOfPersons, Organisation], overrides=activity_has_place
+    )
+
+
 
     role_occupation_role = build_property(
         "Amt", "role occupied in", RoleOccupation, Role

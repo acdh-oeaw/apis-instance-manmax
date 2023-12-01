@@ -1,5 +1,5 @@
 import apis_ontology.django_init
-
+from collections import deque
 import datetime
 import json
 
@@ -18,6 +18,7 @@ from apis_core.apis_relations.models import Property
 from apis_ontology.models import (
     Factoid,
     Typology,
+    ManMaxTempEntityClass,
     construct_properties,
     overridden_properties,
 )
@@ -117,6 +118,17 @@ def build_relation_to_types(model_class):
     return relations_to_entities, relations_to_statements
 
 
+def get_parent_classes(model_class):
+    parent_classes = deque()
+    for c in model_class.mro():
+        if c is ManMaxTempEntityClass:
+            break
+        if c is model_class:
+            continue
+        parent_classes.appendleft(c.__name__.lower())
+    return list(parent_classes)
+    
+
 def build_model_config_dict(model_class):
     relations_to_entities, relations_to_statements = build_relation_to_types(
         model_class
@@ -124,13 +136,16 @@ def build_model_config_dict(model_class):
     return {
         "entity_type": model_class.__entity_type__,
         "entity_group": model_class.__entity_group__,
+        "zotero_reference": getattr(model_class, "__zotero_reference__", False),
         "fields": build_field_dict(model_class),
         "relations_to_entities": relations_to_entities,
         "relations_to_statements": relations_to_statements,
         "model_class": model_class,
         "verbose_name": model_class._meta.verbose_name,
         "verbose_name_plural": model_class._meta.verbose_name_plural,
-        "description": model_class.__doc__
+        "description": model_class.__doc__,
+        "parent_classes": get_parent_classes(model_class),
+        "subclasses": [c.__name__.lower() for c in model_class.__subclasses__()]
     }
 
 
@@ -146,7 +161,7 @@ model_config = build_model_config()
 
 if __name__ == "__main__":
     construct_properties()
-    # ic(overridden_properties)
+    print(overridden_properties)
     model_config = build_model_config()
 
     with open("model_config.json", "w") as f:

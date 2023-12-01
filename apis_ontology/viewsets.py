@@ -57,6 +57,9 @@ def get_unpack_statement(obj):
                 "label": rel_obj.name,
             }
         )
+        for related_statement_name in related_obj_def["relations_to_statements"]:
+            if related_statement_name not in current_obj_dict:
+                current_obj_dict[related_statement_name] = [{}]
 
         return_dict[rel_name].append(current_obj_dict)
 
@@ -69,7 +72,7 @@ def get_unpack_factoid(pk):
     # ic(ref.__dict__)
     reference = {
         "id": ref.bibs_url,
-        "text": create_html_citation_from_csl_data_string(ref.bibtex),
+        #"text": create_html_citation_from_csl_data_string(ref.bibtex),
         "pages_start": ref.pages_start,
         "pages_end": ref.pages_end,
         "folio": ref.folio,
@@ -95,6 +98,9 @@ def create_parse_statements(statements):
     created_statements = []
     for statement in statements:
         try:
+            if not statement.get("__object_type__"):
+                print("missing statement type here")
+                raise Exception("No Statement type: skip")
             object_type_config = model_config[statement["__object_type__"]]
         except Exception as e:
             continue
@@ -134,21 +140,24 @@ def create_parse_statements(statements):
                 property_model = object_type_config["relations_to_statements"][
                     relation_name
                 ]["property_class"]
-
-                related_statements = create_parse_statements(
-                    [
-                        related_item
-                        for related_item in related_entity_list
-                        if model_config[related_item["__object_type__"]]["entity_type"]
-                        == "Statements"
-                    ]
-                )
-
-                for related_statement in related_statements:
-                    tt = TempTriple(
-                        subj=statement_obj, obj=related_statement, prop=property_model
+                try:
+                    related_statements = create_parse_statements(
+                        [
+                            related_item
+                            for related_item in related_entity_list
+                            if model_config[related_item["__object_type__"]]["entity_type"]
+                            == "Statements"
+                        ]
                     )
-                    tt.save()
+
+                    for related_statement in related_statements:
+                        tt = TempTriple(
+                            subj=statement_obj, obj=related_statement, prop=property_model
+                        )
+                        tt.save()
+                except Exception as e:
+                    continue
+                    
 
     return created_statements
 
@@ -159,6 +168,7 @@ def create_parse_factoid(data):
 
     for statement in data["has_statements"]:
         if not statement.get("__object_type__"):
+            print("ERROR HERE")
             raise Exception("A statement type must be selected")
 
     statements = create_parse_statements(data["has_statements"])
@@ -221,6 +231,7 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
 
     for id, statement in incoming_statements.items():
         if not statement.get("__object_type__"):
+            print("No statement type selected", statement)
             raise Exception("No statement type selected")
 
     for tt in temp_triples_in_db:
@@ -469,7 +480,11 @@ class SolidJsView(TemplateView):
 
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
+        print(request.data)
+       
+        
         object_model_config = model_config[entity_type]
+        
         fields = {
             k: v for k, v in request.data.items() if k in object_model_config["fields"]
         }
@@ -497,6 +512,21 @@ class EntityViewSet(viewsets.ViewSet):
                 tt = TempTriple(subj=new_entity, obj=obj, prop=property)
                 tt.save()
 
+        
+        if object_model_config["zotero_reference"]:
+            if source_id := request.data.get("source", {}).get("id"):
+                
+                ref = Reference(
+                    bibs_url=source_id,
+                    bibtex=get_bibtex_from_url(source_id),
+                    pages_start=None,
+                    pages_end=None,
+                    folio=None,
+                    object_id=new_entity.pk,
+                    content_type=get_contenttype_of_class(entity_class),
+                )
+                ref.save()
+        
         return Response(
             {
                 "__object_type__": new_entity.__class__.__name__.lower(),
