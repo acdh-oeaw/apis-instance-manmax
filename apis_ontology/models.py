@@ -573,12 +573,12 @@ class ParticipationInEvent(GenericStatement):
 @reversion.register(follow=["genericstatement_ptr"])
 class UtilisationInEvent(GenericStatement):
     """Describes the utilisation of any object in an event"""
-    __entity_group__ = GENERIC
+    __entity_group__ = ARMOURING
     __entity_type__ = STATEMENT
 
     class Meta:
-        verbose_name = "Verwendung"
-        verbose_name_plural = "Verwendungen"
+        verbose_name = "Verwendung von Harnisch/Waffe"
+        verbose_name_plural = "Verwendungen von Harnischen/Waffen"
 
 
 @reversion.register(follow=["genericstatement_ptr"])
@@ -1194,12 +1194,40 @@ class MusicPerformance(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Verschreibung(GenericStatement):
+    """Describes the giving of a Verschreibungsobjekt (income or taxes, possession of a place, person, object) to a Person for a period of time"""
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
-      
+    
     class Meta:
         verbose_name = "Verschreibung"
         verbose_name_plural = "Verschreibungen"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class DebtOwed(GenericStatement):
+    """Describes the owing of debt by one Person/Organisation to another Person/Organisation"""
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+    
+    amount = models.CharField(max_length=255, verbose_name="Betrag", blank=True, null=True)
+    currency = models.CharField(max_length=255, verbose_name="Währung", blank=True, null=True)
+    reason_for_debt = models.CharField(max_length=1000, verbose_name="Grund für die Verschuldung", blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Schulden"
+        verbose_name_plural = "Schulden"
+        
+@reversion.register(follow=["tempentityclass_ptr"])
+class TaxesAndIncome(ManMaxTempEntityClass):
+    """The taxes/income from a place"""
+    __entity_group__ = GENERIC
+    __entity_type__ = ENTITY
+    
+    value = models.CharField(max_length=255, verbose_name="Betrag", blank=True)
+    currency = models.CharField(max_length=255, verbose_name="Währung", blank=True)
+    
+    class Meta:
+        verbose_name = "Steuern und Einnahmen"
+        verbose_name_plural = "Steuern und Einnahmen"
 
 @reversion.register(follow=["genericstatement_ptr"])
 class GenericRelationship(GenericStatement):  
@@ -1211,6 +1239,44 @@ class GenericRelationship(GenericStatement):
         verbose_name = "Generic Relationship"
         verbose_name_plural = "Generic Relationships"
         
+
+@reversion.register(follow=["genericstatement_ptr"])
+class TextualCitationAllusion(GenericStatement):
+    """Describes an allusion in one text to another text. The Source (Quelle) of the Factoid containing this statement may be the citing/alluding
+    text itself (in which case, it needs to be added to Zotero) or a different source ('Source X suggests Text A contains an allusion to Text B')"""
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    part_of_alluding_text = models.CharField(max_length=500, blank=True, null=True, verbose_name="Part of citing text")
+    part_of_alluded_to_text = models.CharField(max_length=500, blank=True, null=True, verbose_name="Part of cited text")
+    
+    class Meta:
+        verbose_name = "Textzitat/Textanspielung"
+        verbose_name_plural = "Textzitaten/Textanspielungen"
+        
+
+@reversion.register(follow=["genericstatement_ptr"])
+class DepicitionOfPersonInArt(GenericStatement):
+    """Describes the representation of a Person in an artistic work (optionally, the Person can be depicted as a Fictional Person, e.g. 'Maximilian
+     is depicted as Apollo')"""
+    __entity_group__ = ART
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Personendarstellung in Art"
+        verbose_name_plural = "Personendarstellungen in Art"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class ArtworkHasAdditionalName(GenericStatement):
+    """Describes the attribution of an additional name to an artwork, possibly by a Person"""
+    __entity_group__ = ART
+    __entity_type__ = STATEMENT
+    
+    additional_name = models.CharField(max_length=255, blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Kunstwerk hat zusätzlichen Namen"
+        verbose_name_plural = "Kunstwerke hat zusätzliche Namen"
 
 
 overridden_properties = defaultdict(lambda: set())
@@ -1338,13 +1404,15 @@ def construct_properties():
         subclasses(CreationAct),
         [*subclasses(PhysicalObject), *subclasses(ConceptualObject)],
     )
+    
+    textual_creation_act_text_created = build_property("erstellter Text", "was created in", TextualCreationAct, subclasses(TextualWork), overrides=creation_act_thing_created)
 
     text_authored = build_property(
-        "verfasster Text", "was authored in", Authoring, subclasses(TextualWork), overrides=creation_act_thing_created
+        "verfasster Text", "was authored in", Authoring, subclasses(TextualWork), overrides=[creation_act_thing_created, textual_creation_act_text_created]
     )
 
     printed_work_printed = build_property(
-        "gedrucktes Werk", "was printed in", Printing, subclasses(PrintedWork)
+        "gedrucktes Werk", "was printed in", Printing, subclasses(PrintedWork), overrides=[creation_act_thing_created, textual_creation_act_text_created]
     )
 
     secretarial_act_contributed_to = build_property(
@@ -1352,6 +1420,7 @@ def construct_properties():
         "was concerned in secretarial act",
         SecretarialAct,
         subclasses(TextualWork),
+        overrides=[creation_act_thing_created, textual_creation_act_text_created]
     )
 
     redacting_contributed_to = build_property(
@@ -1359,6 +1428,7 @@ def construct_properties():
         "was concerned in redacting",
         Redacting,
         subclasses(TextualWork),
+        overrides=[creation_act_thing_created, textual_creation_act_text_created]
     )
 
     preparation_of_conceptual_text_of = build_property(
@@ -1366,6 +1436,7 @@ def construct_properties():
         "was prepared as conceptual text in",
         PreparationOfConceptualText,
         subclasses(TextualWork),
+        overrides=[creation_act_thing_created, textual_creation_act_text_created]
     )
 
     assembly_of_composite_object = build_property(
@@ -1395,7 +1466,7 @@ def construct_properties():
         [Person, *subclasses(Organisation)],
     )
 
-    naming_of_person = build_property("genammte Person", "was named in", Naming, Person)
+    naming_of_person = build_property("genannte Person", "was named in", Naming, Person)
 
     gendering_of_person = build_property("person", "was gendered in", Gendering, Person)
 
@@ -1685,13 +1756,14 @@ def construct_properties():
         [Person, Organisation, Family],
     )
 
-    decoration_of_object_object = build_property(
+    repair_of_armour_object = build_property(
         "repariertes Objekt",
         "was repaired in",
         RepairOfArmour,
         [Armour, ArmourPart, Arms],
+        overrides=creation_act_thing_created
     )
-    decoration_of_object_person = build_property(
+    repair_of_armour_person = build_property(
         "Reparateur",
         "was involved in repair",
         RepairOfArmour,
@@ -1703,6 +1775,7 @@ def construct_properties():
         "was decorated in",
         DecorationOfArmour,
         [Armour, ArmourPart, Arms],
+        overrides=[creation_act_thing_created]
     )
     decoration_of_object_person = build_property(
         "Verzierer",
@@ -1777,3 +1850,27 @@ def construct_properties():
         overrides=[transportation_of_object_object],
     )
     # transportation_of_object_by = build_property("transported by", "was involved in transportation", TransportationOfObject, [Person, *subclasses(Organisation), Family, GroupOfPersons])
+
+    # Verschreibung
+    
+    verschreibung_person_giving = build_property("Aussteller", "gave Verschreibung", Verschreibung, [Person, *subclasses(Organisation), Family])
+    verschreibung_person_receiving = build_property("Empfänger", "received Verschreibung", Verschreibung, [Person, *subclasses(Organisation), Family])
+    verschreibung_object = build_property("Verschreibungsobjekt", "is object of Verschreibung", Verschreibung, [Person, Place, *subclasses(PhysicalObject), TaxesAndIncome])
+    verschreibung_reason = build_property("Grund für die Verschreibung", "is reason for Verschreibung", Verschreibung, [DebtOwed])
+    
+    taxes_and_income_from_place = build_property("aus dem Ort", "place is source of incoming", TaxesAndIncome, Place)
+    
+    debt_person_owing = build_property("Schuldner", "owes debt", DebtOwed, [Person, *subclasses(Organisation), Family])
+    debt_person_owed = build_property("Gläubiger", "is owed debt", DebtOwed, [Person, *subclasses(Organisation), Family])
+    
+    text_citation_citing_text = build_property("Zitat oder Anspielung auf Text", "text references other text in", TextualCitationAllusion, subclasses(TextualWork))
+    text_citation_cited_text = build_property("zitierter oder referenzierter Text", "text referenced in", TextualCitationAllusion, subclasses(TextualWork))
+    
+    depiction_of_person_in_art_art = build_property("Kunstwerk", "contains depiction", DepicitionOfPersonInArt, ArtisticWork)
+    depiction_of_person_person_depicted = build_property("dargestellte Person", "has depiction", DepicitionOfPersonInArt, Person)
+    depiction_of_person_depicted_as = build_property("Person dargestellt als", "is depicted in", DepicitionOfPersonInArt, [Person, FictionalPerson])
+    depiction_of_person_in_place = build_property("Ort an dem die Person dargestellt ist", "is location of depiction", DepicitionOfPersonInArt, [Place, FictionalPlace])
+
+    
+    artwork_has_additional_name_artwork = build_property("Kunstwerk", "has alternative naming", ArtworkHasAdditionalName, ArtisticWork)
+    artwork_has_additional_name_named_by = build_property("Kunstwerk benannt von", "involved in naming artwork", ArtworkHasAdditionalName, [Person, *subclasses(Organisation)])
