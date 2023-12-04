@@ -65,7 +65,12 @@
             <span class="mr-4"><small>Created when:</small> {{object.created_when}}</span>
             <span class="mr-4"><small>Modified by:</small> {{object.modified_by}}</span>
             <span class="mr-4"><small>Modified when:</small> {{object.modified_when}}</span>
+            {% if entity_type == "factoid" %}
+            <span class="mr-4"><a href="/manmax/factoid-builder/edit/{{object.pk}}" class="btn btn-primary">
+  Open with Factoid Builder</a></span>
+            {% endif %}
         </div>
+        
       <div class="col-md-2">
         {% if object.get_next_url %}
           <h2>
