@@ -72,7 +72,7 @@ def get_unpack_factoid(pk):
     # ic(ref.__dict__)
     reference = {
         "id": ref.bibs_url,
-        #"text": create_html_citation_from_csl_data_string(ref.bibtex),
+        "text": create_html_citation_from_csl_data_string(ref.bibtex),
         "pages_start": ref.pages_start,
         "pages_end": ref.pages_end,
         "folio": ref.folio,
