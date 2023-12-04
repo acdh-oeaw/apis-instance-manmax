@@ -68,15 +68,18 @@ def get_unpack_statement(obj):
 
 def get_unpack_factoid(pk):
     obj = Factoid.objects.get(pk=pk)
-    ref = Reference.objects.get(object_id=pk)
-    # ic(ref.__dict__)
-    reference = {
-        "id": ref.bibs_url,
-        "text": create_html_citation_from_csl_data_string(ref.bibtex),
-        "pages_start": ref.pages_start,
-        "pages_end": ref.pages_end,
-        "folio": ref.folio,
-    }
+    try:
+        ref = Reference.objects.get(object_id=pk)
+        # ic(ref.__dict__)
+        reference = {
+            "id": ref.bibs_url,
+            "text": create_html_citation_from_csl_data_string(ref.bibtex),
+            "pages_start": ref.pages_start,
+            "pages_end": ref.pages_end,
+            "folio": ref.folio,
+        }
+    except:
+        reference = None
 
     # print(str(ref), ref.bibtex)
     # reference["bibtex"] = json.loads(reference["bibtex"])
@@ -145,19 +148,22 @@ def create_parse_statements(statements):
                         [
                             related_item
                             for related_item in related_entity_list
-                            if model_config[related_item["__object_type__"]]["entity_type"]
+                            if model_config[related_item["__object_type__"]][
+                                "entity_type"
+                            ]
                             == "Statements"
                         ]
                     )
 
                     for related_statement in related_statements:
                         tt = TempTriple(
-                            subj=statement_obj, obj=related_statement, prop=property_model
+                            subj=statement_obj,
+                            obj=related_statement,
+                            prop=property_model,
                         )
                         tt.save()
                 except Exception as e:
                     continue
-                    
 
     return created_statements
 
@@ -348,10 +354,10 @@ def edit_parse_factoid(data, pk):
     factoid.save()
 
     reference_data = data["source"]
-  
+
     # When updating a reference, get the old references
     reference = Reference.objects.get(object_id=factoid.pk)
-    
+
     # And then change the start and end pages and folio
     reference.pages_start = reference_data.get("pages_start", None)
     reference.pages_end = reference_data.get("pages_end", None)
@@ -362,8 +368,7 @@ def edit_parse_factoid(data, pk):
         reference.bibs_url = reference_data["id"]
         reference.bibtex = get_bibtex_from_url(reference_data["id"])
     reference.save()
-    
-    
+
     has_statement_prop = Property.objects.get(
         subj_class=get_contenttype_of_class(Factoid), name_forward="has_statement"
     )
@@ -396,14 +401,11 @@ class AutocompleteViewSet(viewsets.ViewSet):
             ]
 
         search_items = request.query_params["q"].lower().split(" ")
-        
+
         q = Q()
         for si in search_items:
             q &= Q(name__icontains=si)
-        
-        
-        
-        
+
         results = []
         for model in relatable_models:
             matches = [
@@ -425,12 +427,11 @@ class AutocompleteViewSet(viewsets.ViewSet):
 class FactoidViewSet(viewsets.ViewSet):
     def list(self, request):
         print(request.user)
-        
-        
+
         factoids = Factoid.objects.filter(name__icontains=request.query_params["q"])
         if request.query_params.get("currentUser"):
             factoids = factoids.filter(created_by=request.user.username)
-            
+
         factoids = factoids.order_by("-modified_when")
         factoids_serializable = [
             {
@@ -481,10 +482,9 @@ class SolidJsView(TemplateView):
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
         print(request.data)
-       
-        
+
         object_model_config = model_config[entity_type]
-        
+
         fields = {
             k: v for k, v in request.data.items() if k in object_model_config["fields"]
         }
@@ -512,10 +512,8 @@ class EntityViewSet(viewsets.ViewSet):
                 tt = TempTriple(subj=new_entity, obj=obj, prop=property)
                 tt.save()
 
-        
         if object_model_config["zotero_reference"]:
             if source_id := request.data.get("source", {}).get("id"):
-                
                 ref = Reference(
                     bibs_url=source_id,
                     bibtex=get_bibtex_from_url(source_id),
@@ -526,7 +524,7 @@ class EntityViewSet(viewsets.ViewSet):
                     content_type=get_contenttype_of_class(entity_class),
                 )
                 ref.save()
-        
+
         return Response(
             {
                 "__object_type__": new_entity.__class__.__name__.lower(),
@@ -694,43 +692,50 @@ class PersonViewSet(viewsets.ViewSet):
                 "id": new_entity.id,
             }
         )
-        
 
 
 def sort_func(q, match):
     q_index = match["name"].lower().index(q) + ord(match["name"][0])
     return q_index
-    
+
 
 @authentication_classes([])
 @permission_classes([])
 class EdiarumPersonViewset(viewsets.ViewSet):
     def list(self, request):
         if not request.query_params.get("q", None):
-            return Response({"message": "A query parameter must be provided"}, status=401)
+            return Response(
+                {"message": "A query parameter must be provided"}, status=401
+            )
         q = request.query_params["q"].lower()
-        persons = [model_to_dict(p) for p in Person.objects.filter(name__icontains=q)[0:100]]
-     
+        persons = [
+            model_to_dict(p) for p in Person.objects.filter(name__icontains=q)[0:100]
+        ]
+
         persons.sort(key=lambda match: sort_func(q, match))
-        response =  render(request, "ediarum/list.xml", context={"data": persons})
+        response = render(request, "ediarum/list.xml", context={"data": persons})
         response["content-type"] = "application/xml"
         return response
 
+
 @authentication_classes([])
-@permission_classes([])   
+@permission_classes([])
 class EdiarumPlaceViewset(viewsets.ViewSet):
     def list(self, request):
         if not request.query_params.get("q", None):
-            return Response({"message": "A query parameter must be provided"}, status=401)
-        
+            return Response(
+                {"message": "A query parameter must be provided"}, status=401
+            )
+
         q = request.query_params["q"].lower()
-        places = [model_to_dict(p) for p in Place.objects.filter(name__icontains=q)[0:100]]
+        places = [
+            model_to_dict(p) for p in Place.objects.filter(name__icontains=q)[0:100]
+        ]
 
         places.sort(key=lambda match: match["name"].lower().index(q))
         response = render(request, "ediarum/list.xml", context={"data": places})
         response["content-type"] = "application/xml"
         return response
-        
 
 
 if __name__ == "__main__":
