@@ -94,6 +94,7 @@ def get_unpack_factoid(pk):
         "source": reference,
         "has_statements": statements["has_statement"],
     }
+    print(return_data)
     return return_data
 
 
@@ -404,7 +405,8 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
         q = Q()
         for si in search_items:
-            q &= Q(name__icontains=si)
+            q &= (Q(name__icontains=si) | Q(internal_notes__icontains=si))
+            
 
         results = []
         for model in relatable_models:
@@ -417,9 +419,16 @@ class AutocompleteViewSet(viewsets.ViewSet):
                 for match in model.objects.filter(q)
             ]
             results += matches
+            
+        def sort_func(match):
+            try:
+                return match["label"].lower().index(search_items[0])
+            except:
+                return 100
+            
 
         # TODO: figure out why this sort does not work...
-        results.sort(key=lambda match: match["label"].lower().index(search_items[0]))
+        results.sort(key=sort_func)
 
         return Response(results)
 
