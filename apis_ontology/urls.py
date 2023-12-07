@@ -51,6 +51,9 @@ custom_url_patterns = [
         name="solidedit",
     ),
     path(
+        "manmax/factoid-builder/build-example", login_required(SolidJsView.as_view()), name="example"
+    ),
+    path(
         "manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"
     ),
     path(
