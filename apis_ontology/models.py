@@ -1194,6 +1194,7 @@ class MusicPerformance(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Verschreibung(GenericStatement):
+    """beschreibt die Vergabe eines Besitzrechtes als Bürgschaft für eine Geldleihe."""
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
       
