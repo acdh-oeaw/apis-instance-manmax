@@ -23,7 +23,7 @@ import datetime
 
 start = datetime.datetime.now()
 
-person = Person.objects.filter(name__icontains="THIS JOHN SMITH").first()
+person = Person.objects.filter(name__icontains="maximilian").first()
 person = TempTriple.objects.filter(obj=person)
 person_factoids = {recursive_get_factoid(tt.subj) for tt in person}
 person_factoids_unpacked = [get_unpack_factoid(f.pk) for f in person_factoids]

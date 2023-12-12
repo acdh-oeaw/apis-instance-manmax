@@ -1263,8 +1263,8 @@ class DepicitionOfPersonInArt(GenericStatement):
     __entity_type__ = STATEMENT
     
     class Meta:
-        verbose_name = "Personendarstellung in Art"
-        verbose_name_plural = "Personendarstellungen in Art"
+        verbose_name = "Personendarstellung in Kunst"
+        verbose_name_plural = "Personendarstellungen in Kunst"
 
 @reversion.register(follow=["genericstatement_ptr"])
 class ArtworkHasAdditionalName(GenericStatement):
@@ -1546,7 +1546,7 @@ def construct_properties():
         "Aufführende",
         "involved in performance of work",
         PerformanceOfWork,
-        [Person, *subclasses(Organisation)], overrides=[activity_carried_out_by],
+        [Person, *subclasses(Organisation), GroupOfPersons], overrides=[activity_carried_out_by],
     )
     
     performance_of_work_attendees = build_property(

@@ -435,11 +435,21 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
 class FactoidViewSet(viewsets.ViewSet):
     def list(self, request):
-        print(request.user)
+        search_tokens = request.query_params.get("q", "").lower().split(" ")
+        if not search_tokens:
+            return Response({"message", "No search string"}, status=401)
 
-        factoids = Factoid.objects.filter(name__icontains=request.query_params["q"])
+        q = Q()
+        for search_token in search_tokens:
+            q &= Q(name__icontains=search_token)
+        
+        factoids = Factoid.objects.filter(q)
+        
+        
         if request.query_params.get("currentUser"):
             factoids = factoids.filter(created_by=request.user.username)
+            
+            
 
         factoids = factoids.order_by("-modified_when")
         factoids_serializable = [
