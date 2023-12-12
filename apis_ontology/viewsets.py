@@ -1,7 +1,7 @@
 import apis_ontology.django_init
 
 import json
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 from django.db import transaction
 from django.views.generic import TemplateView
@@ -20,6 +20,7 @@ from django.shortcuts import render
 from apis_ontology.model_config import model_config
 from apis_ontology.utils import create_html_citation_from_csl_data_string
 from django.db.models import Q
+
 
 
 FIELDS_TO_EXCLUDE = [
@@ -755,6 +756,10 @@ class EdiarumPlaceViewset(viewsets.ViewSet):
         response = render(request, "ediarum/list.xml", context={"data": places})
         response["content-type"] = "application/xml"
         return response
+
+class LeaderboardViewSet(viewsets.ViewSet):
+    def list(self, request):
+        return Response(Counter(f.created_by for f in Factoid.objects.all()))
 
 
 if __name__ == "__main__":

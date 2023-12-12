@@ -8,7 +8,8 @@ from .viewsets import (
     EntityViewSet,
     PersonViewSet,
     EdiarumPersonViewset,
-    EdiarumPlaceViewset
+    EdiarumPlaceViewset,
+    LeaderboardViewSet
 )
 from django.urls import path, re_path
 
@@ -54,12 +55,21 @@ custom_url_patterns = [
         "manmax/factoid-builder/build-example", login_required(SolidJsView.as_view()), name="example"
     ),
     path(
+        "manmax/factoid-builder/leaderboard", login_required(SolidJsView.as_view()), name="leaderboardfrontend"
+    ),
+    path(
         "manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"
     ),
+    
     path(
         "manmax/autocomplete/<str:subj_entity_type>/<str:relation_name>",
         login_required(AutocompleteViewSet.as_view({"get": "list"})),
         name="autocomplete",
+    ),
+    path(
+        "manmax/leaderboard/",
+        login_required(LeaderboardViewSet.as_view({"get": "list"})),
+        name="list_viewset",
     ),
     path(
         "manmax/factoids",
