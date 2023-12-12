@@ -1,7 +1,7 @@
 import apis_ontology.django_init
 
 import json
-from collections import defaultdict, Counter
+from collections import defaultdict, Counter, OrderedDict
 
 from django.db import transaction
 from django.views.generic import TemplateView
@@ -759,7 +759,7 @@ class EdiarumPlaceViewset(viewsets.ViewSet):
 
 class LeaderboardViewSet(viewsets.ViewSet):
     def list(self, request):
-        return Response(Counter(f.created_by for f in Factoid.objects.all()))
+        return Response(OrderedDict(Counter(f.created_by for f in Factoid.objects.all()).most_common()))
 
 
 if __name__ == "__main__":
