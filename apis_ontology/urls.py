@@ -9,7 +9,8 @@ from .viewsets import (
     PersonViewSet,
     EdiarumPersonViewset,
     EdiarumPlaceViewset,
-    LeaderboardViewSet
+    EdiarumOrganisationViewset,
+    LeaderboardViewSet,
 )
 from django.urls import path, re_path
 
@@ -34,6 +35,12 @@ def login_required(view):
 
 custom_url_patterns = [
     path(
+        "ediarum/organisation/",
+        EdiarumOrganisationViewset.as_view(
+            {"get": "list"}, name="ediarum-organisation"
+        ),
+    ),
+    path(
         "ediarum/person/",
         EdiarumPersonViewset.as_view({"get": "list"}, name="ediarum-person"),
     ),
@@ -52,15 +59,18 @@ custom_url_patterns = [
         name="solidedit",
     ),
     path(
-        "manmax/factoid-builder/build-example", login_required(SolidJsView.as_view()), name="example"
+        "manmax/factoid-builder/build-example",
+        login_required(SolidJsView.as_view()),
+        name="example",
     ),
     path(
-        "manmax/factoid-builder/leaderboard", login_required(SolidJsView.as_view()), name="leaderboardfrontend"
+        "manmax/factoid-builder/leaderboard",
+        login_required(SolidJsView.as_view()),
+        name="leaderboardfrontend",
     ),
     path(
         "manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"
     ),
-    
     path(
         "manmax/autocomplete/<str:subj_entity_type>/<str:relation_name>",
         login_required(AutocompleteViewSet.as_view({"get": "list"})),

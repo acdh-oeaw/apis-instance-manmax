@@ -10,7 +10,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from apis_core.apis_relations.models import TempTriple, Property
-from apis_ontology.models import Factoid, Gendering, Naming, Person, Place
+from apis_ontology.models import Factoid, Gendering, Naming, Person, Place, Organisation
 from django.forms.models import model_to_dict
 from apis_core.utils.caching import get_contenttype_of_class, get_entity_class_of_name
 from apis_bibsonomy.models import Reference
@@ -750,6 +750,25 @@ class EdiarumPlaceViewset(viewsets.ViewSet):
         q = request.query_params["q"].lower()
         places = [
             model_to_dict(p) for p in Place.objects.filter(name__icontains=q)[0:100]
+        ]
+
+        places.sort(key=lambda match: match["name"].lower().index(q))
+        response = render(request, "ediarum/list.xml", context={"data": places})
+        response["content-type"] = "application/xml"
+        return response
+    
+@authentication_classes([])
+@permission_classes([])
+class EdiarumOrganisationViewset(viewsets.ViewSet):
+    def list(self, request):
+        if not request.query_params.get("q", None):
+            return Response(
+                {"message": "A query parameter must be provided"}, status=401
+            )
+
+        q = request.query_params["q"].lower()
+        places = [
+            model_to_dict(p) for p in Organisation.objects.filter(name__icontains=q)[0:100]
         ]
 
         places.sort(key=lambda match: match["name"].lower().index(q))
