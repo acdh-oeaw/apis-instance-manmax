@@ -79,7 +79,8 @@ def get_unpack_factoid(pk):
             "pages_end": ref.pages_end,
             "folio": ref.folio,
         }
-    except:
+    except Exception as e:
+        print(e)
         reference = None
 
     # print(str(ref), ref.bibtex)
@@ -679,9 +680,11 @@ class PersonViewSet(viewsets.ViewSet):
 
             reference_data = request.data["source"]
             print(reference_data)
+            print(get_bibtex_from_url(reference_data["id"]))
             ref = Reference(
-                bibs_url=reference_data["id"],
-                bibtex=reference_data["text"],
+                bibs_url=reference_data["id"],                                                                                                                             
+                bibtex=get_bibtex_from_url(reference_data["id"]),
+
                 pages_start=reference_data.get("pages_start", None),
                 pages_end=reference_data.get("pages_end", None),
                 folio=reference_data.get("folio", None),
