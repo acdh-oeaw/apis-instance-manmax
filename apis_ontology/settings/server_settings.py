@@ -184,3 +184,5 @@ for template in TEMPLATES:
     )
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+
+#INSTALLED_APPS.remove("apis_ontology")

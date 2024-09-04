@@ -92,9 +92,19 @@ def get_unpack_factoid(pk):
 
     return_data = {
         "id": obj.id,
+        "review": {
+            "reviewed": obj.reviewed,
+            "reviewed_by": obj.review_by,
+            "review_notes": obj.review_notes,
+            "problem_flagged": obj.problem_flagged
+        },
         "name": obj.name,
         "source": reference,
         "has_statements": statements["has_statement"],
+        "created_by": obj.created_by,
+        "created_when": obj.created_when,
+        "modified_by": obj.modified_by,
+        "modified_when": obj.modified_when
     }
     print(return_data)
     return return_data
@@ -349,11 +359,23 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
     return created_statements
 
 
-def edit_parse_factoid(data, pk):
+def edit_parse_factoid(data, pk, user=""):
     if data["id"] != pk:
         raise Exception
     factoid = Factoid.objects.get(pk=data["id"])
     factoid.name = data["name"]
+    
+    if data.get("review", {}).get("reviewed") and (factoid.reviewed != data.get("review", {}).get("reviewed") or factoid.review_notes != data.get("review", {}).get("review_notes") or factoid.problem_flagged != data.get("review", {}).get("problem_flagged")):
+        if factoid.review and ", " in factoid.review and factoid.review_by.split(", ")[-1] != str(user):
+            factoid.review_by = str(factoid.review_by) + ", " + str(user) if factoid.review_by else str(user)
+        else: 
+            factoid.review_by  = str(user)
+    
+    factoid.problem_flagged = data.get("review", {}).get("problem_flagged") or False
+    factoid.reviewed = data.get("review", {}).get("reviewed") or False
+    factoid.review_notes = data.get("review", {}).get("review_notes") or ""
+    
+    
     factoid.save()
 
     reference_data = data["source"]
@@ -445,6 +467,7 @@ class FactoidViewSet(viewsets.ViewSet):
         for search_token in search_tokens:
             q &= Q(name__icontains=search_token)
         
+        
         factoids = Factoid.objects.filter(q)
         
         
@@ -462,6 +485,8 @@ class FactoidViewSet(viewsets.ViewSet):
                 "created_when": f.created_when,
                 "modified_by": f.modified_by,
                 "modified_when": f.modified_when,
+                "reviewed": f.reviewed,
+                "problem_flagged": f.problem_flagged
             }
             for f in factoids
         ]
@@ -484,9 +509,10 @@ class FactoidViewSet(viewsets.ViewSet):
             return Response(get_unpack_factoid(pk=factoid.pk))
 
     def update(self, request, pk=None):
+        print(request.user)
         with transaction.atomic():
             try:
-                factoid = edit_parse_factoid(request.data, pk)
+                factoid = edit_parse_factoid(request.data, pk, request.user)
             except Exception as e:
                 print("error", e)
                 return Response(
