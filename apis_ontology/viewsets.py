@@ -1,5 +1,3 @@
-import apis_ontology.django_init
-
 import json
 from collections import defaultdict, Counter, OrderedDict
 
@@ -21,7 +19,6 @@ from django.shortcuts import render
 from apis_ontology.model_config import model_config
 from apis_ontology.utils import create_html_citation_from_csl_data_string
 from django.db.models import Q
-
 
 
 FIELDS_TO_EXCLUDE = [
@@ -97,7 +94,7 @@ def get_unpack_factoid(pk):
             "reviewed": obj.reviewed,
             "reviewed_by": obj.review_by,
             "review_notes": obj.review_notes,
-            "problem_flagged": obj.problem_flagged
+            "problem_flagged": obj.problem_flagged,
         },
         "name": obj.name,
         "source": reference,
@@ -105,9 +102,9 @@ def get_unpack_factoid(pk):
         "created_by": obj.created_by,
         "created_when": obj.created_when,
         "modified_by": obj.modified_by,
-        "modified_when": obj.modified_when
+        "modified_when": obj.modified_when,
     }
-    #print(return_data)
+    # print(return_data)
     return return_data
 
 
@@ -119,7 +116,7 @@ def create_parse_statements(statements):
                 print("missing statement type here")
                 raise Exception("No Statement type: skip")
             object_type_config = model_config[statement["__object_type__"]]
-        except Exception as e:
+        except Exception:
             continue
 
         fields = {
@@ -176,7 +173,7 @@ def create_parse_statements(statements):
                             prop=property_model,
                         )
                         tt.save()
-                except Exception as e:
+                except Exception:
                     continue
 
     return created_statements
@@ -365,18 +362,29 @@ def edit_parse_factoid(data, pk, user=""):
         raise Exception
     factoid = Factoid.objects.get(pk=data["id"])
     factoid.name = data["name"]
-    
-    if data.get("review", {}).get("reviewed") and (factoid.reviewed != data.get("review", {}).get("reviewed") or factoid.review_notes != data.get("review", {}).get("review_notes") or factoid.problem_flagged != data.get("review", {}).get("problem_flagged")):
-        if factoid.review and ", " in factoid.review and factoid.review_by.split(", ")[-1] != str(user):
-            factoid.review_by = str(factoid.review_by) + ", " + str(user) if factoid.review_by else str(user)
-        else: 
-            factoid.review_by  = str(user)
-    
+
+    if data.get("review", {}).get("reviewed") and (
+        factoid.reviewed != data.get("review", {}).get("reviewed")
+        or factoid.review_notes != data.get("review", {}).get("review_notes")
+        or factoid.problem_flagged != data.get("review", {}).get("problem_flagged")
+    ):
+        if (
+            factoid.review
+            and ", " in factoid.review
+            and factoid.review_by.split(", ")[-1] != str(user)
+        ):
+            factoid.review_by = (
+                str(factoid.review_by) + ", " + str(user)
+                if factoid.review_by
+                else str(user)
+            )
+        else:
+            factoid.review_by = str(user)
+
     factoid.problem_flagged = data.get("review", {}).get("problem_flagged") or False
     factoid.reviewed = data.get("review", {}).get("reviewed") or False
     factoid.review_notes = data.get("review", {}).get("review_notes") or ""
-    
-    
+
     factoid.save()
 
     reference_data = data["source"]
@@ -411,6 +419,7 @@ def edit_parse_factoid(data, pk, user=""):
 
 from rest_framework.decorators import authentication_classes, permission_classes
 
+
 @authentication_classes([])
 @permission_classes([])
 class UsersViewSet(viewsets.ViewSet):
@@ -418,9 +427,10 @@ class UsersViewSet(viewsets.ViewSet):
         results = [user.username for user in User.objects.all()]
         return Response(results)
 
+
 class AutocompleteViewSet(viewsets.ViewSet):
     def list(self, request, subj_entity_type=None, relation_name=None):
-        #(subj_entity_type, model_config[subj_entity_type]["relations_to_entities"])
+        # (subj_entity_type, model_config[subj_entity_type]["relations_to_entities"])
         relatable_type_names = model_config[subj_entity_type]["relations_to_entities"][
             relation_name
         ]["allowed_types"]
@@ -436,8 +446,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
         q = Q()
         for si in search_items:
-            q &= (Q(name__icontains=si) | Q(internal_notes__icontains=si))
-            
+            q &= Q(name__icontains=si) | Q(internal_notes__icontains=si)
 
         results = []
         for model in relatable_models:
@@ -450,13 +459,12 @@ class AutocompleteViewSet(viewsets.ViewSet):
                 for match in model.objects.filter(q)
             ]
             results += matches
-            
+
         def sort_func(match):
             try:
                 return match["label"].lower().index(search_items[0])
             except:
                 return 100
-            
 
         # TODO: figure out why this sort does not work...
         results.sort(key=sort_func)
@@ -464,8 +472,8 @@ class AutocompleteViewSet(viewsets.ViewSet):
         return Response(results)
 
 
+PAGE_SIZE = 100
 
-PAGE_SIZE = 50
 
 class FactoidViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -476,14 +484,12 @@ class FactoidViewSet(viewsets.ViewSet):
         q = Q()
         for search_token in search_tokens:
             q &= Q(name__icontains=search_token)
-        
-        
+
         factoids = Factoid.objects.filter(q)
-        
-        
+
         if request.query_params.get("currentUser"):
             factoids = factoids.filter(created_by=request.user.username)
-            
+
         if statusFilter := request.query_params.get("status"):
             if statusFilter == "unchecked":
                 factoids = factoids.filter(reviewed=False)
@@ -491,40 +497,38 @@ class FactoidViewSet(viewsets.ViewSet):
                 factoids = factoids.filter(reviewed=True, problem_flagged=False)
             elif statusFilter == "error":
                 factoids = factoids.filter(reviewed=True, problem_flagged=True)
-            
+
         if userFilter := request.query_params.get("user"):
             factoids = factoids.filter(created_by=userFilter)
 
         count = factoids.count()
-        
+
         lower_bound = 0
         upper_bound = PAGE_SIZE
-        
+
         if page_number := request.query_params.get("page"):
             page_number = int(page_number)
             lower_bound = (page_number - 1) * PAGE_SIZE
             upper_bound = page_number * PAGE_SIZE
-            
-        
-        
+
         factoids = factoids.order_by("-modified_when")[lower_bound:upper_bound]
-        
-        
+
         factoids_serializable = {
             "count": count,
             "factoids": [
-            {
-                "id": f.id,
-                "name": f.name,
-                "created_by": f.created_by,
-                "created_when": f.created_when,
-                "modified_by": f.modified_by,
-                "modified_when": f.modified_when,
-                "reviewed": f.reviewed,
-                "problem_flagged": f.problem_flagged
-            }
-            for f in factoids
-        ]}
+                {
+                    "id": f.id,
+                    "name": f.name,
+                    "created_by": f.created_by,
+                    "created_when": f.created_when,
+                    "modified_by": f.modified_by,
+                    "modified_when": f.modified_when,
+                    "reviewed": f.reviewed,
+                    "problem_flagged": f.problem_flagged,
+                }
+                for f in factoids
+            ],
+        }
         return Response(factoids_serializable)
 
     def retrieve(self, request, pk=None):
@@ -544,7 +548,7 @@ class FactoidViewSet(viewsets.ViewSet):
             return Response(get_unpack_factoid(pk=factoid.pk))
 
     def update(self, request, pk=None):
-        #print(request.user)
+        # print(request.user)
         with transaction.atomic():
             try:
                 factoid = edit_parse_factoid(request.data, pk, request.user)
@@ -563,7 +567,7 @@ class SolidJsView(TemplateView):
 
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
-        #(request.data)
+        # (request.data)
 
         object_model_config = model_config[entity_type]
 
@@ -740,12 +744,11 @@ class PersonViewSet(viewsets.ViewSet):
                 factoid_to_naming_tt.save()
 
             reference_data = request.data["source"]
-            #print(reference_data)
-            #print(get_bibtex_from_url(reference_data["id"]))
+            # print(reference_data)
+            # print(get_bibtex_from_url(reference_data["id"]))
             ref = Reference(
-                bibs_url=reference_data["id"],                                                                                                                             
+                bibs_url=reference_data["id"],
                 bibtex=get_bibtex_from_url(reference_data["id"]),
-
                 pages_start=reference_data.get("pages_start", None),
                 pages_end=reference_data.get("pages_end", None),
                 folio=reference_data.get("folio", None),
@@ -820,7 +823,8 @@ class EdiarumPlaceViewset(viewsets.ViewSet):
         response = render(request, "ediarum/list.xml", context={"data": places})
         response["content-type"] = "application/xml"
         return response
-    
+
+
 @authentication_classes([])
 @permission_classes([])
 class EdiarumOrganisationViewset(viewsets.ViewSet):
@@ -832,7 +836,8 @@ class EdiarumOrganisationViewset(viewsets.ViewSet):
 
         q = request.query_params["q"].lower()
         places = [
-            model_to_dict(p) for p in Organisation.objects.filter(name__icontains=q)[0:100]
+            model_to_dict(p)
+            for p in Organisation.objects.filter(name__icontains=q)[0:100]
         ]
 
         places.sort(key=lambda match: match["name"].lower().index(q))
@@ -840,9 +845,14 @@ class EdiarumOrganisationViewset(viewsets.ViewSet):
         response["content-type"] = "application/xml"
         return response
 
+
 class LeaderboardViewSet(viewsets.ViewSet):
     def list(self, request):
-        return Response(OrderedDict(Counter(f.created_by for f in Factoid.objects.all()).most_common()))
+        return Response(
+            OrderedDict(
+                Counter(f.created_by for f in Factoid.objects.all()).most_common()
+            )
+        )
 
 
 if __name__ == "__main__":
