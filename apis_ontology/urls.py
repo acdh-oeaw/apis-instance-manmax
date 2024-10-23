@@ -11,6 +11,7 @@ from .viewsets import (
     EdiarumPlaceViewset,
     EdiarumOrganisationViewset,
     LeaderboardViewSet,
+    UsersViewSet
 )
 from django.urls import path, re_path
 
@@ -82,7 +83,12 @@ custom_url_patterns = [
         name="list_viewset",
     ),
     path(
-        "manmax/factoids",
+        "manmax/users/",
+        login_required(UsersViewSet.as_view({"get": "list"})),
+        name="list_users",
+    ),
+    path(
+        "manmax/factoids/",
         login_required(FactoidViewSet.as_view({"get": "list"})),
         name="list_factoid",
     ),

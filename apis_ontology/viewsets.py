@@ -3,6 +3,7 @@ import apis_ontology.django_init
 import json
 from collections import defaultdict, Counter, OrderedDict
 
+from django.contrib.auth.models import User
 from django.db import transaction
 from django.views.generic import TemplateView
 
@@ -106,7 +107,7 @@ def get_unpack_factoid(pk):
         "modified_by": obj.modified_by,
         "modified_when": obj.modified_when
     }
-    print(return_data)
+    #print(return_data)
     return return_data
 
 
@@ -410,10 +411,16 @@ def edit_parse_factoid(data, pk, user=""):
 
 from rest_framework.decorators import authentication_classes, permission_classes
 
+@authentication_classes([])
+@permission_classes([])
+class UsersViewSet(viewsets.ViewSet):
+    def list(self, request):
+        results = [user.username for user in User.objects.all()]
+        return Response(results)
 
 class AutocompleteViewSet(viewsets.ViewSet):
     def list(self, request, subj_entity_type=None, relation_name=None):
-        print(subj_entity_type, model_config[subj_entity_type]["relations_to_entities"])
+        #(subj_entity_type, model_config[subj_entity_type]["relations_to_entities"])
         relatable_type_names = model_config[subj_entity_type]["relations_to_entities"][
             relation_name
         ]["allowed_types"]
@@ -457,6 +464,9 @@ class AutocompleteViewSet(viewsets.ViewSet):
         return Response(results)
 
 
+
+PAGE_SIZE = 50
+
 class FactoidViewSet(viewsets.ViewSet):
     def list(self, request):
         search_tokens = request.query_params.get("q", "").lower().split(" ")
@@ -474,10 +484,35 @@ class FactoidViewSet(viewsets.ViewSet):
         if request.query_params.get("currentUser"):
             factoids = factoids.filter(created_by=request.user.username)
             
+        if statusFilter := request.query_params.get("status"):
+            if statusFilter == "unchecked":
+                factoids = factoids.filter(reviewed=False)
+            elif statusFilter == "checked":
+                factoids = factoids.filter(reviewed=True, problem_flagged=False)
+            elif statusFilter == "error":
+                factoids = factoids.filter(reviewed=True, problem_flagged=True)
             
+        if userFilter := request.query_params.get("user"):
+            factoids = factoids.filter(created_by=userFilter)
 
-        factoids = factoids.order_by("-modified_when")
-        factoids_serializable = [
+        count = factoids.count()
+        
+        lower_bound = 0
+        upper_bound = PAGE_SIZE
+        
+        if page_number := request.query_params.get("page"):
+            page_number = int(page_number)
+            lower_bound = (page_number - 1) * PAGE_SIZE
+            upper_bound = page_number * PAGE_SIZE
+            
+        
+        
+        factoids = factoids.order_by("-modified_when")[lower_bound:upper_bound]
+        
+        
+        factoids_serializable = {
+            "count": count,
+            "factoids": [
             {
                 "id": f.id,
                 "name": f.name,
@@ -489,7 +524,7 @@ class FactoidViewSet(viewsets.ViewSet):
                 "problem_flagged": f.problem_flagged
             }
             for f in factoids
-        ]
+        ]}
         return Response(factoids_serializable)
 
     def retrieve(self, request, pk=None):
@@ -509,7 +544,7 @@ class FactoidViewSet(viewsets.ViewSet):
             return Response(get_unpack_factoid(pk=factoid.pk))
 
     def update(self, request, pk=None):
-        print(request.user)
+        #print(request.user)
         with transaction.atomic():
             try:
                 factoid = edit_parse_factoid(request.data, pk, request.user)
@@ -528,7 +563,7 @@ class SolidJsView(TemplateView):
 
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
-        print(request.data)
+        #(request.data)
 
         object_model_config = model_config[entity_type]
 
@@ -705,8 +740,8 @@ class PersonViewSet(viewsets.ViewSet):
                 factoid_to_naming_tt.save()
 
             reference_data = request.data["source"]
-            print(reference_data)
-            print(get_bibtex_from_url(reference_data["id"]))
+            #print(reference_data)
+            #print(get_bibtex_from_url(reference_data["id"]))
             ref = Reference(
                 bibs_url=reference_data["id"],                                                                                                                             
                 bibtex=get_bibtex_from_url(reference_data["id"]),

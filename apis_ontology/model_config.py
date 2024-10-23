@@ -36,6 +36,7 @@ TYPE_LOOKUP = {
     models.DateField: datetime.date,
     models.DateTimeField: datetime.datetime,
     models.TextField: str,
+    models.JSONField: "json"
 }
 
 
@@ -49,7 +50,7 @@ def build_field_dict(model_class):
             and field.editable
         ):
             field_dict[field.attname] = {
-                "field_type": TYPE_LOOKUP[type(field)].__name__,
+                "field_type": TYPE_LOOKUP[type(field)] if TYPE_LOOKUP[type(field)] == "json" else TYPE_LOOKUP[type(field)].__name__,
                 "blank": field.blank,
                 "default": field.get_default(),
                 "verbose_name": field.verbose_name,
@@ -127,7 +128,28 @@ def get_parent_classes(model_class):
             continue
         parent_classes.appendleft(c.__name__.lower())
     return list(parent_classes)
+
+non_certainty_fields = {"id",
+    "name",
+    "internal_notes",
+    "start_date",
+    "start_start_date",
+    "end_start_date",
+    "end_date",
+    "start_end_date",
+    "end_end_date",
+    "notes",
+    "head_statement",
+    "certainty_values"
+    "certainty"}
+
+
+def build_certainty_value_template(model_class):
+    fields = {**build_field_dict(model_class), **build_relations_dict(model_class)}.keys()
     
+    fields = [field for field in fields if field not in non_certainty_fields]
+
+    return {field: {"certainty": 4, "notes": ""} for field in fields}
 
 def build_model_config_dict(model_class):
     relations_to_entities, relations_to_statements = build_relation_to_types(

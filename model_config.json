@@ -97,6 +97,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -224,6 +238,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -470,6 +498,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -610,6 +652,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -1189,6 +1245,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -1346,6 +1416,20 @@
                 "verbose_name": "head statement",
                 "help_text": ""
             },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
+            },
             "additional_name": {
                 "field_type": "str",
                 "blank": true,
@@ -1478,6 +1562,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -1622,6 +1720,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -1760,6 +1872,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -2003,6 +2129,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -2232,6 +2372,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             },
             "method": {
@@ -2888,6 +3042,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -3051,6 +3219,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -3199,6 +3381,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -3334,6 +3530,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -3457,6 +3667,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             },
             "amount": {
@@ -3612,6 +3836,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -3756,6 +3994,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -3986,6 +4238,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -4123,6 +4389,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             },
             "nature_of_dispute": {
@@ -4297,6 +4577,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -4436,6 +4730,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -4662,6 +4970,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -5204,6 +5526,20 @@
                 "verbose_name": "head statement",
                 "help_text": ""
             },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
+            },
             "gender": {
                 "field_type": "str",
                 "blank": true,
@@ -5454,6 +5790,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -5571,6 +5921,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -5711,6 +6075,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -5872,6 +6250,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -6418,6 +6810,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -6542,6 +6948,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -6766,6 +7186,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {},
@@ -6982,6 +7416,20 @@
                 "verbose_name": "head statement",
                 "help_text": ""
             },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
+            },
             "forename": {
                 "field_type": "str",
                 "blank": true,
@@ -7130,6 +7578,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -7395,6 +7857,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -7519,6 +7995,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -7681,6 +8171,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             },
             "parental_type": {
@@ -7849,6 +8353,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -7979,6 +8497,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             },
             "amount": {
@@ -8161,6 +8693,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -8303,6 +8849,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -8551,6 +9111,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -9096,6 +9670,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -9342,6 +9930,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -9478,6 +10080,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -9617,6 +10233,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -9755,6 +10385,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -10236,6 +10880,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -10469,6 +11127,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -10606,6 +11278,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             },
             "sibling_type": {
@@ -11002,6 +11688,20 @@
                 "verbose_name": "head statement",
                 "help_text": ""
             },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
+            },
             "part_of_alluding_text": {
                 "field_type": "str",
                 "blank": true,
@@ -11147,6 +11847,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -11289,6 +12003,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -11649,6 +12377,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -11808,6 +12550,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },
@@ -11977,6 +12733,20 @@
                 "default": true,
                 "verbose_name": "head statement",
                 "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
+                "help_text": ""
             }
         },
         "relations_to_entities": {
@@ -12102,6 +12872,20 @@
                 "blank": false,
                 "default": true,
                 "verbose_name": "head statement",
+                "help_text": ""
+            },
+            "certainty": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty",
+                "help_text": ""
+            },
+            "certainty_values": {
+                "field_type": "json",
+                "blank": false,
+                "default": null,
+                "verbose_name": "certainty values",
                 "help_text": ""
             }
         },

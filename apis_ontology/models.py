@@ -4,7 +4,11 @@ from dataclasses import dataclass
 from typing import Union, Iterator
 
 from django.db.models.signals import post_save, m2m_changed
+from django.contrib.postgres.fields import JSONField
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
+import pydantic
+
 
 import reversion
 from django.contrib.contenttypes.models import ContentType
@@ -91,9 +95,9 @@ class ManMaxTempEntityClass(TempEntityClass):
     class Meta:
         abstract = True
 
-    created_by = models.CharField(max_length=300, blank=True, editable=False)
+    created_by = models.CharField(max_length=300, blank=True, editable=False, db_index=True)
     created_when = models.DateTimeField(auto_now_add=True, editable=False)
-    modified_by = models.CharField(max_length=300, blank=True, editable=False)
+    modified_by = models.CharField(max_length=300, blank=True, editable=False, db_index=True)
     modified_when = models.DateTimeField(auto_now=True, editable=False)
     internal_notes = models.TextField(
         blank=True,
@@ -121,7 +125,7 @@ class ManMaxTempEntityClass(TempEntityClass):
 @reversion.register(follow=["tempentityclass_ptr"])
 class Factoid(ManMaxTempEntityClass):
     reviewed = models.BooleanField(default=False)
-    review_notes = models.TextField()
+    review_notes = models.TextField(blank=True, null=True)
     review_by = models.CharField(blank=True, max_length=50)
     problem_flagged = models.BooleanField(default=False)
 
@@ -316,6 +320,17 @@ class FictionalPlace(ConceptualObject):
 
 #### GENERIC STATEMENTS
 
+class CertaintyModel(pydantic.BaseModel):
+    certainty: int = pydantic.Field(le=4, ge=1, default=4)
+    notes: str = ""
+
+
+class CertaintyFieldModel(pydantic.RootModel[dict[str, CertaintyModel]]):
+    pass
+
+
+    
+
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class GenericStatement(ManMaxTempEntityClass):
@@ -325,6 +340,34 @@ class GenericStatement(ManMaxTempEntityClass):
     __entity_type__ = STATEMENT
 
     head_statement = models.BooleanField(default=True)
+    
+    certainty = models.JSONField(null=True)
+    certainty_values = models.JSONField(null=True)
+    
+    def build_certainty_value_blank(self):
+        from apis_ontology.model_config import build_certainty_value_template
+        if not self.certainty:
+            print(self.pk, "Building Statement-level certainty dict")
+            self.certainty = {"certainty": 4, "notes": ""}
+        else:
+            print(self.pk, "Statement-level certainty dict already exists")
+        if not self.certainty_values:
+            print(self.pk, "Building field-level certainty dicts")
+            self.certainty_values = build_certainty_value_template(self.self_contenttype.model_class())
+        else:
+            print(self.pk, "Field-level certainty dict already exists")
+        
+    def save(self, *args, **kwargs):
+        try:
+            CertaintyFieldModel.model_validate(self.certainty_values)
+            CertaintyModel.model_validate(self.certainty)
+        except pydantic.ValidationError:
+            raise ValidationError("Certainty Values could not be validated")
+        
+        super().save(*args, **kwargs)
+        
+    
+        
 
     class Meta:
         verbose_name = "Generic Statement"
