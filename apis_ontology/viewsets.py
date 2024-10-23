@@ -446,7 +446,9 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
         q = Q()
         for si in search_items:
-            q &= Q(name__icontains=si) | Q(internal_notes__icontains=si)
+            q &= Q(name__icontains=si)
+            if hasattr(relatable_models, "internal_notes"):
+                q |= Q(internal_notes__icontains=si)
 
         results = []
         for model in relatable_models:
