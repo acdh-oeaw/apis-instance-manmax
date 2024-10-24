@@ -474,7 +474,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
         return Response(results)
 
 
-PAGE_SIZE = 100
+PAGE_SIZE = 200
 
 
 class FactoidViewSet(viewsets.ViewSet):

@@ -1,11 +1,6 @@
 from collections.abc import Iterable
 from collections import defaultdict
-from dataclasses import dataclass
-from typing import Union, Iterator
 
-from django.db.models.signals import post_save, m2m_changed
-from django.contrib.postgres.fields import JSONField
-from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 import pydantic
 
@@ -15,10 +10,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from apis_core.apis_entities.models import TempEntityClass
-from apis_core.apis_relations.models import Property, Triple
-from apis_core.utils import caching
+from apis_core.apis_relations.models import Property
 
-from apis_ontology.helper_functions import remove_extra_spaces
 from apis_ontology.middleware.get_request import current_request
 
 # Entity categories
@@ -81,6 +74,7 @@ class ArmsType(Typology):
         verbose_name = "Harnisches-/Waffentyp"
         verbose_name_plural = "Harnisches-/Waffentypen"
 
+
 @reversion.register(follow=["tempentityclass_ptr"])
 class RightsToPlaceType(Typology):
     __entity_group__ = GENERIC
@@ -90,14 +84,19 @@ class RightsToPlaceType(Typology):
         verbose_name = "Rechte am Ortstyp"
         verbose_name_plural = "Rechte am Ortstypen"
 
+
 @reversion.register(follow=["tempentityclass_ptr"])
 class ManMaxTempEntityClass(TempEntityClass):
     class Meta:
         abstract = True
 
-    created_by = models.CharField(max_length=300, blank=True, editable=False, db_index=True)
+    created_by = models.CharField(
+        max_length=300, blank=True, editable=False, db_index=True
+    )
     created_when = models.DateTimeField(auto_now_add=True, editable=False)
-    modified_by = models.CharField(max_length=300, blank=True, editable=False, db_index=True)
+    modified_by = models.CharField(
+        max_length=300, blank=True, editable=False, db_index=True
+    )
     modified_when = models.DateTimeField(auto_now=True, editable=False)
     internal_notes = models.TextField(
         blank=True,
@@ -224,15 +223,17 @@ class ConceptualObject(ManMaxTempEntityClass):
         verbose_name = "Konzeptionelles Objekt"
         verbose_name_plural = "Konzeptionelle Objekte"
 
+
 @reversion.register(follow=["conceptualobject_ptr"])
 class RightsToPlace(ConceptualObject):
     __entity_group__ = GENERIC
     __entity_type__ = ENTITY
     __zotero_reference__ = False
-    
+
     class Meta:
         verbose_name = "Rechte am Ort"
         verbose_name_plural = "Rechte am Ort"
+
 
 @reversion.register(follow=["conceptualobject_ptr"])
 class CompositeConceptualObject(ConceptualObject):
@@ -320,6 +321,7 @@ class FictionalPlace(ConceptualObject):
 
 #### GENERIC STATEMENTS
 
+
 class CertaintyModel(pydantic.BaseModel):
     certainty: int = pydantic.Field(le=4, ge=1, default=4)
     notes: str = ""
@@ -327,9 +329,6 @@ class CertaintyModel(pydantic.BaseModel):
 
 class CertaintyFieldModel(pydantic.RootModel[dict[str, CertaintyModel]]):
     pass
-
-
-    
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -340,12 +339,13 @@ class GenericStatement(ManMaxTempEntityClass):
     __entity_type__ = STATEMENT
 
     head_statement = models.BooleanField(default=True)
-    
+
     certainty = models.JSONField(null=True)
     certainty_values = models.JSONField(null=True)
-    
+
     def build_certainty_value_blank(self):
         from apis_ontology.model_config import build_certainty_value_template
+
         if not self.certainty:
             print(self.pk, "Building Statement-level certainty dict")
             self.certainty = {"certainty": 4, "notes": ""}
@@ -353,21 +353,20 @@ class GenericStatement(ManMaxTempEntityClass):
             print(self.pk, "Statement-level certainty dict already exists")
         if not self.certainty_values:
             print(self.pk, "Building field-level certainty dicts")
-            self.certainty_values = build_certainty_value_template(self.self_contenttype.model_class())
+            self.certainty_values = build_certainty_value_template(
+                self.self_contenttype.model_class()
+            )
         else:
             print(self.pk, "Field-level certainty dict already exists")
-        
+
     def save(self, *args, **kwargs):
         try:
             CertaintyFieldModel.model_validate(self.certainty_values)
             CertaintyModel.model_validate(self.certainty)
         except pydantic.ValidationError:
             raise ValidationError("Certainty Values could not be validated")
-        
+
         super().save(*args, **kwargs)
-        
-    
-        
 
     class Meta:
         verbose_name = "Generic Statement"
@@ -1009,14 +1008,16 @@ class Death(GenericStatement):
     class Meta:
         verbose_name = "Tod"
         verbose_name_plural = "Tode"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class PersonGroupHasLocation(GenericStatement):
-    """Describes the location of a Person/Group at a particular time (e.g. Maximilian went to Wiener Neustadt in 1492). 
+    """Describes the location of a Person/Group at a particular time (e.g. Maximilian went to Wiener Neustadt in 1492).
     The location of an Organisation should be described using OrganisationLocation"""
+
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Aufenthaltsort"
         verbose_name_plural = "Aufenthaltsorte"
@@ -1443,18 +1444,20 @@ class ArtworkHasAdditionalName(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Dispute(GenericStatement):
-    """Describes a dispute — both formal legal proceedings and ad hoc disputes — between parties (persons or groups), 
+    """Describes a dispute — both formal legal proceedings and ad hoc disputes — between parties (persons or groups),
     with references to involved parties and presiding persons, and object of dispute"""
+
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
-    
-    nature_of_dispute = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Art des Streits")
-    
+
+    nature_of_dispute = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Art des Streits"
+    )
+
     class Meta:
         verbose_name = "Streit"
         verbose_name_plural = "Streite"
-        
-        
+
 
 overridden_properties = defaultdict(lambda: set())
 
@@ -1524,20 +1527,45 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
-    dispute_disputing_parties = build_property("Streitparteien", "war Streitpartei in", Dispute, [Person, *subclasses(GroupOfPersons), Organisation])
-    
-    dispute_other_disputing_parties = build_property("andere vom Streit betroffene", "war auch beteiligt an Streit", Dispute, [Person, *subclasses(GroupOfPersons), Organisation])
-    
-    dispute_presiding_person = build_property("vorsitzende Person", "war vorsitzende Person in", Dispute, Person)
-    
-    dispute_disputed_object = build_property("Streitobjekt", "war Streigegenstand von", Dispute, [Place, ConceptualObject, PhysicalObject])
-    
-    
-    rights_to_place_has_rights_to_place_type = build_property("Rechte am Orts-typ", "instantiates type", RightsToPlace, RightsToPlaceType)
+    dispute_disputing_parties = build_property(
+        "Streitparteien",
+        "war Streitpartei in",
+        Dispute,
+        [Person, *subclasses(GroupOfPersons), Organisation],
+    )
+
+    dispute_other_disputing_parties = build_property(
+        "andere vom Streit betroffene",
+        "war auch beteiligt an Streit",
+        Dispute,
+        [Person, *subclasses(GroupOfPersons), Organisation],
+    )
+
+    dispute_presiding_person = build_property(
+        "vorsitzende Person", "war vorsitzende Person in", Dispute, Person
+    )
+
+    dispute_disputed_object = build_property(
+        "Streitobjekt",
+        "war Streigegenstand von",
+        Dispute,
+        [Place, ConceptualObject, PhysicalObject],
+    )
+
+    rights_to_place_has_rights_to_place_type = build_property(
+        "Rechte am Orts-typ", "instantiates type", RightsToPlace, RightsToPlaceType
+    )
     rights_to_place_place = build_property("Ort", "has rights to", RightsToPlace, Place)
-    
-    has_location_person_group = build_property("ist Aufenthalt von", "hält sich auf", PersonGroupHasLocation, [Person, GroupOfPersons])
-    has_location_place = build_property("is Ort in", "ist Ort von", PersonGroupHasLocation, Place)
+
+    has_location_person_group = build_property(
+        "ist Aufenthalt von",
+        "hält sich auf",
+        PersonGroupHasLocation,
+        [Person, GroupOfPersons],
+    )
+    has_location_place = build_property(
+        "is Ort in", "ist Ort von", PersonGroupHasLocation, Place
+    )
 
     genericrelationship_person = build_property(
         "Verwandte Personen", "has relationship", GenericRelationship, Person
@@ -1903,7 +1931,7 @@ def construct_properties():
             Payment,
             Order,
             OwnershipTransfer,
-            *subclasses(TransportationOfObject)
+            *subclasses(TransportationOfObject),
         ],
     )
     ordered_by = build_property(
