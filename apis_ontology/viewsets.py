@@ -625,6 +625,7 @@ class EntityViewSet(viewsets.ViewSet):
 class PersonViewSet(viewsets.ViewSet):
     def create(self, request):
         # ic("creating person")
+        from apis_ontology.model_config import build_certainty_value_template
 
         object_model_config = model_config["person"]
 
@@ -697,7 +698,9 @@ class PersonViewSet(viewsets.ViewSet):
                     else f"[GENDERING] {new_entity.name} hat unbekanntes Geschlecht"
                 )
                 gendering = Gendering(
-                    name=gendering_name, gender=gendering_info["gender"]
+                    name=gendering_name, gender=gendering_info["gender"], certainty={"certainty": 4, "notes": ""}, certainty_values=build_certainty_value_template(
+                        Gendering
+                    )
                 )
                 gendering.save()
 
@@ -727,7 +730,9 @@ class PersonViewSet(viewsets.ViewSet):
                 if request.data["naming"]["role_name"]:
                     names += f", {request.data['naming']['role_name']}"
                 naming_name = f"[NENNUNG] {new_entity.name} heißt {names}"
-                naming = Naming(name=naming_name, **request.data["naming"])
+                naming = Naming(name=naming_name, certainty={"certainty": 4, "notes": ""}, certainty_values=build_certainty_value_template(
+                        Naming
+                    ), **request.data["naming"])
 
                 naming.save()
 

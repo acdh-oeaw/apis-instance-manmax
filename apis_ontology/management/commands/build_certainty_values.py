@@ -11,6 +11,7 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
+        print("running")
         for gs in GenericStatement.objects.all():
             gs.build_certainty_value_blank()
             gs.save(auto_created=True)
