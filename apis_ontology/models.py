@@ -319,6 +319,8 @@ class FictionalPlace(ConceptualObject):
         verbose_name_plural = "Fiktive Personen"
 
 
+
+
 #### GENERIC STATEMENTS
 
 
