@@ -326,8 +326,8 @@ class ReifiedRelation(ManMaxTempEntityClass):
     __entity_group__ = OTHER
     __is_reified_relation_type__ = True
     
-    certainty = models.JSONField(null=True)
-    certainty_values = models.JSONField(null=True)
+    certainty = models.JSONField(null=True, blank=True, default=None)
+    certainty_values = models.JSONField(null=True, blank=True, default=None)
     
     @classmethod
     def get_entity_list_filter(cls):
@@ -366,6 +366,15 @@ class ReifiedRelation(ManMaxTempEntityClass):
             print(self.pk, "Field-level certainty dict already exists")
 
     def save(self, *args, **kwargs):
+        from apis_ontology.model_config import build_certainty_value_template
+        
+        if not self.certainty:
+            self.certainty = {"certainty": 4, "notes": ""}
+        if not self.certainty_values:
+            self.certainty_values = build_certainty_value_template(
+                self.self_contenttype.model_class()
+            )
+        
         try:
             CertaintyFieldModel.model_validate(self.certainty_values)
             CertaintyModel.model_validate(self.certainty)
@@ -411,8 +420,8 @@ class GenericStatement(ManMaxTempEntityClass):
 
     head_statement = models.BooleanField(default=True)
 
-    certainty = models.JSONField(null=True)
-    certainty_values = models.JSONField(null=True)
+    certainty = models.JSONField(null=True, blank=True, default=None)
+    certainty_values = models.JSONField(null=True, blank=True, default=None)
     
     @classmethod
     def get_entity_list_filter(cls):
@@ -451,6 +460,13 @@ class GenericStatement(ManMaxTempEntityClass):
             print(self.pk, "Field-level certainty dict already exists")
 
     def save(self, *args, **kwargs):
+        if not self.certainty:
+            self.certainty = {"certainty": 4, "notes": ""}
+        if not self.certainty_values:
+            self.certainty_values = build_certainty_value_template(
+                self.self_contenttype.model_class()
+            )    
+            
         try:
             CertaintyFieldModel.model_validate(self.certainty_values)
             CertaintyModel.model_validate(self.certainty)
