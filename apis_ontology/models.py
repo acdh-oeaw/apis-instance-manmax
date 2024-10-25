@@ -9,6 +9,7 @@ import reversion
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+
 from apis_core.apis_entities.models import TempEntityClass
 from apis_core.apis_relations.models import Property
 
@@ -319,6 +320,74 @@ class FictionalPlace(ConceptualObject):
         verbose_name_plural = "Fiktive Personen"
 
 
+@reversion.register(follow=["tempentityclass_ptr"])
+class ReifiedRelation(ManMaxTempEntityClass):
+    __entity_type__ = ENTITY
+    __entity_group__ = OTHER
+    __is_reified_relation_type__ = True
+    
+    certainty = models.JSONField(null=True)
+    certainty_values = models.JSONField(null=True)
+    
+    @classmethod
+    def get_entity_list_filter(cls):
+        from apis_core.apis_entities.filters import GenericEntityListFilter
+        import django_filters
+        
+        class GenericStatementListFilter(GenericEntityListFilter):
+            certainty = django_filters.CharFilter(
+                method='name_filter'
+            )
+
+            certainty_values = django_filters.CharFilter(
+                method='work_filter'
+            )
+            
+            class Meta(GenericEntityListFilter.Meta):
+                model = cls
+            
+                
+        return GenericStatementListFilter
+
+    def build_certainty_value_blank(self):
+        from apis_ontology.model_config import build_certainty_value_template
+
+        if not self.certainty:
+            print(self.pk, "Building Statement-level certainty dict")
+            self.certainty = {"certainty": 4, "notes": ""}
+        else:
+            print(self.pk, "Statement-level certainty dict already exists")
+        if not self.certainty_values:
+            print(self.pk, "Building field-level certainty dicts")
+            self.certainty_values = build_certainty_value_template(
+                self.self_contenttype.model_class()
+            )
+        else:
+            print(self.pk, "Field-level certainty dict already exists")
+
+    def save(self, *args, **kwargs):
+        try:
+            CertaintyFieldModel.model_validate(self.certainty_values)
+            CertaintyModel.model_validate(self.certainty)
+        except pydantic.ValidationError:
+            raise ValidationError("Certainty Values could not be validated")
+
+        super().save(*args, **kwargs)
+    
+    
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class PersonWithProxy(ReifiedRelation):
+    """A person represented by another person, within the context of an action"""
+    
+    __entity_type__ = ENTITY
+    __entity_group__ = OTHER
+    __is_reified_relation_type__ = True
+    
+    
+    class Meta:
+        verbose_name = "Person represented by Proxy"
+        verbose_name = "Person represented by Proxy"
 
 
 #### GENERIC STATEMENTS
@@ -344,6 +413,26 @@ class GenericStatement(ManMaxTempEntityClass):
 
     certainty = models.JSONField(null=True)
     certainty_values = models.JSONField(null=True)
+    
+    @classmethod
+    def get_entity_list_filter(cls):
+        from apis_core.apis_entities.filters import GenericEntityListFilter
+        import django_filters
+        
+        class GenericStatementListFilter(GenericEntityListFilter):
+            certainty = django_filters.CharFilter(
+                method='name_filter'
+            )
+
+            certainty_values = django_filters.CharFilter(
+                method='work_filter'
+            )
+            
+            class Meta(GenericEntityListFilter.Meta):
+                model = cls
+            
+                
+        return GenericStatementListFilter
 
     def build_certainty_value_blank(self):
         from apis_ontology.model_config import build_certainty_value_template
@@ -1529,6 +1618,10 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+    
+    person_with_proxy_person = build_property("Principal person", "is principal person in", PersonWithProxy, Person)
+    person_with_proxy_proxy = build_property("Proxy", "is proxy in", PersonWithProxy, Person)
+    
     dispute_disputing_parties = build_property(
         "Streitparteien",
         "war Streitpartei in",
@@ -1871,7 +1964,7 @@ def construct_properties():
     )
 
     marriage_beginning_person = build_property(
-        "Ehepartner", "has marriage beginning in", MarriageBeginning, Person
+        "Ehepartner", "has marriage beginning in", MarriageBeginning, [Person, PersonWithProxy]
     )
     marriage_beginning_place = build_property(
         "Ort der Eheschließung", "is place of marriage", MarriageBeginning, Place
@@ -1880,6 +1973,8 @@ def construct_properties():
     marriage_end_person = build_property(
         "Ehemalige Ehepartner", "has marriage ending in", MarriageEnd, Person
     )
+    
+    
 
     family_membership_family = build_property(
         "Familie", "is member of family", FamilyMembership, Family
@@ -2186,3 +2281,5 @@ def construct_properties():
         ArtworkHasAdditionalName,
         [Person, *subclasses(Organisation)],
     )
+
+

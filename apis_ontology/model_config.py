@@ -158,6 +158,7 @@ def build_model_config_dict(model_class):
     return {
         "entity_type": model_class.__entity_type__,
         "entity_group": model_class.__entity_group__,
+        "reified_relation": getattr(model_class, "__is_reified_relation_type__", False),
         "zotero_reference": getattr(model_class, "__zotero_reference__", False),
         "fields": build_field_dict(model_class),
         "relations_to_entities": relations_to_entities,
