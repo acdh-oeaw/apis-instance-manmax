@@ -112,7 +112,7 @@ def create_parse_statements(statements):
     created_statements = []
     for statement in statements:
         try:
-            if not statement.get("__object_type__"):
+            if not statement.get("__object_type__", None):
                 print("missing statement type here")
                 raise Exception("No Statement type: skip")
             object_type_config = model_config[statement["__object_type__"]]
@@ -184,7 +184,7 @@ def create_parse_factoid(data):
     factoid.save()
 
     for statement in data["has_statements"]:
-        if not statement.get("__object_type__"):
+        if not statement.get("__object_type__", None):
             print("ERROR HERE")
             raise Exception("A statement type must be selected")
 

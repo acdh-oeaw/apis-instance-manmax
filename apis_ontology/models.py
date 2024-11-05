@@ -453,19 +453,28 @@ class GenericStatement(ManMaxTempEntityClass):
             print(self.pk, "Statement-level certainty dict already exists")
         if not self.certainty_values:
             print(self.pk, "Building field-level certainty dicts")
-            self.certainty_values = build_certainty_value_template(
-                self.self_contenttype.model_class()
-            )
+            
+            if self.self_contenttype:
+            
+                self.certainty_values = build_certainty_value_template(
+                    self.self_contenttype.model_class()
+                )
+            else:
+                self.certainty_values = build_certainty_value_template(self.__class__)
         else:
             print(self.pk, "Field-level certainty dict already exists")
 
     def save(self, *args, **kwargs):
+        from apis_ontology.model_config import build_certainty_value_template
         if not self.certainty:
             self.certainty = {"certainty": 4, "notes": ""}
         if not self.certainty_values:
-            self.certainty_values = build_certainty_value_template(
-                self.self_contenttype.model_class()
-            )    
+            if self.self_contenttype:
+                self.certainty_values = build_certainty_value_template(
+                    self.self_contenttype.model_class()
+                )
+            else:
+                self.certainty_values = build_certainty_value_template(self.__class__)
             
         try:
             CertaintyFieldModel.model_validate(self.certainty_values)
