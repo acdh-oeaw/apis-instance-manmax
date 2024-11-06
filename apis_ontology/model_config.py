@@ -182,9 +182,11 @@ def build_model_config():
 
 model_config = build_model_config()
 
+
+
 if __name__ == "__main__":
     construct_properties()
-    print(overridden_properties)
+    
     model_config = build_model_config()
 
     with open("model_config.json", "w") as f:
