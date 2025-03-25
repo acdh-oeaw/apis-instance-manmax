@@ -1716,6 +1716,12 @@ class TextReferencesObject(GenericStatement):
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
     
+@reversion.register(follow=["textualwork_ptr"])
+class Epitaph(TextualWork):
+    
+    __entity_group__ = TEXT
+    __entity_type__ = ENTITY
+    
 
 overridden_properties = defaultdict(lambda: set())
 
@@ -2655,6 +2661,10 @@ def construct_properties():
         Burial,
         [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)]
     )
+    
+    burial_gravestone = build_property("Grabmal", "ist Grabmal von", Burial, subclasses(ArtisticWork))
+    
+    burial_epitaph = build_property("Epitaph", "ist Epitaph von", Burial, Epitaph) 
     
     place_of_burial = build_property(
         "Ort des Begräbnisses",
