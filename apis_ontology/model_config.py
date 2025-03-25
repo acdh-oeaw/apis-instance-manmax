@@ -98,6 +98,7 @@ def build_relation_to_types(model_class):
     relations_to_entities = {}
     relations_to_statements = {}
     rels = build_relations_dict(model_class)
+    print(rels)
     for rel_name, rel_def in rels.items():
         related_types = set(
             [
@@ -107,7 +108,7 @@ def build_relation_to_types(model_class):
         )
         if len(related_types) > 1:
             raise Exception(
-                f"Model class {model_class} is related to Entities and Statements"
+                f"Model class {model_class} on field {rel_name} is related to Entities and Statements: {rel_def['allowed_types']}"
             )
         related_type = related_types.pop()
 

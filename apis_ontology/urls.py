@@ -11,7 +11,8 @@ from .viewsets import (
     EdiarumPlaceViewset,
     EdiarumOrganisationViewset,
     LeaderboardViewSet,
-    UsersViewSet
+    UsersViewSet,
+    ExampleViewSet
 )
 from django.urls import path, re_path
 
@@ -60,15 +61,43 @@ custom_url_patterns = [
         name="solidedit",
     ),
     path(
-        "manmax/factoid-builder/build-example",
+        "manmax/factoid-builder/example",
         login_required(SolidJsView.as_view()),
-        name="example",
+        name="example_interface_list",
+    ),
+    path(
+        "manmax/factoid-builder/example/create",
+        login_required(SolidJsView.as_view()),
+        name="example_interface_create",
+    ),
+    path(
+        "manmax/factoid-builder/example/<int:pk>",
+        login_required(SolidJsView.as_view()),
+        name="example_interface_view",
+    ),
+ 
+    path("manmax/example/", 
+         login_required(ExampleViewSet.as_view({"get": "list"})), 
+         name="example_list"
+    ),
+    path("manmax/example/<int:pk>", 
+         login_required(ExampleViewSet.as_view({"get": "retrieve"})), 
+         name="example_get"
+    ),
+    path("manmax/example/create", 
+         login_required(ExampleViewSet.as_view({"post": "create"})), 
+         name="example_create_post"
+    ),
+    path("manmax/example/<int:pk>/", 
+         login_required(ExampleViewSet.as_view({"post": "update"})), 
+         name="example_update_post"
     ),
     path(
         "manmax/factoid-builder/leaderboard",
         login_required(SolidJsView.as_view()),
         name="leaderboardfrontend",
     ),
+    
     path(
         "manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"
     ),

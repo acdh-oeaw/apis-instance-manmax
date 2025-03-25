@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from apis_core.apis_relations.models import TempTriple, Property
-from apis_ontology.models import Factoid, Gendering, Naming, Person, Place, Organisation
+from apis_ontology.models import Factoid, Gendering, Naming, Person, Place, Organisation, Example
 from django.forms.models import model_to_dict
 from apis_core.utils.caching import get_contenttype_of_class, get_entity_class_of_name
 from apis_bibsonomy.models import Reference
@@ -19,7 +19,7 @@ from django.shortcuts import render
 from apis_ontology.model_config import model_config
 from apis_ontology.utils import create_html_citation_from_csl_data_string
 from django.db.models import Q
-
+from django.contrib.contenttypes.models import ContentType
 
 FIELDS_TO_EXCLUDE = [
     "start_date",
@@ -860,7 +860,82 @@ class LeaderboardViewSet(viewsets.ViewSet):
                 Counter(f.created_by for f in Factoid.objects.all()).most_common()
             )
         )
+        
+def extract_statement_types(statement_list):
+    statement_types = set()
+    for statement in statement_list:
+        statement_types.add(statement["__object_type__"])
+        nested_statement_keys = {k for k in statement.keys() if k in model_config[statement["__object_type__"]]["relations_to_statements"]}
+        for nested_statement_key in nested_statement_keys:
+            statement_types.update(extract_statement_types(statement[nested_statement_key]))
+    return statement_types
+            
+        
+class ExampleViewSet(viewsets.ViewSet):
+    @staticmethod
+    def build_example_list_response(example: Example):
+        example_data = json.loads(example.example)
+        e = {"id": example.pk, "name": example_data["example_title"], "referenced_types": example_data.get("referenced_types", [])}
+        return e
+    
+    def list(self, request):
+        search_tokens = request.query_params.get("q", "").lower().split(" ")
+        if not search_tokens:
+            return Response({"message", "No search string"}, status=401)
 
+        q = Q()
+        for search_token in search_tokens:
+            q &= Q(example__icontains=search_token)
+
+        examples = Example.objects.filter(q)
+        
+        response = [self.build_example_list_response(example) for example in examples]
+        return Response(response)
+
+    def retrieve(self, request, pk=None):
+       
+        example = Example.objects.get(pk=pk)
+        if example:
+            response = json.loads(example.example)
+            #response["referenced_types"] = [{"verbose_name": get_entity_class_of_name(t.model)._meta.verbose_name, "model_name": t.model} for t in example.models_referenced.all()]
+            return Response(response)
+    
+    def update(self, request, pk=None):
+        example = Example.objects.get(pk=pk)
+        if not example:
+            return Response(status=404)
+        
+        data = request.data
+        statement_types = extract_statement_types(request.data["has_statements"])
+        data["referenced_types"] = [{"verbose_name": get_entity_class_of_name(t)._meta.verbose_name, "model_name": t} for t in statement_types]
+        
+        example.example = json.dumps(data)
+        example.save()
+        statement_type_contenttypes = {get_contenttype_of_class(model_config[st]["model_class"]) for st in statement_types}
+        for statement_type_contenttype in statement_type_contenttypes:
+            example.models_referenced.add(statement_type_contenttype)
+        for existing_statement_type in example.models_referenced.all():
+            if existing_statement_type not in statement_type_contenttypes:
+                example.models_referenced.remove(existing_statement_type)
+        
+        
+        return Response(data={"success": True}, status=200)
+    
+    def create(self, request):
+       
+        data = request.data
+        statement_types = extract_statement_types(request.data["has_statements"])
+        data["referenced_types"] = [{"verbose_name": get_entity_class_of_name(t)._meta.verbose_name, "model_name": t} for t in statement_types]
+        
+        created_example = Example(example=json.dumps(data))
+        created_example.save()
+        statement_type_contenttypes = {get_contenttype_of_class(model_config[st]["model_class"]) for st in statement_types}
+        for statement_type_contenttype in statement_type_contenttypes:
+            created_example.models_referenced.add(statement_type_contenttype)
+        
+        
+        return Response({"id": created_example.pk, **json.loads(created_example.example)}, status=200)
+        
 
 if __name__ == "__main__":
     with open("apis_ontology/test_edit_factoid_data.json") as f:

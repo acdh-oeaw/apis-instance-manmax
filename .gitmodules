@@ -1,0 +1,3 @@
+[submodule "generated-documentation"]
+	path = generated-documentation
+	url = https://github.com/managing-maximilian/generated-documentation.git
