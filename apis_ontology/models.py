@@ -1,18 +1,15 @@
-from collections.abc import Iterable
 from collections import defaultdict
+from collections.abc import Iterable
 
-from django.core.exceptions import ValidationError
 import pydantic
-
-
 import reversion
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.core.exceptions import ValidationError
+from django.db import models
 
 from apis_core.apis_entities.models import TempEntityClass
 from apis_core.apis_relations.models import Property
-
 from apis_ontology.middleware.get_request import current_request
 
 
@@ -60,6 +57,36 @@ class Typology(TempEntityClass):
 
     class Meta:
         pass
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class DegreeType(Typology):
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Abschlusstyp"
+        verbose_name_plural = "AmtsAbschlusstypen"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class EducationType(Typology):
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Studientyp"
+        verbose_name_plural = "Studientypen"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class EducationSubject(Typology):
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Studienfach"
+        verbose_name_plural = "Studienfachen"
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -337,8 +364,9 @@ class ReifiedRelation(ManMaxTempEntityClass):
 
     @classmethod
     def get_entity_list_filter(cls):
-        from apis_core.apis_entities.filters import GenericEntityListFilter
         import django_filters
+
+        from apis_core.apis_entities.filters import GenericEntityListFilter
 
         class GenericStatementListFilter(GenericEntityListFilter):
             certainty = django_filters.CharFilter(method="name_filter")
@@ -424,8 +452,9 @@ class GenericStatement(ManMaxTempEntityClass):
 
     @classmethod
     def get_entity_list_filter(cls):
-        from apis_core.apis_entities.filters import GenericEntityListFilter
         import django_filters
+
+        from apis_core.apis_entities.filters import GenericEntityListFilter
 
         class GenericStatementListFilter(GenericEntityListFilter):
             certainty = django_filters.CharFilter(method="name_filter")
@@ -649,13 +678,13 @@ class CreationOfOrganisation(CreationAct):
     class Meta:
         verbose_name = "Gründung einer Körperschaft"
         verbose_name_plural = "Gründungen von Körperschaften"
-        
-        
+
+
 @reversion.register(follow="genericstatement_ptr")
 class OrganisationIsPartOfOrganisation(GenericStatement):
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "hat Unterorganisation"
         verbose_name = "hat Unterorganisation"
@@ -1384,7 +1413,7 @@ class Payment(GenericStatement):
 
     amount = models.CharField(max_length=200, blank=True)
     currency = models.CharField(max_length=200, blank=True)
-    
+
     FREQUENCY = (
         ("einmalig", "einmalig"),
         ("wöchentlich", "wöchentlich"),
@@ -1392,7 +1421,10 @@ class Payment(GenericStatement):
         ("jährlich", "jährlich"),
     )
     frequency = models.CharField(
-        max_length=16, choices=FREQUENCY, blank=True, verbose_name="Häufigkeit der Zahlung"
+        max_length=16,
+        choices=FREQUENCY,
+        blank=True,
+        verbose_name="Häufigkeit der Zahlung",
     )
 
     class Meta:
@@ -1410,7 +1442,8 @@ class Order(GenericStatement):
     class Meta:
         verbose_name = "Befehl"
         verbose_name_plural = "Befehle"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class GrantingPermission(GenericStatement):
     """An order given by someone to do something"""
@@ -1607,123 +1640,175 @@ class Dispute(GenericStatement):
         verbose_name = "Streit"
         verbose_name_plural = "Streite"
 
+
 @reversion.register(follow=["genericstatement_ptr"])
 class ObjectHasLocation(GenericStatement):
     """Describes the location of a physical object at particular time"""
 
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Objekt has Standort"
         verbose_name_plural = "Objekten haben Standorte"
 
+
 @reversion.register(follow=["genericstatement_ptr"])
 class Baptism(GenericStatement):
     """Describes the Bapitsm of a person at a place and time, referencing Godparents and others in involved"""
-    
+
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Taufe"
         verbose_name_plural = "Taufen"
+
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Ennoblement(GenericStatement):
     """Describes the elevation of a Person to the nobility; combine with other statements
     (e.g. receipt of property; Naming with a title) to provide details"""
-    
+
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Veredelung"
         verbose_name_plural = "Veredlungen"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class EventCharacterisation(GenericStatement):
-    """Provides statements that characterise a generic event, e.g. "The Journey of Maximilian to the Low Countries" 
+    """Provides statements that characterise a generic event, e.g. "The Journey of Maximilian to the Low Countries"
     characterised by "Maximilian makes journey to low countries". Include ONLY statements that characterise the
-    event, not incidental activities (i.e. NOT "Maximilian attended a musical performance during the journey")"""
+    event, not incidental activities (i.e. NOT "Maximilian attended a musical performance during the journey")
+    """
+
     __entity_group__ = OTHER
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Charakterisierung von Ereignis"
-        verbose_name_plural = "Charakterisierung von Ereignissen"        
-        
+        verbose_name_plural = "Charakterisierung von Ereignissen"
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class Burial(GenericStatement):
     """Describes the burial of a person at a place, carried out by persons/groups"""
+
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Begräbnis"
         verbose_name_plural = "Begräbnisse"
 
+
 @reversion.register(follow=["genericstatement_ptr"])
 class Invitation(GenericStatement):
     """Describes an invitation issued by a person for another person to do something"""
+
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Einladung"
         verbose_name_plural = "Einladungen"
 
+
 @reversion.register(follow=["genericstatement_ptr"])
 class Journey(GenericStatement):
-    """Describes a journey of a Person/Group from a place to another place, with optional objective; 
+    """Describes a journey of a Person/Group from a place to another place, with optional objective;
     best used to describe a journey of some duration (e.g. "Maximilian's journey to the Low Countries").
     Use multiple 'Aufenthaltsort' statements where possible. Also prefer specific 'journey' types,
     e.g. 'Transport eines Objekts'"""
-    
+
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Reise"
         verbose_name_plural = "Reisen"
-        
+
+
 @reversion.register(follow=["textualcreationact_ptr"])
 class InventoryCreation(TextualCreationAct):
     """Describes the creation of an Inventory"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Erstellung von Inventar"
         verbose_name_plural = "Erstellungen von Inventare"
-        
+
+
 @reversion.register(follow=["compositetextualwork_ptr"])
 class Inventory(CompositeTextualWork):
     """An Inventory"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
-    
+
     class Meta:
         verbose_name = "Inventar"
         verbose_name_plural = "Inventare"
-    
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class TextReferencesObject(GenericStatement):
     """Describes a reference to a physical or conceptual object contained in a text"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
+
 @reversion.register(follow=["textualwork_ptr"])
 class Epitaph(TextualWork):
-    
+
     __entity_group__ = TEXT
     __entity_type__ = ENTITY
-    
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Matriculation(GenericStatement):
+    """Describes the matriculation of a person at a university"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Immatrikulation"
+        verbose_name_plural = "Immatrikulationen"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Graduation(GenericStatement):
+    """Describes the graduation of a person at a university"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Graduierung"
+        verbose_name_plural = "Graduierungen"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class GenericEducation(GenericStatement):
+    """Describes the education of a person in other capacity (use Immatrikulation/Graduierung where possible)"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Ausbildung"
+        verbose_name_plural = "Ausbildungen"
+
 
 overridden_properties = defaultdict(lambda: set())
+
 
 def build_property(
     name: str,
@@ -1790,6 +1875,71 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+    
+    education_type_subtype = build_property( "unterkategories von", "is supertype of", EducationType, EducationType)
+
+    matriculation_person_matriculating = build_property(
+        "Immatrikulierende Person", "hat immatrikuliert", Matriculation, Person
+    )
+
+    matriculation_institution = build_property(
+        "Institution",
+        "Immatrikulationsanstalt",
+        Matriculation,
+        Organisation,
+    )
+
+    graduation_person_graduating = build_property(
+        "Graduierender",
+        "hat graduieren",
+        Graduation,
+        Person,
+    )
+
+    graduation_institution = build_property(
+        "Institution",
+        "Graduierungsanstalt",
+        Graduation,
+        Organisation,
+    )
+
+    graduation_degree_type = build_property(
+        "Abschlusstyp",
+        "Is type of",
+        Graduation,
+        DegreeType,
+    )
+
+    graduation_degree_subject = build_property(
+        "Studienfach", "ist Studienfach von", Graduation, EducationSubject
+    )
+
+    education_person_being_educated = build_property(
+        "Ausgebildete Person", "hat Ausbildung", GenericEducation, Person
+    )
+
+    education_educator = build_property(
+        "Ausbilder",
+        "hat Ausbildung",
+        GenericEducation,
+        [Person, PersonWithProxy, GroupOfPersons, Organisation],
+    )
+
+    education_subject = build_property(
+        "Studienfach", "ist Studienfach von", GenericEducation, EducationSubject
+    )
+
+    education_place = build_property(
+        "Ort", "ist Ausbildungsort von", GenericEducation, Place
+    )
+    
+    education_education_type = build_property("Ausbildungstyp", "ist Ausbildungstyp von", GenericEducation, EducationType)
+    
+    
+
+    graduation_degree_subject = build_property(
+        "Studientfach", "ist Studienfach von", Graduation, EducationSubject
+    )
 
     person_with_proxy_person = build_property(
         "Principal person", "is principal person in", PersonWithProxy, Person
@@ -1813,7 +1963,10 @@ def construct_properties():
     )
 
     dispute_presiding_person = build_property(
-        "vorsitzende Person", "war vorsitzende Person in", Dispute, [Person, PersonWithProxy]
+        "vorsitzende Person",
+        "war vorsitzende Person in",
+        Dispute,
+        [Person, PersonWithProxy],
     )
 
     dispute_disputed_object = build_property(
@@ -1910,15 +2063,30 @@ def construct_properties():
         subclasses(TextualWork),
         overrides=creation_act_thing_created,
     )
-    
-    
-    inventory_creation_inventory = build_property("Inventar erstellt", "War erstellt in", InventoryCreation, Inventory, overrides=[textual_creation_act_text_created])
-    inventory_creation_supervisor = build_property("Erstellung betreut von", "Betreute einer Erstellung", InventoryCreation, [Person, GroupOfPersons])
-    
-    text_references_object_text = build_property("Text", "Referenz", TextReferencesObject, subclasses(TextualWork))
-    text_references_object_object = build_property("Objekt referenziert", "wurde referenziert in", TextReferencesObject, [*subclasses(PhysicalObject), *subclasses(ConceptualObject)])
-    
-    
+
+    inventory_creation_inventory = build_property(
+        "Inventar erstellt",
+        "War erstellt in",
+        InventoryCreation,
+        Inventory,
+        overrides=[textual_creation_act_text_created],
+    )
+    inventory_creation_supervisor = build_property(
+        "Erstellung betreut von",
+        "Betreute einer Erstellung",
+        InventoryCreation,
+        [Person, GroupOfPersons],
+    )
+
+    text_references_object_text = build_property(
+        "Text", "Referenz", TextReferencesObject, subclasses(TextualWork)
+    )
+    text_references_object_object = build_property(
+        "Objekt referenziert",
+        "wurde referenziert in",
+        TextReferencesObject,
+        [*subclasses(PhysicalObject), *subclasses(ConceptualObject)],
+    )
 
     text_authored = build_property(
         "verfasster Text",
@@ -1935,12 +2103,18 @@ def construct_properties():
         subclasses(PrintedWork),
         overrides=[creation_act_thing_created, textual_creation_act_text_created],
     )
-    
+
     source_work_printed = build_property(
         "betreffender Text",
         "ist der betreffende Text in",
         Printing,
-        [*subclasses(TextualWork), *subclasses(CompositeTextualWork), Book, Poem, Leaflet]
+        [
+            *subclasses(TextualWork),
+            *subclasses(CompositeTextualWork),
+            Book,
+            Poem,
+            Leaflet,
+        ],
     )
 
     secretarial_act_contributed_to = build_property(
@@ -1974,12 +2148,17 @@ def construct_properties():
         [*subclasses(CompositeConceptualObject), *subclasses(CompositePhysicalObject)],
         overrides=[creation_act_thing_created],
     )
-    
+
     assembly_of_composite_object_object = build_property(
         "Teilobjekte",
         "ist Teilobjekt in",
         AssemblyOfCompositeObject,
-        [*subclasses(PhysicalObject), *subclasses(ConceptualObject), *subclasses(CompositeConceptualObject), *subclasses(CompositePhysicalObject)]
+        [
+            *subclasses(PhysicalObject),
+            *subclasses(ConceptualObject),
+            *subclasses(CompositeConceptualObject),
+            *subclasses(CompositePhysicalObject),
+        ],
     )
 
     ownership_transfer_what = build_property(
@@ -2044,7 +2223,12 @@ def construct_properties():
         "election by",
         "was responsible for election of",
         Election,
-        [*subclasses(GroupOfPersons), *subclasses(Organisation), Person, PersonWithProxy],
+        [
+            *subclasses(GroupOfPersons),
+            *subclasses(Organisation),
+            Person,
+            PersonWithProxy,
+        ],
     )
     election_to_role = build_property("Amt", "was occupied by election", Election, Role)
     election_of_person = build_property(
@@ -2075,12 +2259,12 @@ def construct_properties():
         Place,
         overrides=[activity_has_place],
     )
-    
+
     performance_of_work_as_part_of_event = build_property(
         "Teil eines Ereignisses",
         "war Teil eines Ereingnisses",
         PerformanceOfWork,
-        GenericEvent
+        GenericEvent,
     )
 
     text_performance_work = build_property(
@@ -2203,11 +2387,14 @@ def construct_properties():
             OwnershipTransfer,
             *subclasses(Activity),
             TransportationOfArmour,
-            TransportationOfObject
+            TransportationOfObject,
         ],
     )
     payment_by_person = build_property(
-        "Zahlender", "made payment in", Payment, [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)]
+        "Zahlender",
+        "made payment in",
+        Payment,
+        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
     payment_to_person = build_property(
         "Zahlungsempfänger",
@@ -2238,11 +2425,14 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
-            PersonGroupHasLocation
+            PersonGroupHasLocation,
         ],
     )
     ordered_by = build_property(
-        "Befehlsgeber", "gave order", Order, [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)]
+        "Befehlsgeber",
+        "gave order",
+        Order,
+        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
     order_received_by = build_property(
         "Befehlsempfänger",
@@ -2368,12 +2558,12 @@ def construct_properties():
     communicates_with_recipient_place = build_property(
         "Zielort", "is reception place of communication", CommunicatesWith, Place
     )
-    
+
     performance_of_work_as_part_of_event = build_property(
         "Teil eines Ereignisses",
         "war Teil eines Ereingnisses",
         CommunicatesWith,
-        GenericEvent
+        GenericEvent,
     )
 
     transportation_of_object_object = build_property(
@@ -2456,22 +2646,24 @@ def construct_properties():
         DebtOwed,
         [Person, *subclasses(Organisation), Family],
     )
-    
+
     # TODO: check types
     debt_owned_reason_for = build_property(
         "Schuldensgrund",
         "ist Schuldensgrund in",
         DebtOwed,
-        [PerformanceOfTask,
-        MusicPerformance,
-        *subclasses(CreationAct),
-        *subclasses(CreationCommission),
-        AssignmentToRole,
-        RemovalFromRole,
-        Payment,
-        Order,
-        OwnershipTransfer,
-        *subclasses(TransportationOfObject)],
+        [
+            PerformanceOfTask,
+            MusicPerformance,
+            *subclasses(CreationAct),
+            *subclasses(CreationCommission),
+            AssignmentToRole,
+            RemovalFromRole,
+            Payment,
+            Order,
+            OwnershipTransfer,
+            *subclasses(TransportationOfObject),
+        ],
     )
 
     text_citation_citing_text = build_property(
@@ -2521,43 +2713,40 @@ def construct_properties():
         "übergeordnete Organisation",
         "ist übergeordnete Organisation",
         OrganisationIsPartOfOrganisation,
-        [GroupOfPersons, *subclasses(Organisation)]
+        [GroupOfPersons, *subclasses(Organisation)],
     )
     organisation_is_child_organisation_in_is_suborganisation = build_property(
         "untergeordnete Organisation",
         "ist untergeordnete Organisation",
         OrganisationIsPartOfOrganisation,
-        [GroupOfPersons, *subclasses(Organisation)]
+        [GroupOfPersons, *subclasses(Organisation)],
     )
-    
+
     object_has_location_object = build_property(
         "Objekt",
         "Objekt befindet sich in Ort",
         ObjectHasLocation,
-        subclasses(PhysicalObject)
+        subclasses(PhysicalObject),
     )
-    
+
     object_has_location_location = build_property(
-        "Ort",
-        "Ist Ort von",
-        ObjectHasLocation,
-        Place
+        "Ort", "Ist Ort von", ObjectHasLocation, Place
     )
-    
+
     granting_permission_granter = build_property(
         "Erlaubnis erteilt von",
         "die Erlaubnis erteilt",
         GrantingPermission,
-        [*subclasses(Person), *subclasses(GroupOfPersons), *subclasses(Organisation)]
+        [*subclasses(Person), *subclasses(GroupOfPersons), *subclasses(Organisation)],
     )
-    
+
     granting_permission_recipient = build_property(
-        "erhaltene Erlaubnis", 
-        "erhielt die Erlaubnis in", 
+        "erhaltene Erlaubnis",
+        "erhielt die Erlaubnis in",
         GrantingPermission,
-        [*subclasses(Person), *subclasses(GroupOfPersons), *subclasses(Organisation)]
+        [*subclasses(Person), *subclasses(GroupOfPersons), *subclasses(Organisation)],
     )
-    
+
     granting_permission_thing_granted = build_property(
         "Erlaubnis zur Tätigkeit",
         "war erlaubt in",
@@ -2573,127 +2762,104 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
-            CommunicatesWith
+            CommunicatesWith,
         ],
     )
-    
+
     baptism_person_baptised = build_property(
-        "Getaufte Person",
-        "wurde getauft in",
-        Baptism,
-        Person
+        "Getaufte Person", "wurde getauft in", Baptism, Person
     )
-    
+
     bapitism_godparents = build_property(
-        "Pate/Patin",
-        "war Pate/Patin in",
-        Baptism,
-        [Person, PersonWithProxy]
+        "Pate/Patin", "war Pate/Patin in", Baptism, [Person, PersonWithProxy]
     )
-    
+
     baptism_involved_in_baptism = build_property(
         "An der Taufe beteiligt",
         "war an der Taufe beteiligt",
         Baptism,
-        [Person, GroupOfPersons, *subclasses(Organisation),PersonWithProxy]
+        [Person, GroupOfPersons, *subclasses(Organisation), PersonWithProxy],
     )
-    
+
     baptism_place_of_baptism = build_property(
-        "Ort der Taufe",
-        "was Ort einer Taufe",
-        Baptism,
-        Place
+        "Ort der Taufe", "was Ort einer Taufe", Baptism, Place
     )
-    
+
     ennoblement_person_ennobled = build_property(
-        "geadelte Person",
-        "wurde geadelt in",
-        Ennoblement,
-        Person
+        "geadelte Person", "wurde geadelt in", Ennoblement, Person
     )
-    
+
     ennoblement_ennobled_by = build_property(
         "geadelt durch",
         "führte die Veredelung in",
         Ennoblement,
-        [Person, *subclasses(Organisation), PersonWithProxy, GroupOfPersons]
+        [Person, *subclasses(Organisation), PersonWithProxy, GroupOfPersons],
     )
-    
+
     ennoblement_place = build_property(
-        "Ort",
-        "war Ort der Veredelung",
-        Ennoblement,
-        Place
+        "Ort", "war Ort der Veredelung", Ennoblement, Place
     )
-    
+
     performance_of_work_as_part_of_event = build_property(
         "Teil eines Ereignisses",
         "war Teil eines Ereingnisses",
         Ennoblement,
-        GenericEvent
+        GenericEvent,
     )
-    
+
     event_characterisation_event = build_property(
         "Ereignis",
         "Ereignis charakterisiert in",
         EventCharacterisation,
-        subclasses(GenericEvent)
+        subclasses(GenericEvent),
     )
-    
+
     event_characterisation_place = build_property(
         "Ort des Ereignisses",
         "ist der Ort des Ereignisses",
         EventCharacterisation,
-        Place
+        Place,
     )
-    
-    
+
     burial_person_buried = build_property(
-        "Begrabener",
-        "wurde begraben bei",
-        Burial,
-        Person
+        "Begrabener", "wurde begraben bei", Burial, Person
     )
-    
+
     burial_persons_burying = build_property(
         "Beteiligte Personen",
         "carried out burial",
         Burial,
-        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)]
+        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
-    
-    burial_gravestone = build_property("Grabmal", "ist Grabmal von", Burial, subclasses(ArtisticWork))
-    
-    burial_epitaph = build_property("Epitaph", "ist Epitaph von", Burial, Epitaph) 
-    
+
+    burial_gravestone = build_property(
+        "Grabmal", "ist Grabmal von", Burial, subclasses(ArtisticWork)
+    )
+
+    burial_epitaph = build_property("Epitaph", "ist Epitaph von", Burial, Epitaph)
+
     place_of_burial = build_property(
-        "Ort des Begräbnisses",
-        "war Ort eines Begräbnisses",
-        Burial,
-        Place
+        "Ort des Begräbnisses", "war Ort eines Begräbnisses", Burial, Place
     )
-    
+
     invitation_person_inviting = build_property(
-        "Einladung von", 
-        "war Emittent einer Einladung", 
-        Invitation, 
-        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)]
+        "Einladung von",
+        "war Emittent einer Einladung",
+        Invitation,
+        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
-    
+
     invitation_person_receiving = build_property(
         "Eingeladung an",
         "war eingeladen",
         Invitation,
-        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)]
+        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
-    
+
     place_of_invitation = build_property(
-        "Ort",
-        "war Ort einer Einladung",
-        Invitation,
-        Place
+        "Ort", "war Ort einer Einladung", Invitation, Place
     )
-    
+
     thing_invited = build_property(
         "Einladung zu",
         "Objekt einer Einladung",
@@ -2710,35 +2876,31 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
-        ]
+        ],
     )
-    
+
     journey_person_travelling = build_property(
         "Reisende Person/Gruppe",
         "reiste auf Reise",
         Journey,
-        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)]
+        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
-    
+
     journey_origin = build_property(
-        "Ursprung der Reise",
-        "war Ursprung einer Reise",
-        Journey,
-        Place
+        "Ursprung der Reise", "war Ursprung einer Reise", Journey, Place
     )
-    
+
     journey_destination = build_property(
-        "Ziel der Reise",
-        "war Ziel einer Reise",
-        Journey,
-        Place
+        "Ziel der Reise", "war Ziel einer Reise", Journey, Place
     )
-    
+
     journey_object = build_property(
         "Zweck der Reise",
         "war Zweck einer Reise",
         Journey,
-        [CommunicatesWith, PerformanceOfTask,
+        [
+            CommunicatesWith,
+            PerformanceOfTask,
             MusicPerformance,
             *subclasses(CreationAct),
             *subclasses(CreationCommission),
@@ -2747,10 +2909,10 @@ def construct_properties():
             RemovalFromRole,
             Payment,
             Order,
-            OwnershipTransfer, 
-            Birth, 
-            MarriageBeginning, 
-            RoleOccupation, 
-            AssignmentToRole
-        ]
+            OwnershipTransfer,
+            Birth,
+            MarriageBeginning,
+            RoleOccupation,
+            AssignmentToRole,
+        ],
     )
