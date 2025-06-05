@@ -137,6 +137,11 @@ custom_url_patterns = [
         name="create_factoid",
     ),
     path(
+        "manmax/factoids/api/create/",
+        FactoidViewSet.as_view({"post": "create"}),
+        name="create_factoid_api",
+    ),
+    path(
         "manmax/person/create",
         login_required(PersonViewSet.as_view({"post": "create"})),
         name="create_entity",
@@ -149,3 +154,4 @@ custom_url_patterns = [
 ]
 
 urlpatterns += custom_url_patterns
+

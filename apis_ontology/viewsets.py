@@ -78,7 +78,7 @@ def get_unpack_factoid(pk):
             "folio": ref.folio,
         }
     except Exception as e:
-        print(e)
+     
         reference = None
 
     # print(str(ref), ref.bibtex)
@@ -180,12 +180,13 @@ def create_parse_statements(statements):
 
 
 def create_parse_factoid(data):
+    
     factoid = Factoid(name=data["name"])
     factoid.save()
 
     for statement in data["has_statements"]:
         if not statement.get("__object_type__", None):
-            print("ERROR HERE")
+         
             raise Exception("A statement type must be selected")
 
     statements = create_parse_statements(data["has_statements"])
@@ -537,11 +538,12 @@ class FactoidViewSet(viewsets.ViewSet):
         return Response(get_unpack_factoid(pk=pk))
 
     def create(self, request):
+       
         with transaction.atomic():
             try:
                 factoid = create_parse_factoid(request.data)
             except Exception as e:
-                print("error", e)
+                print("ERROR CREATING FACTOID", e)
                 return Response(
                     {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
                     status=400,

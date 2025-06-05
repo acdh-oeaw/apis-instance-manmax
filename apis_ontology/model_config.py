@@ -98,7 +98,7 @@ def build_relation_to_types(model_class):
     relations_to_entities = {}
     relations_to_statements = {}
     rels = build_relations_dict(model_class)
-    print(rels)
+
     for rel_name, rel_def in rels.items():
         related_types = set(
             [
@@ -185,7 +185,7 @@ model_config = build_model_config()
 
 if __name__ == "__main__":
     construct_properties()
-    print(overridden_properties)
+  
     model_config = build_model_config()
 
     with open("model_config.json", "w") as f:
