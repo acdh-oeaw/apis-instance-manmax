@@ -1,28 +1,23 @@
 from apis.urls import urlpatterns
-
-
-from .viewsets import (
-    FactoidViewSet,
-    AutocompleteViewSet,
-    SolidJsView,
-    EntityViewSet,
-    PersonViewSet,
-    EdiarumPersonViewset,
-    EdiarumPlaceViewset,
-    EdiarumOrganisationViewset,
-    LeaderboardViewSet,
-    UsersViewSet,
-    ExampleViewSet
-)
-from django.urls import path, re_path
-
-from django.shortcuts import render
-from django.templatetags.static import static
-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required as django_login_required
+from django.shortcuts import render
+from django.templatetags.static import static
+from django.urls import path, re_path
 
-from django.contrib.auth.decorators import user_passes_test
+from .viewsets import (
+    AutocompleteViewSet,
+    EdiarumOrganisationViewset,
+    EdiarumPersonViewset,
+    EdiarumPlaceViewset,
+    EntityViewSet,
+    ExampleViewSet,
+    FactoidViewSet,
+    LeaderboardViewSet,
+    PersonViewSet,
+    SolidJsView,
+    UsersViewSet,
+)
 
 
 def frontend(request):
@@ -75,29 +70,31 @@ custom_url_patterns = [
         login_required(SolidJsView.as_view()),
         name="example_interface_view",
     ),
- 
-    path("manmax/example/", 
-         login_required(ExampleViewSet.as_view({"get": "list"})), 
-         name="example_list"
+    path(
+        "manmax/example/",
+        login_required(ExampleViewSet.as_view({"get": "list"})),
+        name="example_list",
     ),
-    path("manmax/example/<int:pk>", 
-         login_required(ExampleViewSet.as_view({"get": "retrieve"})), 
-         name="example_get"
+    path(
+        "manmax/example/<int:pk>",
+        login_required(ExampleViewSet.as_view({"get": "retrieve"})),
+        name="example_get",
     ),
-    path("manmax/example/create", 
-         login_required(ExampleViewSet.as_view({"post": "create"})), 
-         name="example_create_post"
+    path(
+        "manmax/example/create",
+        login_required(ExampleViewSet.as_view({"post": "create"})),
+        name="example_create_post",
     ),
-    path("manmax/example/<int:pk>/", 
-         login_required(ExampleViewSet.as_view({"post": "update"})), 
-         name="example_update_post"
+    path(
+        "manmax/example/<int:pk>/",
+        login_required(ExampleViewSet.as_view({"post": "update"})),
+        name="example_update_post",
     ),
     path(
         "manmax/factoid-builder/leaderboard",
         login_required(SolidJsView.as_view()),
         name="leaderboardfrontend",
     ),
-    
     path(
         "manmax/factoid-builder/", login_required(SolidJsView.as_view()), name="solid"
     ),
@@ -137,7 +134,7 @@ custom_url_patterns = [
         name="create_factoid",
     ),
     path(
-        "manmax/factoids/api/create/",
+        "manmax/factoids/api/create",
         FactoidViewSet.as_view({"post": "create"}),
         name="create_factoid_api",
     ),
@@ -154,4 +151,3 @@ custom_url_patterns = [
 ]
 
 urlpatterns += custom_url_patterns
-
