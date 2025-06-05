@@ -7,3 +7,5 @@ FactoidData.BACKUP.json
 FactoidExtractionErrors.txt
 
 venv
+
+get_factoids_for_person.py
