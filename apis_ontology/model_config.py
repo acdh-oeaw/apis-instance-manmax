@@ -100,12 +100,16 @@ def build_relation_to_types(model_class):
     rels = build_relations_dict(model_class)
 
     for rel_name, rel_def in rels.items():
+    
         related_types = set(
             [
                 getattr(get_entity_class_of_name(rel_type), "__entity_type__", "Entity")
-                for rel_type in rel_def["allowed_types"]
+                for rel_type in rel_def["allowed_types"] if rel_type != "unreconciled"
             ]
         )
+     
+        
+        
         if len(related_types) > 1:
             raise Exception(
                 f"Model class {model_class} on field {rel_name} is related to Entities and Statements: {rel_def['allowed_types']}"

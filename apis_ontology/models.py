@@ -35,6 +35,7 @@ OTHER = "Andere"
 
 ENTITY = "Entities"
 STATEMENT = "Statements"
+UNRECONCILED = "Unreconciled"
 
 group_order = [
     GENERIC,
@@ -49,6 +50,12 @@ group_order = [
     OTHER,
 ]
 
+@reversion.register(follow=["tempentityclass_ptr"])
+class Unreconciled(TempEntityClass):
+    __entity_group__ = None
+    __entity_type__ = UNRECONCILED
+    
+    unreconciled_type = models.CharField(max_length=200)
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class Typology(TempEntityClass):
@@ -144,6 +151,8 @@ class ManMaxTempEntityClass(TempEntityClass):
         default=list,
         editable=False,
     )
+    reconcile_text = models.TextField(blank=True, null=True, default="")
+    
 
     def save(self, auto_created=False, *args, **kwargs):
         if auto_created:
@@ -161,6 +170,7 @@ class Factoid(ManMaxTempEntityClass):
     review_notes = models.TextField(blank=True, null=True)
     review_by = models.CharField(blank=True, max_length=50)
     problem_flagged = models.BooleanField(default=False)
+    contains_unreconciled = models.BooleanField(default=False)
 
     class Meta:
         pass
@@ -1860,9 +1870,15 @@ def build_property(
     if isinstance(obj_class, Iterable):
         for oclass in set(obj_class):
             prop.obj_class.add(ContentType.objects.get_for_model(oclass))
+            
+        if any(oc.__entity_type__ == ENTITY for oc in obj_class):
+            prop.obj_class.add(ContentType.objects.get_for_model(Unreconciled))
 
     else:
         prop.obj_class.add(ContentType.objects.get_for_model(obj_class))
+        
+        if obj_class.__entity_type__ == ENTITY:
+            prop.obj_class.add(ContentType.objects.get_for_model(Unreconciled))
 
     return prop
 

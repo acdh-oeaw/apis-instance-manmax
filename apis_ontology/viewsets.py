@@ -17,6 +17,7 @@ from apis_bibsonomy.utils import get_bibtex_from_url
 
 from django.shortcuts import render
 from apis_ontology.model_config import model_config
+from apis_ontology.models import Unreconciled
 from apis_ontology.utils import create_html_citation_from_csl_data_string
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
@@ -41,6 +42,7 @@ def get_unpack_statement(obj):
         rel_obj_type = rel_obj.__class__.__name__.lower()
         related_obj_def = model_config[rel_obj_type]
         fields_to_get = related_obj_def["fields"].keys()
+        print(fields_to_get)
         current_obj_dict = (
             {
                 "__object_type__": rel_obj_type,
@@ -50,7 +52,17 @@ def get_unpack_statement(obj):
                 **get_unpack_statement(rel_obj),
             }
             if rel_obj.__entity_type__ == "Statements"
+            
             else {
+                "__object_type__": rel_obj_type,
+                "id": rel_obj.id,
+                "label": rel_obj.name,
+                "unreconciled_type": rel_obj.unreconciled_type
+            }
+            if rel_obj_type == "unreconciled" else
+
+            
+            {
                 "__object_type__": rel_obj_type,
                 "id": rel_obj.id,
                 "label": rel_obj.name,
@@ -95,6 +107,7 @@ def get_unpack_factoid(pk):
             "reviewed_by": obj.review_by,
             "review_notes": obj.review_notes,
             "problem_flagged": obj.problem_flagged,
+            "contains_unreconciled": obj.contains_unreconciled,
         },
         "name": obj.name,
         "source": reference,
@@ -149,6 +162,23 @@ def create_parse_statements(statements):
                         subj=statement_obj, obj=related_instance, prop=property_model
                     )
                     tt.save()
+                    
+                unreconciled_entities = [
+                    related_item
+                    for related_item in related_entity_list
+                    if related_item["__object_type__"]
+                    == "unreconciled"
+                ]
+                #print(unreconciled_entities)
+                for unreconciled_entity in unreconciled_entities:
+                   
+                    unreconciled_object =  Unreconciled(name=unreconciled_entity["name"], unreconciled_type=unreconciled_entity["unreconciled_type"])
+                    unreconciled_object.save()
+                    tt = TempTriple(subj=statement_obj, obj=unreconciled_object, prop=property_model)
+                    tt.save()
+                
+
+
 
             if relation_name in object_type_config["relations_to_statements"]:
                 property_model = object_type_config["relations_to_statements"][
@@ -179,9 +209,23 @@ def create_parse_statements(statements):
     return created_statements
 
 
+def contains_unreconciled(data):
+    for k, v in data.items():
+        if k == "__object_type__" and v == "unreconciled":
+            return True
+
+        if isinstance(v, list):
+            for item in v:
+                if contains_unreconciled(item):
+                    return True
+
+    return False
+
+
 def create_parse_factoid(data):
     
-    factoid = Factoid(name=data["name"])
+    
+    factoid = Factoid(name=data["name"], contains_unreconciled=contains_unreconciled(data))
     factoid.save()
 
     for statement in data["has_statements"]:
@@ -279,7 +323,11 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                 for k, v in incoming_statements[tt.obj.id].items()
                 if k in object_type_config["relations_to_entities"]
             }
+            
+           
+            
             for k, v in relation_to_entities.items():
+            
                 property = Property.objects.get(
                     subj_class=get_contenttype_of_class(
                         object_type_config["model_class"]
@@ -299,10 +347,23 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                         itt.delete()
 
                 for incoming_relation in v:
+                    
                     if incoming_relation["id"] not in inner_tt_in_db_by_obj_id:
                         relation_object_to_add = model_config[
                             incoming_relation["__object_type__"]
                         ]["model_class"].objects.get(pk=incoming_relation["id"])
+                        
+                        if "reconcileValue" in incoming_relation:
+                            
+                            if not relation_object_to_add.reconcile_text:
+                                relation_object_to_add.reconcile_text = ""
+                            
+                            if incoming_relation['reconcileValue'] not in relation_object_to_add.reconcile_text:
+                                
+                                relation_object_to_add.reconcile_text += f" {incoming_relation['reconcileValue']}"
+                            relation_object_to_add.save()
+                            
+                        
                         itt = TempTriple(
                             subj=tt.obj, obj=relation_object_to_add, prop=property
                         )
@@ -363,6 +424,7 @@ def edit_parse_factoid(data, pk, user=""):
         raise Exception
     factoid = Factoid.objects.get(pk=data["id"])
     factoid.name = data["name"]
+    factoid.contains_unreconciled = contains_unreconciled(data)
 
     if data.get("review", {}).get("reviewed") and (
         factoid.reviewed != data.get("review", {}).get("reviewed")
@@ -435,12 +497,14 @@ class AutocompleteViewSet(viewsets.ViewSet):
         relatable_type_names = model_config[subj_entity_type]["relations_to_entities"][
             relation_name
         ]["allowed_types"]
+        
+        
 
         if filter_by_type := request.query_params.get("filter_by_type", None):
             relatable_models = [model_config[filter_by_type]["model_class"]]
         else:
             relatable_models = [
-                model_config[name]["model_class"] for name in relatable_type_names
+                model_config[name]["model_class"] for name in relatable_type_names if name != "unreconciled"
             ]
 
         search_items = request.query_params["q"].lower().split(" ")
@@ -448,8 +512,12 @@ class AutocompleteViewSet(viewsets.ViewSet):
         q = Q()
         for si in search_items:
             q &= Q(name__icontains=si)
+            
             if hasattr(relatable_models, "internal_notes"):
                 q |= Q(internal_notes__icontains=si)
+                
+            if hasattr(relatable_models, "reconcile_text"):
+                q |= Q(reconcile_text__icontains=si)
 
         results = []
         for model in relatable_models:
@@ -494,12 +562,15 @@ class FactoidViewSet(viewsets.ViewSet):
             factoids = factoids.filter(created_by=request.user.username)
 
         if statusFilter := request.query_params.get("status"):
+            print(statusFilter)
             if statusFilter == "unchecked":
                 factoids = factoids.filter(reviewed=False)
             elif statusFilter == "checked":
                 factoids = factoids.filter(reviewed=True, problem_flagged=False)
             elif statusFilter == "error":
                 factoids = factoids.filter(reviewed=True, problem_flagged=True)
+            elif statusFilter == "containsUnreconciled":
+                factoids = factoids.filter(contains_unreconciled=True)
 
         if userFilter := request.query_params.get("user"):
             factoids = factoids.filter(created_by=userFilter)
@@ -528,6 +599,7 @@ class FactoidViewSet(viewsets.ViewSet):
                     "modified_when": f.modified_when,
                     "reviewed": f.reviewed,
                     "problem_flagged": f.problem_flagged,
+                    "contains_unreconciled": f.contains_unreconciled,
                 }
                 for f in factoids
             ],
