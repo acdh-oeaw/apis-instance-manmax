@@ -50,12 +50,14 @@ group_order = [
     OTHER,
 ]
 
+
 @reversion.register(follow=["tempentityclass_ptr"])
 class Unreconciled(TempEntityClass):
     __entity_group__ = None
     __entity_type__ = UNRECONCILED
-    
+
     unreconciled_type = models.CharField(max_length=200)
+
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class Typology(TempEntityClass):
@@ -64,6 +66,76 @@ class Typology(TempEntityClass):
 
     class Meta:
         pass
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class DayInReligiousCalendarType(Typology):
+    __entity_group__ = GENERIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Typ des Tages im religiösen Kalender"
+        verbose_name_plural = "Typen von Tage im religiösen Kalender"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class IllnessType(Typology):
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Krankheitstyp"
+        verbose_name_plural = "Krankheitstypen"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class AllowanceType(Typology):
+    __entity_group__ = GENERIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        pass
+        # TODO: ADD VERBOSE NAMES
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class ChurchServiceType(Typology):
+    __entity_group__ = GENERIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Gottesdiensttyp"
+        verbose_name_plural = "Gottesdiensttypen"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class MusicPerformanceType(Typology):
+    __entity_group__ = MUSIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Musikaufführungstyp"
+        verbose_name_plural = "Musikaufführungstypen"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class SingingType(Typology):
+    __entity_group__ = MUSIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Gesangstyp"
+        verbose_name_plural = "Gesangstypen"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class InstrumentType(Typology):
+    __entity_group__ = MUSIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Instrumententyp"
+        verbose_name_plural = "Instrumententypen"
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -152,7 +224,6 @@ class ManMaxTempEntityClass(TempEntityClass):
         editable=False,
     )
     reconcile_text = models.TextField(blank=True, null=True, default="")
-    
 
     def save(self, auto_created=False, *args, **kwargs):
         if auto_created:
@@ -1817,6 +1888,239 @@ class GenericEducation(GenericStatement):
         verbose_name_plural = "Ausbildungen"
 
 
+@reversion.register(follow=["genericstatement_ptr"])
+class Request(GenericStatement):
+    """Describes a request made by a person to another person or organisation"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Bitte"
+        verbose_name_plural = "Bitten"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class AssociationWithPlace(GenericStatement):
+    """Describes the association of a person with a place, e.g. 'John of Bristol'
+    (this typically describes a place of origin, not necessarily a place of birth).
+    For a specific location of a person at a particular time, use Aufenthaltsort"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Assoziation mit Ort"
+        verbose_name_plural = "Assoziationen mit Ort"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class ResignationFromRole(GenericStatement):
+    """Describes the resignation of a person from a role in an organisation"""
+
+    __entity_group__ = ROLE_ORGANISATIONS
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Rücktritt von Amt"
+        verbose_name_plural = "Rücktritte von Amt"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class CancellationOfDebt(GenericStatement):
+    """Describes the cancellation of a debt owed by one Person/Organisation to another Person/Organisation"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Schuldenserlass"
+        verbose_name_plural = "Schuldenserlasse"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Promise(GenericStatement):
+    """Describes a promise made by a person to another person or organisation"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Versprechen"
+        verbose_name_plural = "Versprechen"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class GrantingOfIndulgence(GenericStatement):
+    """Describes the granting of an indulgence by a person to another person"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    description_of_indulgence = models.CharField(
+        max_length=1000, blank=True, null=True, verbose_name="Beschreibung des Ablasses"
+    )
+
+    class Meta:
+        verbose_name = "Gewährung von Ablass"
+        verbose_name_plural = "Gewährungen von Ablass"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class LegitimacyOfBirth(GenericStatement):
+    """Describes the legitimacy of a person's birth, e.g. 'Maximilian was born legitimate'"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    OPTIONS = (
+        ("ehelichkeit", "Ehelichkeit"),
+        ("außerehelichkeit", "Außerehelichkeit"),
+    )
+    legitimacy = models.CharField(
+        max_length=16, choices=OPTIONS, blank=True, verbose_name="Legitimität"
+    )
+
+    class Meta:
+        verbose_name = "Legitimität der Geburt"
+        verbose_name_plural = "Legitimitäten der Geburt"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class GrantingOfDispensation(GenericStatement):
+    """Describes the granting of a dispensation by a person to another person"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    dispensation_description = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        verbose_name="Beschreibung der Dispens",
+    )
+
+    class Meta:
+        verbose_name = "Gewährung von Dispens"
+        verbose_name_plural = "Gewährungen von Dispense"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class PresentationForRole(GenericStatement):
+    """Describes the presentation of a person for a role in an organisation, e.g. 'Maximilian was presented for the role of King of the Romans by his father Frederick III'"""
+
+    __entity_group__ = ROLE_ORGANISATIONS
+    __entity_type__ = STATEMENT
+
+    OPTIONS = (
+        ("accepted", "Akzeptiert"),
+        ("notAccepted", "nicht akzeptiert"),
+        ("unknown", "Unbekannt"),
+    )
+    role_obtained = models.CharField(
+        max_length=12,
+        blank=True,
+        null=True,
+        choices=OPTIONS,
+        verbose_name="",
+    )
+
+    class Meta:
+        verbose_name = "Besetzungsvorschlag für Amt"
+        verbose_name_plural = "Besetzungsvorschläge für Amt"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class PersonHasIllness(GenericStatement):
+    """Describes the illness of a person at a particular time"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Krankheit einer Person"
+        verbose_name_plural = "Krankheiten einer Person"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class IndividualMusicalPerformance(GenericStatement):
+    """Describes the performance of a piece of music by a person as part of of a MusicPerformance"""
+
+    __entity_group__ = MUSIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Individuelle Musikaufführung"
+        verbose_name_plural = "Individuelle Musikaufführungen"
+
+
+@reversion.register(follow=["individualmusicalperformance_ptr"])
+class SingingPerformance(IndividualMusicalPerformance):
+    """Describes the singing of a person as part of a MusicPerformance"""
+
+    __entity_group__ = MUSIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Gesangsaufführung"
+        verbose_name_plural = "Gesangsaufführungen"
+
+
+@reversion.register(follow=["individualmusicalperformance_ptr"])
+class InstrumentalPerformance(IndividualMusicalPerformance):
+    """Describes the playing of an instrument by a person as part of a MusicPerformance"""
+
+    __entity_group__ = MUSIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Instrumentalaufführung"
+        verbose_name_plural = "Instrumentalaufführungen"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class ChurchService(GenericStatement):
+    """Describes a church service"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Gottesdienst"
+        verbose_name_plural = "Gottesdienste"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class DayInReligiousCalendar(ManMaxTempEntityClass):
+    """A day in the religious calendar, e.g. a feast day"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = ENTITY
+
+    moveable_or_immoveable_feast = models.CharField(
+        max_length=20,
+        choices=(("moveable", "Beweglich"), ("immoveable", "Feste")),
+        blank=True,
+        verbose_name="Art des Feiertages",
+    )
+
+    class Meta:
+        verbose_name = "Tag im Kirchenjahr"
+        verbose_name_plural = "Tage im Kirchenjahr"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Contract(GenericStatement):
+    """Describes a contract between two parties, e.g. 'Maximilian contracts with the city of Vienna to provide him with horses'"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Vertrag"
+        verbose_name_plural = "Verträge"
+
+
 overridden_properties = defaultdict(lambda: set())
 
 
@@ -1870,13 +2174,13 @@ def build_property(
     if isinstance(obj_class, Iterable):
         for oclass in set(obj_class):
             prop.obj_class.add(ContentType.objects.get_for_model(oclass))
-            
+
         if any(oc.__entity_type__ == ENTITY for oc in obj_class):
             prop.obj_class.add(ContentType.objects.get_for_model(Unreconciled))
 
     else:
         prop.obj_class.add(ContentType.objects.get_for_model(obj_class))
-        
+
         if obj_class.__entity_type__ == ENTITY:
             prop.obj_class.add(ContentType.objects.get_for_model(Unreconciled))
 
@@ -1891,8 +2195,10 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
-    
-    education_type_subtype = build_property( "unterkategories von", "is supertype of", EducationType, EducationType)
+
+    education_type_subtype = build_property(
+        "unterkategories von", "is supertype of", EducationType, EducationType
+    )
 
     matriculation_person_matriculating = build_property(
         "Immatrikulierende Person", "hat immatrikuliert", Matriculation, Person
@@ -1948,10 +2254,10 @@ def construct_properties():
     education_place = build_property(
         "Ort", "ist Ausbildungsort von", GenericEducation, Place
     )
-    
-    education_education_type = build_property("Ausbildungstyp", "ist Ausbildungstyp von", GenericEducation, EducationType)
-    
-    
+
+    education_education_type = build_property(
+        "Ausbildungstyp", "ist Ausbildungstyp von", GenericEducation, EducationType
+    )
 
     graduation_degree_subject = build_property(
         "Studientfach", "ist Studienfach von", Graduation, EducationSubject
@@ -2324,7 +2630,10 @@ def construct_properties():
         [Person, PersonWithProxy, *subclasses(Organisation)],
     )
     assignment_to_role_assignee = build_property(
-        "Amtsempfänger", "was assigned role in", AssignmentToRole, Person
+        "Amtsempfänger",
+        "was assigned role in",
+        AssignmentToRole,
+        [Person, PersonWithProxy],
     )
     assignment_to_role_starts_role_occupation = build_property(
         "bekleidetes Amt",
@@ -2349,6 +2658,23 @@ def construct_properties():
         "bekleidetes Amt",
         "was ended by",
         RemovalFromRole,
+        RoleOccupation,
+    )
+
+    resignation_from_role_role = build_property(
+        "Amt zurückgetreten von",
+        "was removed from person in",
+        ResignationFromRole,
+        Role,
+    )
+
+    resignation_from_role_resigner = build_property(
+        "zurücktretende Person", "removed from role in", ResignationFromRole, Person
+    )
+    resignation_from_role_role_from_role_ends_role_occupation = build_property(
+        "bekleidetes Amt",
+        "was ended by",
+        ResignationFromRole,
         RoleOccupation,
     )
 
@@ -2931,4 +3257,379 @@ def construct_properties():
             RoleOccupation,
             AssignmentToRole,
         ],
+    )
+
+    request_for = build_property(
+        "Objekt der Bitte",
+        "was requested in",
+        subclasses(Request),
+        [
+            PerformanceOfTask,
+            MusicPerformance,
+            *subclasses(CreationAct),
+            *subclasses(CreationCommission),
+            AssignmentToRole,
+            RemovalFromRole,
+            Payment,
+            Order,
+            OwnershipTransfer,
+            *subclasses(TransportationOfObject),
+            PersonGroupHasLocation,
+        ],
+    )
+    request_made_by = build_property(
+        "Bittsteller",
+        "made request",
+        Request,
+        [
+            Person,
+            PersonWithProxy,
+            *subclasses(GroupOfPersons),
+            *subclasses(Organisation),
+        ],
+    )
+    request_received_by = build_property(
+        "Bittschriftempfänger",
+        "received request",
+        Request,
+        [
+            Person,
+            PersonWithProxy,
+            *subclasses(Organisation),
+            *subclasses(GroupOfPersons),
+        ],
+    )
+
+    request_place_of_request = build_property(
+        "Ort der Bittstellung",
+        "was place of request in",
+        Request,
+        Place,
+    )
+
+    association_with_place_person = build_property(
+        "Person",
+        "ist assoziiert mit",
+        AssociationWithPlace,
+        Person,
+    )
+    association_with_place_place = build_property(
+        "Ort",
+        "is associated place in",
+        AssociationWithPlace,
+        Place,
+    )
+
+    cancellation_of_debt_person_cancelling = build_property(
+        "Schuldenerlassender",
+        "cancelling debt in",
+        CancellationOfDebt,
+        [
+            Person,
+            PersonWithProxy,
+            *subclasses(Organisation),
+            *subclasses(GroupOfPersons),
+        ],
+    )
+
+    cancellation_of_debt_debt = build_property(
+        "zu erlassende Schuld",
+        "debt cancelled in",
+        CancellationOfDebt,
+        DebtOwed,
+    )
+
+    promise_person_promising = build_property(
+        "Versprechen gebende Person",
+        "made promise in",
+        Promise,
+        [
+            Person,
+            PersonWithProxy,
+            *subclasses(Organisation),
+            *subclasses(GroupOfPersons),
+        ],
+    )
+
+    promise_thing_promised = build_property(
+        "versprochenes Objekt",
+        "was promised in",
+        Promise,
+        [
+            PerformanceOfTask,
+            MusicPerformance,
+            *subclasses(CreationAct),
+            *subclasses(CreationCommission),
+            AssignmentToRole,
+            RemovalFromRole,
+            Payment,
+            Order,
+            OwnershipTransfer,
+            *subclasses(TransportationOfObject),
+        ],
+    )
+    promise_person_promised_to = build_property(
+        "die Person der etwas versprochen wird",
+        "was promised to in",
+        Promise,
+        [
+            Person,
+            PersonWithProxy,
+            *subclasses(Organisation),
+            *subclasses(GroupOfPersons),
+        ],
+    )
+
+    promise_place_of_promise = build_property(
+        "Ort des Versprechens",
+        "was place of promise in",
+        Promise,
+        Place,
+    )
+
+    granting_of_indulgence_granter = build_property(
+        "Ablassanbieter",
+        "granted indulgence in",
+        GrantingOfIndulgence,
+        [*subclasses(Person), *subclasses(GroupOfPersons), *subclasses(Organisation)],
+    )
+
+    granting_of_indulgence_recipient = build_property(
+        "Ablassnehmer",
+        "recipient of indulgence in",
+        GrantingOfIndulgence,
+        [*subclasses(Person), *subclasses(GroupOfPersons), *subclasses(Organisation)],
+    )
+
+    legitimacy_of_birth_person = build_property(
+        "Person",
+        "has birth legitimacy",
+        LegitimacyOfBirth,
+        Person,
+    )
+
+    granting_of_dispensation_granter = build_property(
+        "Dispens erteilt von",
+        "granted dispensation in",
+        GrantingOfDispensation,
+        [
+            *subclasses(Person),
+            *subclasses(GroupOfPersons),
+            *subclasses(Organisation),
+            PersonWithProxy,
+        ],
+    )
+
+    granting_of_dispensation_recipient = build_property(
+        "Empfänger der Dispens",
+        "recipient of dispensation in",
+        GrantingOfDispensation,
+        [
+            *subclasses(Person),
+            *subclasses(GroupOfPersons),
+            *subclasses(Organisation),
+            PersonWithProxy,
+        ],
+    )
+
+    granting_of_dispensation_object = build_property(
+        "Objekt des Dispenses",
+        "is type of dispensation in",
+        GrantingOfDispensation,
+        [
+            MarriageBeginning,
+            OwnershipTransfer,
+            RoleOccupation,
+            LegitimacyOfBirth,
+            Burial,
+        ],
+    )
+
+    presentation_for_role_person_presented = build_property(
+        "präsentierte Person",
+        "was presented in",
+        PresentationForRole,
+        Person,
+    )
+
+    presentation_for_role_presenter = build_property(
+        "präsentierende Person",
+        "was presenter in",
+        PresentationForRole,
+        [Person, PersonWithProxy, *subclasses(Organisation)],
+    )
+
+    presentation_for_role_role = build_property(
+        "Amt",
+        "was presented in",
+        PresentationForRole,
+        Role,
+    )
+
+    person_has_illness_person = build_property(
+        "Kranker",
+        "has illness",
+        PersonHasIllness,
+        Person,
+    )
+
+    person_has_illness_illnes_type = build_property(
+        "Krankheitstyp",
+        "is type of illness",
+        PersonHasIllness,
+        IllnessType,
+    )
+
+    person_has_illness_place = build_property(
+        "Ort der Erkrankung",
+        "is place of illness",
+        PersonHasIllness,
+        Place,
+    )
+
+    music_performance_type = build_property(
+        "Musikaufführungstyp",
+        "is type of music performance",
+        MusicPerformance,
+        MusicPerformanceType,
+    )
+
+    music_performance_performed_work = build_property(
+        "aufgeführtes Werk",
+        "was performed in",
+        MusicPerformance,
+        [MusicWork],
+    )
+    music_performance_attendees = build_property(
+        "Aufführungsteilnehmer",
+        "attended performance",
+        MusicPerformance,
+        [Person, GroupOfPersons, *subclasses(Organisation), PersonWithProxy],
+    )
+
+    music_performance_location = build_property(
+        "Ort der Aufführung",
+        "is location of performance",
+        MusicPerformance,
+        Place,
+        overrides=[activity_has_place],
+    )
+
+    music_performance_individual_performances = build_property(
+        "enthält Individuelle Musikaufführungen",
+        "is individual performance in",
+        MusicPerformance,
+        IndividualMusicalPerformance,
+    )
+
+    individiual_music_performance_place = build_property(
+        "Ort der Musikaufführung",
+        "is location of individual music performance",
+        IndividualMusicalPerformance,
+        Place,
+        overrides=[activity_has_place],
+    )
+
+    individual_music_performance_performer = build_property(
+        "Musikant",
+        "was performer in individual music performance",
+        IndividualMusicalPerformance,
+        [Person, PersonWithProxy, *subclasses(Organisation)],
+    )
+
+    singing_performance_singing_type = build_property(
+        "Gesangstyp",
+        "is type of singing performance",
+        SingingPerformance,
+        SingingType,
+    )
+
+    instrumental_performance_instrument_type = build_property(
+        "Instrumententyp",
+        "is type of instrumental performance",
+        InstrumentalPerformance,
+        InstrumentType,
+    )
+
+    church_service_type = build_property(
+        "Gottesdiensttyp", "is type of church service", ChurchService, ChurchServiceType
+    )
+
+    church_service_attendees = build_property(
+        "Gottesdienstteilnehmer",
+        "attended church service",
+        ChurchService,
+        [Person, GroupOfPersons, *subclasses(Organisation), PersonWithProxy],
+    )
+
+    church_service_location = build_property(
+        "Ort des Gottesdienstes",
+        "is location of church service",
+        ChurchService,
+        Place,
+        overrides=[activity_has_place],
+    )
+
+    church_service_involves_performance = build_property(
+        "Teil eines Gottesdienstes",
+        "war Teil eines Gottesdienstes",
+        ChurchService,
+        [
+            MusicPerformance,
+            *subclasses(IndividualMusicalPerformance),
+            PerformanceOfWork,
+        ],
+    )
+
+    church_service_reason = build_property(
+        "Anlass des Gottesdienstes",
+        "is reason for church service",
+        ChurchService,
+        [Death, MarriageBeginning, Baptism],
+    )
+
+    church_service_religious_calendar_date = build_property(
+        "Tag in Kirchenjahr",
+        "is religious calendar date of church service",
+        ChurchService,
+        DayInReligiousCalendar,
+    )
+
+    contract_persons = build_property(
+        "Vertragspartner",
+        "are parties in contract",
+        Contract,
+        [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
+    )
+
+    contract_object = build_property(
+        "Vertragsgegenstand",
+        "is object of contract",
+        Contract,
+        [
+            PerformanceOfTask,
+            MusicPerformance,
+            *subclasses(CreationAct),
+            *subclasses(CreationCommission),
+            AssignmentToRole,
+            RemovalFromRole,
+            Payment,
+            Order,
+            OwnershipTransfer,
+            *subclasses(TransportationOfObject),
+        ],
+    )
+
+    contract_place = build_property(
+        "Ort des Vertragsabschlusses",
+        "is place of contract",
+        Contract,
+        Place,
+    )
+
+    contract_witnesses = build_property(
+        "Zeugen des Vertrags",
+        "are witnesses of contract",
+        Contract,
+        [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
     )
