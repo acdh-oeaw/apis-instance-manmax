@@ -171,8 +171,8 @@ def create_parse_statements(statements):
                 ]
                 #print(unreconciled_entities)
                 for unreconciled_entity in unreconciled_entities:
-                   
-                    unreconciled_object =  Unreconciled(name=unreconciled_entity["name"], unreconciled_type=unreconciled_entity["unreconciled_type"])
+                    unreconciled_name = unreconciled_entity.get("name", unreconciled_entity.get("label"))
+                    unreconciled_object =  Unreconciled(name=unreconciled_name, unreconciled_type=unreconciled_entity["unreconciled_type"])
                     unreconciled_object.save()
                     tt = TempTriple(subj=statement_obj, obj=unreconciled_object, prop=property_model)
                     tt.save()
@@ -613,12 +613,13 @@ class FactoidViewSet(viewsets.ViewSet):
         return Response(get_unpack_factoid(pk=pk))
 
     def create(self, request):
-       
+        import traceback
         with transaction.atomic():
             try:
                 factoid = create_parse_factoid(request.data)
             except Exception as e:
                 print("ERROR CREATING FACTOID", e)
+                print(traceback.format_exc())
                 return Response(
                     {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
                     status=400,
