@@ -42,7 +42,7 @@ def get_unpack_statement(obj):
         rel_obj_type = rel_obj.__class__.__name__.lower()
         related_obj_def = model_config[rel_obj_type]
         fields_to_get = related_obj_def["fields"].keys()
-        print(fields_to_get)
+     
         current_obj_dict = (
             {
                 "__object_type__": rel_obj_type,
@@ -345,6 +345,9 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                 for itt in inner_temp_triples_in_db:
                     if itt.obj.id not in incoming_relation_to_entities_by_id:
                         itt.delete()
+                        
+                        if isinstance(itt.obj, Unreconciled):
+                            itt.obj.delete()
 
                 for incoming_relation in v:
                     
@@ -636,6 +639,10 @@ class FactoidViewSet(viewsets.ViewSet):
                 )
             return Response(get_unpack_factoid(pk=factoid.pk))
 
+    def current_dump(self, request):
+        with open("FactoidData.DUMP.json") as f:
+            data = json.loads(f.read())
+        return Response(data)
 
 class SolidJsView(TemplateView):
     template_name = "apis_ontology/solid_index.html"
@@ -694,6 +701,7 @@ class EntityViewSet(viewsets.ViewSet):
                 "id": new_entity.id,
             }
         )
+
 
 
 class PersonViewSet(viewsets.ViewSet):
@@ -926,6 +934,66 @@ class EdiarumOrganisationViewset(viewsets.ViewSet):
         response["content-type"] = "application/xml"
         return response
 
+from apis_ontology.utils import get_factoids_for_unreconciled
+
+class UnreconciledViewSet(viewsets.ViewSet):
+    def list(self, request):
+        if not request.query_params.get("source", None) and not request.query_params.get("id", None) :
+            return Response(
+                {"message": "A source, id and type must be provided"}, status=401
+            )
+        factoids = get_factoids_for_unreconciled(request.query_params["id"], request.query_params["source"])  
+    
+            
+        return Response(factoids)
+    
+    def create(self, request):
+        
+        reconcile_to_object_data = request.data.get("reconcile_to_object", None)
+        if not reconcile_to_object_data:
+            raise Exception("Reconcile to object data missing")
+        reconciled_object_type = model_config[reconcile_to_object_data["__object_type__"]]["model_class"]
+        reconciled_object = reconciled_object_type.objects.get(pk=reconcile_to_object_data["id"])
+        
+        
+        reconciliations = request.data.get("reconciliations", None)
+        if not reconciliations:
+            raise Exception("Reconciliation data missing")
+        
+        with transaction.atomic():
+            
+            for unreconciled_id, reconciliation in reconciliations.items():
+                if not reconciliation.get("isSelected", False):
+                    continue
+                
+                factoid_id = reconciliation["id"]
+                factoid = Factoid.objects.get(pk=factoid_id)
+                
+                ur = Unreconciled.objects.get(pk=unreconciled_id)
+                
+                tt = TempTriple.objects.get(obj__pk=ur.pk)
+                
+                tt_new = TempTriple(subj=tt.subj, obj=reconciled_object, prop=tt.prop)
+                
+                tt_new.save()
+                
+                tt.delete()
+                ur.delete()
+                
+                factoid_data = get_unpack_factoid(factoid_id)
+                factoid.contains_unreconciled = contains_unreconciled(factoid_data)
+                
+                factoid.save()
+                
+                
+                
+            
+            
+        
+        
+        
+        
+        return Response({"message": "Success"}, status=200)
 
 class LeaderboardViewSet(viewsets.ViewSet):
     def list(self, request):

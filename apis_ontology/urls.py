@@ -17,6 +17,7 @@ from .viewsets import (
     PersonViewSet,
     SolidJsView,
     UsersViewSet,
+    UnreconciledViewSet
 )
 
 
@@ -28,11 +29,12 @@ def login_required(view):
     if settings.DEV_VERSION == True:
         
         return view
-    #return django_login_required(view)
-    return view
+    return django_login_required(view)
+   
 
 
 custom_url_patterns = [
+    
     path(
         "ediarum/organisation/",
         EdiarumOrganisationViewset.as_view(
@@ -140,6 +142,13 @@ custom_url_patterns = [
         FactoidViewSet.as_view({"post": "create"}),
         name="create_factoid_api",
     ),
+    path(
+        "manmax/factoids/api/dump",
+        FactoidViewSet.as_view({"get": "current_dump"}),
+        name="dump_factoid_data",
+    ),
+    path("manmax/api/unreconciled", UnreconciledViewSet.as_view({"get": "list"}), name="unreconciled"),
+    path("manmax/api/unreconciled/update", login_required(UnreconciledViewSet.as_view({"post": "create"})), name="unreconciled_update"),
     path(
         "manmax/person/create",
         login_required(PersonViewSet.as_view({"post": "create"})),

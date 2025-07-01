@@ -7,20 +7,21 @@ import json
 
 class Command(BaseCommand):
     help = (
-        "Create and label relationships between entities by running "
-        "the construct_properties() function in your app's models.py file."
+        "Creates a dump of Factoid data"
     )
 
     def handle(self, *args, **options):
         data = []
         errors = []
-        for factoid in Factoid.objects.all():
+        count = Factoid.objects.count()
+        for i, factoid in enumerate(Factoid.objects.all()):
+            print(f"Extracting factoid {i} of {count}: {factoid}")
             try:
                 data.append(get_unpack_factoid(factoid.pk))
             except Exception as e:
                 errors.append(f"{factoid.pk}: Error: {e}\n")
-        with open("FactoidData.BACKUP.json", "w") as f:
-            f.write(json.dumps(data))
+        with open("FactoidData.DUMP.json", "w") as f:
+            f.write(json.dumps(data, default=str))
             
         with open("FactoidExtractionErrors.txt", "w") as f:
             f.writelines(errors)
