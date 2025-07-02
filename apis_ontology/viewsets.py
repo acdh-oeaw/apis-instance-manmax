@@ -961,6 +961,7 @@ class UnreconciledViewSet(viewsets.ViewSet):
         if not reconciliations:
             raise Exception("Reconciliation data missing")
         
+        ur_name = ""
         with transaction.atomic():
             
             for unreconciled_id, reconciliation in reconciliations.items():
@@ -971,6 +972,8 @@ class UnreconciledViewSet(viewsets.ViewSet):
                 factoid = Factoid.objects.get(pk=factoid_id)
                 
                 ur = Unreconciled.objects.get(pk=unreconciled_id)
+                
+                ur_name = ur.name
                 
                 tt = TempTriple.objects.get(obj__pk=ur.pk)
                 
@@ -986,14 +989,7 @@ class UnreconciledViewSet(viewsets.ViewSet):
                 
                 factoid.save()
                 
-                
-                
-            
-            
-        
-        
-        
-        
+        reconciled_object.reconcile_text = f"{reconciled_object.reconcile_text} {ur_name}"
         return Response({"message": "Success"}, status=200)
 
 class LeaderboardViewSet(viewsets.ViewSet):
