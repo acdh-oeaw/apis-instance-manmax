@@ -613,13 +613,13 @@ class FactoidViewSet(viewsets.ViewSet):
         return Response(get_unpack_factoid(pk=pk))
 
     def create(self, request):
-        import traceback
+        
         with transaction.atomic():
             try:
                 factoid = create_parse_factoid(request.data)
             except Exception as e:
                 print("ERROR CREATING FACTOID", e)
-                print(traceback.format_exc())
+                #print(traceback.format_exc())
                 return Response(
                     {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
                     status=400,
@@ -629,6 +629,7 @@ class FactoidViewSet(viewsets.ViewSet):
 
     def update(self, request, pk=None):
         # print(request.user)
+        print(json.dumps(request.data))
         with transaction.atomic():
             try:
                 factoid = edit_parse_factoid(request.data, pk, request.user)
