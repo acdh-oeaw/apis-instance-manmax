@@ -55,7 +55,7 @@ def direct_statements_until_factoid(ur_id, source_id):
 
 def get_factoids_for_unreconciled(unreconciled_id, source_id):
   
-    unreconcileds_with_same_name = Unreconciled.objects.filter(name=Unreconciled.objects.get(id=unreconciled_id).name)
+    unreconcileds_with_same_name = Unreconciled.objects.filter(name=Unreconciled.objects.get(id=unreconciled_id).name)[:30]
     
 
     matching_factoids = {}
