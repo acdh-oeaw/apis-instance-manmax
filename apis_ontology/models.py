@@ -1450,6 +1450,67 @@ class SiblingRelation(FamilialRelation):
 
 
 @reversion.register(follow=["familialrelation_ptr"])
+class SiblingInLawRelation(FamilialRelation):
+    """Describes an Brother-in-Law or Sister-in-Law relationship. Due to ambiguity (sibling of spouse/spouse of sibling),
+    only use this when a more precise description (marriage and sibling relationship) are unknown.
+    """
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    SIBLING_IN_LAW_TYPE = (
+        ("schwager", "Schwager"),
+        ("schwagerin", "Schwagerin"),
+    )
+    in_law_type = models.CharField(
+        max_length=14,
+        choices=SIBLING_IN_LAW_TYPE,
+        blank=True,
+        verbose_name="Art des Verhältnisses",
+    )
+
+    class Meta:
+        verbose_name = "Schwager Verhältnis"
+        verbose_name_plural = "Schwager Verhältnisse"
+
+
+@reversion.register(follow=["familialrelation_ptr"])
+class Guardianship(FamilialRelation):
+    """Describes a Guardian/Ward relationship between two persons"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Vormundschaft"
+        verbose_name_plural = "Vormundschaften"
+
+
+@reversion.register(follow=["familialrelation_ptr"])
+class IsUncleOf(FamilialRelation):
+    """Describes an uncle/aunt relation to nephew/niece. Prefer more precise relationships (brother, father)"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Ist Onkel/Tante von"
+        verbose_name_plural = "Sind Onkel/Tanten von"
+
+
+@reversion.register(follow=["familialrelation_ptr"])
+class IsCousinOf(FamilialRelation):
+    """Describes cousin relation between two persons. Prefer more precise relationships (brother, father, etc.)"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Ist Cousin von"
+        verbose_name_plural = "Sind Cousins von"
+
+
+@reversion.register(follow=["familialrelation_ptr"])
 class MarriageBeginning(FamilialRelation):
     """Describes the beginning of a marriage between two Persons"""
 
@@ -1915,6 +1976,28 @@ class AssociationWithPlace(GenericStatement):
 
 
 @reversion.register(follow=["genericstatement_ptr"])
+class RoleOrOrganisationInServiceOfPerson(GenericStatement):
+
+    __entity_group__ = ROLE_ORGANISATIONS
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Amt/Organisation im Dienst von"
+        verbose_name_plural = "Ämter/Organisationen im Dienst von"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class PersonReportsToPerson(GenericStatement):
+
+    __entity_group__ = ROLE_ORGANISATIONS
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "hat Vorgesetzten"
+        verbose_name_plural = "hat Vorgesetzten"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
 class ResignationFromRole(GenericStatement):
     """Describes the resignation of a person from a role in an organisation"""
 
@@ -2348,6 +2431,32 @@ def construct_properties():
         "teil einer körperschaft", "organisation has role", Role, Organisation
     )
 
+    role_org_in_service_of_role_org = build_property(
+        "Amt oder Organisation",
+        "organisation/role in service of",
+        RoleOrOrganisationInServiceOfPerson,
+        [Role, Organisation],
+    )
+    role_org_in_service_of_person = build_property(
+        "Person",
+        "is served by role/organisation",
+        RoleOrOrganisationInServiceOfPerson,
+        [Person, GroupOfPersons],
+    )
+
+    person_reports_to_superior = build_property(
+        "Vorgesetzter",
+        "is superior in",
+        PersonReportsToPerson,
+        [Person, GroupOfPersons, Family],
+    )
+    person_reports_to_subordinate = build_property(
+        "Untergeben",
+        "is subordinate in",
+        PersonReportsToPerson,
+        [Person, GroupOfPersons],
+    )
+
     factoid_has_statement = build_property(
         "has_statement", "is_statement_of", Factoid, subclasses(GenericStatement)
     )
@@ -2694,6 +2803,33 @@ def construct_properties():
     sibling_relation_person_b = build_property(
         "Geschwisterteil", "has sibling_in_relationship", SiblingRelation, Person
     )
+
+    in_law_relation_person_a = build_property(
+        "Person mit Schwager oder Schwägerin",
+        "has in-law in relation",
+        SiblingInLawRelation,
+        Person,
+    )
+    in_law_relation_person_b = build_property(
+        "Schwager oder Schwägerin",
+        "is in-law in relation",
+        SiblingInLawRelation,
+        Person,
+    )
+
+    guardianship_guardian = build_property(
+        "Sachwalter", "is guardian in", Guardianship, Person
+    )
+    guardianship_ward = build_property("Mündel", "is ward in", Guardianship, Person)
+
+    is_uncle_of_uncle = build_property(
+        "Onkel oder Tante", "is uncle/aunt in", IsUncleOf, Person
+    )
+    is_uncle_of_nephew = build_property(
+        "Neffe oder Nichte", "is nephew/niece in", IsUncleOf, Person
+    )
+
+    is_cousin_of_a = build_property("Cousins", "is cousin in", IsCousinOf, Person)
 
     marriage_beginning_person = build_property(
         "Ehepartner",

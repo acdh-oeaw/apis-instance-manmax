@@ -1,26 +1,31 @@
 import json
-from collections import defaultdict, Counter, OrderedDict
+from collections import Counter, OrderedDict, defaultdict
 
+from apis_bibsonomy.models import Reference
+from apis_bibsonomy.utils import get_bibtex_from_url
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.db.models import Q
+from django.forms.models import model_to_dict
+from django.shortcuts import render
 from django.views.generic import TemplateView
-
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from apis_core.apis_relations.models import TempTriple, Property
-from apis_ontology.models import Factoid, Gendering, Naming, Person, Place, Organisation, Example
-from django.forms.models import model_to_dict
+from apis_core.apis_relations.models import Property, TempTriple
 from apis_core.utils.caching import get_contenttype_of_class, get_entity_class_of_name
-from apis_bibsonomy.models import Reference
-from apis_bibsonomy.utils import get_bibtex_from_url
-
-from django.shortcuts import render
 from apis_ontology.model_config import model_config
-from apis_ontology.models import Unreconciled
+from apis_ontology.models import (
+    Example,
+    Factoid,
+    Gendering,
+    Naming,
+    Organisation,
+    Person,
+    Place,
+    Unreconciled,
+)
 from apis_ontology.utils import create_html_citation_from_csl_data_string
-from django.db.models import Q
-from django.contrib.contenttypes.models import ContentType
 
 FIELDS_TO_EXCLUDE = [
     "start_date",
@@ -42,7 +47,7 @@ def get_unpack_statement(obj):
         rel_obj_type = rel_obj.__class__.__name__.lower()
         related_obj_def = model_config[rel_obj_type]
         fields_to_get = related_obj_def["fields"].keys()
-     
+
         current_obj_dict = (
             {
                 "__object_type__": rel_obj_type,
@@ -52,21 +57,20 @@ def get_unpack_statement(obj):
                 **get_unpack_statement(rel_obj),
             }
             if rel_obj.__entity_type__ == "Statements"
-            
-            else {
-                "__object_type__": rel_obj_type,
-                "id": rel_obj.id,
-                "label": rel_obj.name,
-                "unreconciled_type": rel_obj.unreconciled_type
-            }
-            if rel_obj_type == "unreconciled" else
-
-            
-            {
-                "__object_type__": rel_obj_type,
-                "id": rel_obj.id,
-                "label": rel_obj.name,
-            }
+            else (
+                {
+                    "__object_type__": rel_obj_type,
+                    "id": rel_obj.id,
+                    "label": rel_obj.name,
+                    "unreconciled_type": rel_obj.unreconciled_type,
+                }
+                if rel_obj_type == "unreconciled"
+                else {
+                    "__object_type__": rel_obj_type,
+                    "id": rel_obj.id,
+                    "label": rel_obj.name,
+                }
+            )
         )
         for related_statement_name in related_obj_def["relations_to_statements"]:
             if related_statement_name not in current_obj_dict:
@@ -89,8 +93,8 @@ def get_unpack_factoid(pk):
             "pages_end": ref.pages_end,
             "folio": ref.folio,
         }
-    except Exception as e:
-     
+    except Exception:
+
         reference = None
 
     # print(str(ref), ref.bibtex)
@@ -121,6 +125,32 @@ def get_unpack_factoid(pk):
     return return_data
 
 
+def create_inline_reified_relation(data):
+    object_model_config = model_config[data["__object_type__"]]
+
+    fields = {k: v for k, v in data.items() if k in object_model_config["fields"]}
+    related_entities = {
+        k: v
+        for k, v in data.items()
+        if k in object_model_config["relations_to_entities"]
+    }
+    entity_class = get_entity_class_of_name(data["__object_type__"])
+    new_entity = entity_class(**fields)
+    new_entity.save()
+
+    for relationName, relationObjects in related_entities.items():
+        subj_contenttype = get_contenttype_of_class(object_model_config["model_class"])
+        property = Property.objects.get(
+            subj_class=subj_contenttype, name_forward=relationName.replace("_", " ")
+        )
+        for relationObject in relationObjects:
+            obj_model = model_config[relationObject["__object_type__"]]["model_class"]
+            obj = obj_model.objects.get(pk=relationObject["id"])
+            tt = TempTriple(subj=new_entity, obj=obj, prop=property)
+            tt.save()
+    return new_entity
+
+
 def create_parse_statements(statements):
     created_statements = []
     for statement in statements:
@@ -146,11 +176,27 @@ def create_parse_statements(statements):
                     relation_name
                 ]["property_class"]
 
+                for related_item in related_entity_list:
+                    if model_config[related_item["__object_type__"]][
+                        "reified_relation"
+                    ] and not related_item.get("id", None):
+                        new_entity = create_inline_reified_relation(related_item)
+                        tt = TempTriple(
+                            subj=statement_obj, obj=new_entity, prop=property_model
+                        )
+                        tt.save()
+
                 related_entities = [
                     related_item
                     for related_item in related_entity_list
                     if model_config[related_item["__object_type__"]]["entity_type"]
                     == "Entities"
+                    and not (
+                        model_config[related_item["__object_type__"]][
+                            "reified_relation"
+                        ]
+                        and not related_item.get("id", None)
+                    )
                 ]
 
                 for related_entity in related_entities:
@@ -162,23 +208,26 @@ def create_parse_statements(statements):
                         subj=statement_obj, obj=related_instance, prop=property_model
                     )
                     tt.save()
-                    
+
                 unreconciled_entities = [
                     related_item
                     for related_item in related_entity_list
-                    if related_item["__object_type__"]
-                    == "unreconciled"
+                    if related_item["__object_type__"] == "unreconciled"
                 ]
-                #print(unreconciled_entities)
+                # print(unreconciled_entities)
                 for unreconciled_entity in unreconciled_entities:
-                    unreconciled_name = unreconciled_entity.get("name", unreconciled_entity.get("label"))
-                    unreconciled_object =  Unreconciled(name=unreconciled_name, unreconciled_type=unreconciled_entity["unreconciled_type"])
+                    unreconciled_name = unreconciled_entity.get(
+                        "name", unreconciled_entity.get("label")
+                    )
+                    unreconciled_object = Unreconciled(
+                        name=unreconciled_name,
+                        unreconciled_type=unreconciled_entity["unreconciled_type"],
+                    )
                     unreconciled_object.save()
-                    tt = TempTriple(subj=statement_obj, obj=unreconciled_object, prop=property_model)
+                    tt = TempTriple(
+                        subj=statement_obj, obj=unreconciled_object, prop=property_model
+                    )
                     tt.save()
-                
-
-
 
             if relation_name in object_type_config["relations_to_statements"]:
                 property_model = object_type_config["relations_to_statements"][
@@ -223,14 +272,15 @@ def contains_unreconciled(data):
 
 
 def create_parse_factoid(data):
-    
-    
-    factoid = Factoid(name=data["name"], contains_unreconciled=contains_unreconciled(data))
+
+    factoid = Factoid(
+        name=data["name"], contains_unreconciled=contains_unreconciled(data)
+    )
     factoid.save()
 
     for statement in data["has_statements"]:
         if not statement.get("__object_type__", None):
-         
+
             raise Exception("A statement type must be selected")
 
     statements = create_parse_statements(data["has_statements"])
@@ -323,11 +373,9 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                 for k, v in incoming_statements[tt.obj.id].items()
                 if k in object_type_config["relations_to_entities"]
             }
-            
-           
-            
+
             for k, v in relation_to_entities.items():
-            
+
                 property = Property.objects.get(
                     subj_class=get_contenttype_of_class(
                         object_type_config["model_class"]
@@ -345,28 +393,32 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                 for itt in inner_temp_triples_in_db:
                     if itt.obj.id not in incoming_relation_to_entities_by_id:
                         itt.delete()
-                        
+
                         if isinstance(itt.obj, Unreconciled):
                             itt.obj.delete()
 
                 for incoming_relation in v:
-                    
+
                     if incoming_relation["id"] not in inner_tt_in_db_by_obj_id:
                         relation_object_to_add = model_config[
                             incoming_relation["__object_type__"]
                         ]["model_class"].objects.get(pk=incoming_relation["id"])
-                        
+
                         if "reconcileValue" in incoming_relation:
-                            
+
                             if not relation_object_to_add.reconcile_text:
                                 relation_object_to_add.reconcile_text = ""
-                            
-                            if incoming_relation['reconcileValue'] not in relation_object_to_add.reconcile_text:
-                                
-                                relation_object_to_add.reconcile_text += f" {incoming_relation['reconcileValue']}"
+
+                            if (
+                                incoming_relation["reconcileValue"]
+                                not in relation_object_to_add.reconcile_text
+                            ):
+
+                                relation_object_to_add.reconcile_text += (
+                                    f" {incoming_relation['reconcileValue']}"
+                                )
                             relation_object_to_add.save()
-                            
-                        
+
                         itt = TempTriple(
                             subj=tt.obj, obj=relation_object_to_add, prop=property
                         )
@@ -500,14 +552,14 @@ class AutocompleteViewSet(viewsets.ViewSet):
         relatable_type_names = model_config[subj_entity_type]["relations_to_entities"][
             relation_name
         ]["allowed_types"]
-        
-        
 
         if filter_by_type := request.query_params.get("filter_by_type", None):
             relatable_models = [model_config[filter_by_type]["model_class"]]
         else:
             relatable_models = [
-                model_config[name]["model_class"] for name in relatable_type_names if name != "unreconciled"
+                model_config[name]["model_class"]
+                for name in relatable_type_names
+                if name != "unreconciled"
             ]
 
         search_items = request.query_params["q"].lower().split(" ")
@@ -515,10 +567,10 @@ class AutocompleteViewSet(viewsets.ViewSet):
         q = Q()
         for si in search_items:
             q &= Q(name__icontains=si)
-            
+
             if hasattr(relatable_models, "internal_notes"):
                 q |= Q(internal_notes__icontains=si)
-                
+
             if hasattr(relatable_models, "reconcile_text"):
                 q |= Q(reconcile_text__icontains=si)
 
@@ -613,13 +665,13 @@ class FactoidViewSet(viewsets.ViewSet):
         return Response(get_unpack_factoid(pk=pk))
 
     def create(self, request):
-        
+
         with transaction.atomic():
             try:
                 factoid = create_parse_factoid(request.data)
             except Exception as e:
                 print("ERROR CREATING FACTOID", e)
-                #print(traceback.format_exc())
+                # print(traceback.format_exc())
                 return Response(
                     {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
                     status=400,
@@ -646,13 +698,14 @@ class FactoidViewSet(viewsets.ViewSet):
             data = json.loads(f.read())
         return Response(data)
 
+
 class SolidJsView(TemplateView):
     template_name = "apis_ontology/solid_index.html"
 
 
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
-        # (request.data)
+        print(">>", request.data)
 
         object_model_config = model_config[entity_type]
 
@@ -703,7 +756,6 @@ class EntityViewSet(viewsets.ViewSet):
                 "id": new_entity.id,
             }
         )
-
 
 
 class PersonViewSet(viewsets.ViewSet):
@@ -782,9 +834,10 @@ class PersonViewSet(viewsets.ViewSet):
                     else f"[GENDERING] {new_entity.name} hat unbekanntes Geschlecht"
                 )
                 gendering = Gendering(
-                    name=gendering_name, gender=gendering_info["gender"], certainty={"certainty": 4, "notes": ""}, certainty_values=build_certainty_value_template(
-                        Gendering
-                    )
+                    name=gendering_name,
+                    gender=gendering_info["gender"],
+                    certainty={"certainty": 4, "notes": ""},
+                    certainty_values=build_certainty_value_template(Gendering),
                 )
                 gendering.save()
 
@@ -814,9 +867,12 @@ class PersonViewSet(viewsets.ViewSet):
                 if request.data["naming"]["role_name"]:
                     names += f", {request.data['naming']['role_name']}"
                 naming_name = f"[NENNUNG] {new_entity.name} heißt {names}"
-                naming = Naming(name=naming_name, certainty={"certainty": 4, "notes": ""}, certainty_values=build_certainty_value_template(
-                        Naming
-                    ), **request.data["naming"])
+                naming = Naming(
+                    name=naming_name,
+                    certainty={"certainty": 4, "notes": ""},
+                    certainty_values=build_certainty_value_template(Naming),
+                    **request.data["naming"],
+                )
 
                 naming.save()
 
@@ -936,63 +992,73 @@ class EdiarumOrganisationViewset(viewsets.ViewSet):
         response["content-type"] = "application/xml"
         return response
 
+
 from apis_ontology.utils import get_factoids_for_unreconciled
+
 
 class UnreconciledViewSet(viewsets.ViewSet):
     def list(self, request):
-        if not request.query_params.get("source", None) and not request.query_params.get("id", None) :
+        if not request.query_params.get(
+            "source", None
+        ) and not request.query_params.get("id", None):
             return Response(
                 {"message": "A source, id and type must be provided"}, status=401
             )
-        factoids = get_factoids_for_unreconciled(request.query_params["id"], request.query_params["source"])  
-    
-            
+        factoids = get_factoids_for_unreconciled(
+            request.query_params["id"], request.query_params["source"]
+        )
+
         return Response(factoids)
-    
+
     def create(self, request):
-        
-        
+
         reconcile_to_object_data = request.data.get("reconcile_to_object", None)
         if not reconcile_to_object_data:
             raise Exception("Reconcile to object data missing")
-        reconciled_object_type = model_config[reconcile_to_object_data["__object_type__"]]["model_class"]
-        reconciled_object = reconciled_object_type.objects.get(pk=reconcile_to_object_data["id"])
-        
-        
+        reconciled_object_type = model_config[
+            reconcile_to_object_data["__object_type__"]
+        ]["model_class"]
+        reconciled_object = reconciled_object_type.objects.get(
+            pk=reconcile_to_object_data["id"]
+        )
+
         reconciliations = request.data.get("reconciliations", None)
         if not reconciliations:
             raise Exception("Reconciliation data missing")
-        
+
         ur_name = ""
         with transaction.atomic():
-            
+
             for unreconciled_id, reconciliation in reconciliations.items():
                 if not reconciliation.get("isSelected", False):
                     continue
-                
+
                 factoid_id = reconciliation["id"]
                 factoid = Factoid.objects.get(pk=factoid_id)
-                
+
                 ur = Unreconciled.objects.get(pk=unreconciled_id)
-                
+
                 ur_name = ur.name
-                
+
                 tt = TempTriple.objects.get(obj__pk=ur.pk)
-                
+
                 tt_new = TempTriple(subj=tt.subj, obj=reconciled_object, prop=tt.prop)
-                
+
                 tt_new.save()
-                
+
                 tt.delete()
                 ur.delete()
-                
+
                 factoid_data = get_unpack_factoid(factoid_id)
                 factoid.contains_unreconciled = contains_unreconciled(factoid_data)
-                
+
                 factoid.save()
-                
-        reconciled_object.reconcile_text = f"{reconciled_object.reconcile_text} {ur_name}"
+
+        reconciled_object.reconcile_text = (
+            f"{reconciled_object.reconcile_text} {ur_name}"
+        )
         return Response({"message": "Success"}, status=200)
+
 
 class LeaderboardViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -1001,24 +1067,36 @@ class LeaderboardViewSet(viewsets.ViewSet):
                 Counter(f.created_by for f in Factoid.objects.all()).most_common()
             )
         )
-        
+
+
 def extract_statement_types(statement_list):
     statement_types = set()
     for statement in statement_list:
         statement_types.add(statement["__object_type__"])
-        nested_statement_keys = {k for k in statement.keys() if k in model_config[statement["__object_type__"]]["relations_to_statements"]}
+        nested_statement_keys = {
+            k
+            for k in statement.keys()
+            if k
+            in model_config[statement["__object_type__"]]["relations_to_statements"]
+        }
         for nested_statement_key in nested_statement_keys:
-            statement_types.update(extract_statement_types(statement[nested_statement_key]))
+            statement_types.update(
+                extract_statement_types(statement[nested_statement_key])
+            )
     return statement_types
-            
-        
+
+
 class ExampleViewSet(viewsets.ViewSet):
     @staticmethod
     def build_example_list_response(example: Example):
         example_data = json.loads(example.example)
-        e = {"id": example.pk, "name": example_data["example_title"], "referenced_types": example_data.get("referenced_types", [])}
+        e = {
+            "id": example.pk,
+            "name": example_data["example_title"],
+            "referenced_types": example_data.get("referenced_types", []),
+        }
         return e
-    
+
     def list(self, request):
         search_tokens = request.query_params.get("q", "").lower().split(" ")
         if not search_tokens:
@@ -1029,54 +1107,73 @@ class ExampleViewSet(viewsets.ViewSet):
             q &= Q(example__icontains=search_token)
 
         examples = Example.objects.filter(q)
-        
+
         response = [self.build_example_list_response(example) for example in examples]
         return Response(response)
 
     def retrieve(self, request, pk=None):
-       
+
         example = Example.objects.get(pk=pk)
         if example:
             response = json.loads(example.example)
-            #response["referenced_types"] = [{"verbose_name": get_entity_class_of_name(t.model)._meta.verbose_name, "model_name": t.model} for t in example.models_referenced.all()]
+            # response["referenced_types"] = [{"verbose_name": get_entity_class_of_name(t.model)._meta.verbose_name, "model_name": t.model} for t in example.models_referenced.all()]
             return Response(response)
-    
+
     def update(self, request, pk=None):
         example = Example.objects.get(pk=pk)
         if not example:
             return Response(status=404)
-        
+
         data = request.data
         statement_types = extract_statement_types(request.data["has_statements"])
-        data["referenced_types"] = [{"verbose_name": get_entity_class_of_name(t)._meta.verbose_name, "model_name": t} for t in statement_types]
-        
+        data["referenced_types"] = [
+            {
+                "verbose_name": get_entity_class_of_name(t)._meta.verbose_name,
+                "model_name": t,
+            }
+            for t in statement_types
+        ]
+
         example.example = json.dumps(data)
         example.save()
-        statement_type_contenttypes = {get_contenttype_of_class(model_config[st]["model_class"]) for st in statement_types}
+        statement_type_contenttypes = {
+            get_contenttype_of_class(model_config[st]["model_class"])
+            for st in statement_types
+        }
         for statement_type_contenttype in statement_type_contenttypes:
             example.models_referenced.add(statement_type_contenttype)
         for existing_statement_type in example.models_referenced.all():
             if existing_statement_type not in statement_type_contenttypes:
                 example.models_referenced.remove(existing_statement_type)
-        
-        
+
         return Response(data={"success": True}, status=200)
-    
+
     def create(self, request):
-       
+
         data = request.data
         statement_types = extract_statement_types(request.data["has_statements"])
-        data["referenced_types"] = [{"verbose_name": get_entity_class_of_name(t)._meta.verbose_name, "model_name": t} for t in statement_types]
-        
+        data["referenced_types"] = [
+            {
+                "verbose_name": get_entity_class_of_name(t)._meta.verbose_name,
+                "model_name": t,
+            }
+            for t in statement_types
+        ]
+
         created_example = Example(example=json.dumps(data))
         created_example.save()
-        statement_type_contenttypes = {get_contenttype_of_class(model_config[st]["model_class"]) for st in statement_types}
+        statement_type_contenttypes = {
+            get_contenttype_of_class(model_config[st]["model_class"])
+            for st in statement_types
+        }
         for statement_type_contenttype in statement_type_contenttypes:
             created_example.models_referenced.add(statement_type_contenttype)
-        
-        
-        return Response({"id": created_example.pk, **json.loads(created_example.example)}, status=200)
-        
+
+        return Response(
+            {"id": created_example.pk, **json.loads(created_example.example)},
+            status=200,
+        )
+
 
 if __name__ == "__main__":
     with open("apis_ontology/test_edit_factoid_data.json") as f:
