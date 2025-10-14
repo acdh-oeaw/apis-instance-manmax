@@ -595,6 +595,21 @@ class GenericStatement(ManMaxTempEntityClass):
 
 
 @reversion.register(follow=["genericstatement_ptr"])
+class UnknownStatementType(GenericStatement):
+    """Fallback statement type when the correct type does not exist or cannot by identified. This should be
+    used primarily by AutoAPIS, not manually created."""
+    
+    __entity_group__ = OTHER
+    __entity_type__ = STATEMENT
+    
+    autosuggested_statement_name = models.CharField(blank=True, null=True, max_length=500)
+    suggested_statement = models.TextField(blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Unknown Statement Type"
+        verbose_name_plural = "Unknown Statement Type"
+
+@reversion.register(follow=["genericstatement_ptr"])
 class CommunicatesWith(GenericStatement):
     """A Person or Organisation communicating with another"""
 
@@ -1420,6 +1435,23 @@ class ParentalRelation(FamilialRelation):
         verbose_name = "Elternschaft"
         verbose_name_plural = "Elternschaften"
 
+@reversion.register(follow=["familialrelation_ptr"])
+class ParentInLawRelation(FamilialRelation):
+    """Describes a Parent-in-Law relationship (father-in-law or mother-in-law). Use two precise relations where known (X is spouse of Y; Y is child of Z)"""
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+    
+    PARENT_IN_LAW_TYPES = (("schwiegermutter", "Schwiegermutter"), ("schwiegervater", "Schwiegervater"))
+    parent_in_law_type = models.CharField(
+        max_length=16,
+        choices=PARENT_IN_LAW_TYPES,
+        blank=True,
+        verbose_name="Art des Verhältnisses",
+    )
+    
+    class Meta:
+        verbose_name = "Schwiegerelternverhältnis"
+        verbose_name_plural = "Schwiegerelternverhältnisse"
 
 @reversion.register(follow=["familialrelation_ptr"])
 class SiblingRelation(FamilialRelation):
@@ -1588,7 +1620,7 @@ class Order(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class GrantingPermission(GenericStatement):
-    """An order given by someone to do something"""
+    """Permission given by someone to do something"""
 
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
@@ -2793,6 +2825,10 @@ def construct_properties():
     parental_relation_child = build_property(
         "Kind", "is child in relationship", ParentalRelation, Person
     )
+    
+    parent_in_law_relation_parent = build_property("Schwiegereltern", "is parent-in-law in", ParentInLawRelation, Person)
+    parent_in_law_relation_child = build_property("Schwiegersohn oder Schwiegertochter", "is child-in-law in", ParentInLawRelation, Person)
+
 
     sibling_relation_person_a = build_property(
         "Person mit Geschwisterteil",
@@ -2866,6 +2902,7 @@ def construct_properties():
             *subclasses(Activity),
             TransportationOfArmour,
             TransportationOfObject,
+            
         ],
     )
     payment_by_person = build_property(
@@ -2904,6 +2941,7 @@ def construct_properties():
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
             PersonGroupHasLocation,
+            UnknownStatementType
         ],
     )
     ordered_by = build_property(
@@ -3769,3 +3807,6 @@ def construct_properties():
         Contract,
         [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
     )
+
+    unknown_statement_type_unknown_relation = build_property("unknown relation", "has unknown relation to", UnknownStatementType, [Person, *subclasses(Organisation), *subclasses(Place), Family, *subclasses(GroupOfPersons), *subclasses(ConceptualObject), *subclasses(PhysicalObject), *subclasses(Role), *subclasses(Task), PersonWithProxy, TaxesAndIncome, DayInReligiousCalendar ])
+    unknown_statement_type_statements = build_property("corrected statements", "is corrected statement of", UnknownStatementType, subclasses(GenericStatement))

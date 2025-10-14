@@ -1,0 +1,92 @@
+German Name,APIS Name
+Unknown Statement Type,UnknownStatementType
+Mitteilung,CommunicatesWith
+Generic Activity,Activity
+Besitztransfer,OwnershipTransfer
+Schenkung,GiftGiving
+Herstellungsauftrag,CreationCommission
+Herstellung,CreationAct
+Gründung einer Körperschaft,CreationOfOrganisation
+Kombinierung mehrerer Objekte,AssemblyOfCompositeObject
+Zusammenstellung von Rüstungsteilen,ArmourAssemblyAct
+Verzierung von Harnisch/Waffe,DecorationOfArmour
+Reparatur von Harnisch/Waffe,RepairOfArmour
+Herstellung eines Rüstungsteiles,ArmourCreationAct
+Textschöpfung,TextualCreationAct
+Autorenschaft,Authoring
+Druck,Printing
+Schreibarbeit,SecretarialAct
+Bearbeitung,Redacting
+preparation of conceptual text,PreparationOfConceptualText
+Erstellung von Inventar,InventoryCreation
+Herstellung eines Kunstwerkes,ArtworkCreationAct
+Ausübung einer Tätigkeit,PerformanceOfTask
+Aufführung eines Werkes,PerformanceOfWork
+Textaufführung,TextualPerformance
+Benennung einer Person,Naming
+gendering,Gendering
+hat Unterorganisation,OrganisationIsPartOfOrganisation
+Teilnahme,ParticipationInEvent
+Verwendung von Harnisch/Waffe,UtilisationInEvent
+Transport eines Objekts,TransportationOfObject
+Transport von Harnisch/Waffe,TransportationOfArmour
+Widmung,Dedication
+Geburt,Birth
+Tod,Death
+Aufenthaltsort,PersonGroupHasLocation
+Ort einer Körperschaft,OrganisationLocation
+Befehlsannahme,AcceptanceOfOrder
+Wahl,Election
+Bekleidung eines Amtes,RoleOccupation
+Mitgliedschaft in einer Organisation/Gruppe,GroupMembership
+Amtseinsetzung,AssignmentToRole
+Amtsenthebung,RemovalFromRole
+Familiäre Verbindung,FamilialRelation
+Elternschaft,ParentalRelation
+Geschwisterverhältnis,SiblingRelation
+Schwager Verhältnis,SiblingInLawRelation
+Vormundschaft,Guardianship
+Ist Onkel/Tante von,IsUncleOf
+Ist Cousin von,IsCousinOf
+Eheschließung,MarriageBeginning
+Ende der Ehe,MarriageEnd
+Familienmitgliedschaft,FamilyMembership
+Zahlung,Payment
+Befehl,Order
+Erlaubnis erteilen,GrantingPermission
+Musikaufführung,MusicPerformance
+Verschreibung,Verschreibung
+Schulden,DebtOwed
+Generic Relationship,GenericRelationship
+Textzitat/Textanspielung,TextualCitationAllusion
+Personendarstellung in Kunst,DepicitionOfPersonInArt
+Kunstwerk hat zusätzlichen Namen,ArtworkHasAdditionalName
+Streit,Dispute
+Objekt has Standort,ObjectHasLocation
+Taufe,Baptism
+Veredelung,Ennoblement
+Charakterisierung von Ereignis,EventCharacterisation
+Begräbnis,Burial
+Einladung,Invitation
+Reise,Journey
+text references object,TextReferencesObject
+Immatrikulation,Matriculation
+Graduierung,Graduation
+Ausbildung,GenericEducation
+Bitte,Request
+Assoziation mit Ort,AssociationWithPlace
+Amt/Organisation im Dienst von,RoleOrOrganisationInServiceOfPerson
+hat Vorgesetzten,PersonReportsToPerson
+Rücktritt von Amt,ResignationFromRole
+Schuldenserlass,CancellationOfDebt
+Versprechen,Promise
+Gewährung von Ablass,GrantingOfIndulgence
+Legitimität der Geburt,LegitimacyOfBirth
+Gewährung von Dispens,GrantingOfDispensation
+Besetzungsvorschlag für Amt,PresentationForRole
+Krankheit einer Person,PersonHasIllness
+Individuelle Musikaufführung,IndividualMusicalPerformance
+Gesangsaufführung,SingingPerformance
+Instrumentalaufführung,InstrumentalPerformance
+Gottesdienst,ChurchService
+Vertrag,Contract

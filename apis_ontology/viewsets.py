@@ -260,7 +260,7 @@ def create_parse_statements(statements):
 
 def contains_unreconciled(data):
     for k, v in data.items():
-        if k == "__object_type__" and v == "unreconciled":
+        if k == "__object_type__" and (v == "unreconciled" or v == "unknownstatementtype"):
             return True
 
         if isinstance(v, list):
@@ -431,6 +431,7 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                 for k, v in incoming_statements[tt.obj.id].items()
                 if k in object_type_config["relations_to_statements"]
             }
+            print(relations_to_statements)
             for k, v in relations_to_statements.items():
                 property = Property.objects.get(
                     subj_class=get_contenttype_of_class(
@@ -559,7 +560,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
             relatable_models = [
                 model_config[name]["model_class"]
                 for name in relatable_type_names
-                if name != "unreconciled"
+                if name != "unreconciled" and name != "typology"
             ]
 
         search_items = request.query_params["q"].lower().split(" ")
@@ -576,15 +577,16 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
         results = []
         for model in relatable_models:
-            matches = [
-                {
-                    "label": match.name,
-                    "id": match.id,
-                    "__object_type__": model.__name__.lower(),
-                }
-                for match in model.objects.filter(q)
-            ]
-            results += matches
+            if len(results) < 100:
+                matches = [
+                    {
+                        "label": match.name,
+                        "id": match.id,
+                        "__object_type__": model.__name__.lower(),
+                    }
+                    for match in model.objects.filter(q)
+                ]
+                results += matches
 
         def sort_func(match):
             try:
