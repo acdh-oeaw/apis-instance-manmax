@@ -902,6 +902,15 @@ class ParticipationInEvent(GenericStatement):
         verbose_name = "Teilnahme"
         verbose_name_plural = "Teilnahmen"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class ApologyForNonAttendance(GenericStatement):
+    """Person apologises for not attending event"""
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Bitte um Entschuldigung für Abwesenheit"
+        verbose_name_plural = "Bitten um Entschuldigung für Abwesenheit"
 
 @reversion.register(follow=["genericstatement_ptr"])
 class UtilisationInEvent(GenericStatement):
@@ -1407,6 +1416,16 @@ class FamilialRelation(GenericStatement):
     class Meta:
         verbose_name = "Familiäre Verbindung"
         verbose_name_plural = "Familiäre Verbindungen"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class Heir(GenericStatement):
+    """Describes a Person (or Group) being the heir of a Person (or Group)"""
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Erbe"
+        verbose_name_plural = "Erbe"
 
 
 @reversion.register(follow=["familialrelation_ptr"])
@@ -2234,6 +2253,29 @@ class Contract(GenericStatement):
     class Meta:
         verbose_name = "Vertrag"
         verbose_name_plural = "Verträge"
+        
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class WitnessToSigning(GenericStatement):
+    """Describes the witnessing of the signing (or other act in the creation of) a document"""
+    
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Unterfertigungszeuge"
+        verbose_name_plural = "Unterfertigungszeuge"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class DeliveryOfText(GenericStatement):
+    """Describes the delivery of a text/manuscript/document to an intended recipient"""
+    
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Überbringung von Text"
+        verbose_name_plural = "Überbringungen von Texten"
 
 
 overridden_properties = defaultdict(lambda: set())
@@ -3019,6 +3061,9 @@ def construct_properties():
         ParticipationInEvent,
         [Person, Organisation, Family, PersonWithProxy],
     )
+    
+    apology_for_non_attendance_event = build_property("Ereignis", "is event in nonattendance", ApologyForNonAttendance, subclasses(GenericEvent))
+    apology_for_non_attendance_person = build_property("Abwesende Person", "is person not attending", ApologyForNonAttendance, [Person, Organisation, Family, PersonWithProxy])
 
     repair_of_armour_object = build_property(
         "repariertes Objekt",
@@ -3807,6 +3852,20 @@ def construct_properties():
         Contract,
         [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
     )
+    
+    witness_to_signature_document = build_property("Unterfertigungszeuge", "is document in witnessing", WitnessToSigning, [TextualWork, Manuscript])
+    witness_to_signature_witness = build_property("Zeuge", "is withness to signing of document", WitnessToSigning, [Person, *subclasses(GroupOfPersons), Organisation])
+    
+    heir_testator = build_property("Erblasser", "ist Erblasser in", Heir, [Person, *subclasses(GroupOfPersons), Organisation])
+    heir_erbe = build_property("Erbe", "ist Erbe in", Heir, [Person, *subclasses(GroupOfPersons), Organisation])
+    
+    delivery_of_text_text = build_property("Text", "is text delivered in", DeliveryOfText, [TextualWork, Manuscript, Book, Leaflet])
+    delivery_of_text_sender = build_property("Absender von Text", "is sender of text in delivery of text", DeliveryOfText, [Person, *subclasses(GroupOfPersons), Organisation])
+    delivery_of_text_deliverer = build_property("Überbringer von Text", "is deliverer in delivery of text", DeliveryOfText, [Person, *subclasses(GroupOfPersons), Organisation])
+    delivery_of_text_recipient = build_property("Empfänger des Textes", "is recipient of text", DeliveryOfText, [Person, *subclasses(GroupOfPersons), Organisation])
+    delivery_of_text_origin = build_property("Absendeort", "is place of origin of delivery of text", DeliveryOfText, Place)
+    delivery_of_text_destination = build_property("Standort des Empfängers", "is place of destination of delivery of text", DeliveryOfText, Place)
+    
 
     unknown_statement_type_unknown_relation = build_property("unknown relation", "has unknown relation to", UnknownStatementType, [Person, *subclasses(Organisation), *subclasses(Place), Family, *subclasses(GroupOfPersons), *subclasses(ConceptualObject), *subclasses(PhysicalObject), *subclasses(Role), *subclasses(Task), PersonWithProxy, TaxesAndIncome, DayInReligiousCalendar ])
     unknown_statement_type_statements = build_property("corrected statements", "is corrected statement of", UnknownStatementType, subclasses(GenericStatement))

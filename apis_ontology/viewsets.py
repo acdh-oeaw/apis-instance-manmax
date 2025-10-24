@@ -260,7 +260,9 @@ def create_parse_statements(statements):
 
 def contains_unreconciled(data):
     for k, v in data.items():
-        if k == "__object_type__" and (v == "unreconciled" or v == "unknownstatementtype"):
+        if k == "__object_type__" and (
+            v == "unreconciled" or v == "unknownstatementtype"
+        ):
             return True
 
         if isinstance(v, list):
