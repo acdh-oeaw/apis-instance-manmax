@@ -508,8 +508,8 @@ def edit_parse_factoid(data, pk, user=""):
 
     factoid.save()
 
-    reference_data = data["source"]
     try:
+        reference_data = data["source"]
         # When updating a reference, get the old references
         reference = Reference.objects.get(object_id=factoid.pk)
 
@@ -523,7 +523,8 @@ def edit_parse_factoid(data, pk, user=""):
             reference.bibs_url = reference_data["id"]
             reference.bibtex = get_bibtex_from_url(reference_data["id"])
         reference.save()
-    except:
+    except Exception:
+        reference_data = data["source"]
         reference = Reference(
             bibs_url=reference_data["id"],
             bibtex=get_bibtex_from_url(reference_data["id"]),
@@ -533,6 +534,7 @@ def edit_parse_factoid(data, pk, user=""):
             object_id=factoid.pk,
             content_type=get_contenttype_of_class(Factoid),
         )
+        reference.save()
 
     has_statement_prop = Property.objects.get(
         subj_class=get_contenttype_of_class(Factoid), name_forward="has_statement"
@@ -680,7 +682,6 @@ class FactoidViewSet(viewsets.ViewSet):
 
     def create(self, request):
 
-        
         try:
             with transaction.atomic():
                 factoid = create_parse_factoid(request.data)
@@ -694,8 +695,8 @@ class FactoidViewSet(viewsets.ViewSet):
 
         return Response(get_unpack_factoid(pk=factoid.pk))
 
-    def update(self, request, pk=None):    
-        
+    def update(self, request, pk=None):
+
         try:
             with transaction.atomic():
                 factoid = edit_parse_factoid(request.data, pk, request.user)
