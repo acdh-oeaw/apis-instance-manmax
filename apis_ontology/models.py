@@ -2277,6 +2277,106 @@ class DeliveryOfText(GenericStatement):
         verbose_name = "Überbringung von Text"
         verbose_name_plural = "Überbringungen von Texten"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class TextMakesPositiveStatementAboutPerson(GenericStatement):
+    """Records a positive description of a person given by a text (to link this to the author of the text, use Autorenschaft)"""
+    
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    statement_description = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name="Beschreibung der Aussage",
+    )
+    
+    class Meta:
+        verbose_name = "Text macht eine positive Aussage über die Person"
+        verbose_name_plural = "Texte machen positive Aussage über Personen"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class TextMakesNegativeStatementAboutPerson(GenericStatement):
+    """Records a positive description of a person given by a text (to link the text to the author of the text, use Autorenschaft)"""
+    
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    statement_description = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name="Beschreibung der Aussage",
+    )
+    
+    class Meta:
+        verbose_name = "Text macht eine negative Aussage über die Person"
+        verbose_name_plural = "Texte machen negative Aussage über Personen"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class TextExpressesLamentation(GenericStatement):
+    """Records a text lamenting a situation (to link the text to the author of the text, use Autorenschaft)"""
+    
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Text drückt Klage aus"
+        verbose_name_plural = "Text drückt Klage aus"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class TextAsksForPatronage(GenericStatement):
+    """Records a text asking a person for patronage for the author (to link the text to the author, use Autorenschaft)"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Text bittet um Unterstützung"
+        verbose_name_plural = "Text bittet um Unterstützung"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class TextExpressesThanks(GenericStatement):
+    """Records a text asking a person for patronage for the author (to link the text to the author, use Autorenschaft)"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Text drückt Dankbarkeit aus"
+        verbose_name_plural = "Text drückt Dankbarkeit aus"
+        
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class TextReferencesEvent(GenericStatement):
+    """Records a text referring to an event (to link the text to the author, use Autorenschaft; to describe the event, use Charakterisierung von Ereignis)"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Text bezieht sich auf ein Ereignis"
+        verbose_name_plural = "Text bezieht sich auf ein Ereignis"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class TextAnnounces(GenericStatement):
+    """Describes an Announcement of something (e.g. in a text): "I will write a poem about Maximilian" (to link the text to the author, use Autorenschaft; to describe the event, use Charakterisierung von Ereignis)"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Text kündigt an"
+        verbose_name_plural = "Text kündigt an"
+        
+@reversion.register(follow=["genericstatement_ptr"])
+class AdditionOfTextToManuscript(GenericStatement):
+    """Describes the addition of text to a manuscript (analogous to printing: i.e. Text 1 was written by hand in Manuscript A)"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+    
+    class Meta:
+        verbose_name = "Hinzufügung von Text zum Manuskript"
+        verbose_name_plural = "Hinzufügung von Text zum Manuskript"
 
 overridden_properties = defaultdict(lambda: set())
 
@@ -2352,7 +2452,32 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+    
+    text_makes_positive_statement_about_person_text= build_property("text", "makes positive statement about", TextMakesPositiveStatementAboutPerson, [Book, *subclasses(TextualWork), DedicatoryText])
+    text_makes_positive_statement_about_person_person = build_property("person", "positive statement made about", TextMakesPositiveStatementAboutPerson, [Person, GroupOfPersons])
 
+    text_makes_negative_statement_about_person_text= build_property("text", "makes negative statement about", TextMakesNegativeStatementAboutPerson, [Book, *subclasses(TextualWork), DedicatoryText])
+    text_makes_negative_statement_about_person_person = build_property("person", "negative statement made about", TextMakesNegativeStatementAboutPerson, [Person, GroupOfPersons])
+
+    text_expresses_thanks_text = build_property("text", "expresses thanks", TextExpressesThanks, [Book, *subclasses(TextualWork), DedicatoryText])
+    text_expresses_thanks_object = build_property("Danke für", "thanks expressed for", TextExpressesThanks, subclasses(GenericStatement))
+
+    text_expresses_lamentation_text = build_property("text", "expresses lamentation", TextExpressesLamentation, [Book, *subclasses(TextualWork), DedicatoryText])
+    text_expresses_lamentation_object = build_property("statement", "statement is lamented", TextExpressesLamentation, subclasses(GenericStatement))
+    
+    text_asks_for_patronage_text = build_property("text", "expresses lamentation", TextAsksForPatronage, [Book, *subclasses(TextualWork), DedicatoryText])
+    text_asks_for_patronage_person = build_property("patron", "asked for patronage in text", TextAsksForPatronage, [Person, GroupOfPersons])
+    
+    text_references_event_text = build_property("text", "event referenced in", TextReferencesEvent, [Book, *subclasses(TextualWork), DedicatoryText])
+    text_references_event_event = build_property("Ereignis", "referenced in text", TextReferencesEvent, subclasses(GenericEvent))
+    
+    text_announces_text = build_property("text", "makes announcement", TextExpressesLamentation, [Book, *subclasses(TextualWork), DedicatoryText])
+    text_announcement_thing_announced = build_property("statement", "statement is announced", TextExpressesLamentation, subclasses(GenericStatement))
+    
+    addition_of_text_to_manuscript_manuscript = build_property("Manuskript", "text added in", AdditionOfTextToManuscript, [Manuscript])
+    addition_of_text_to_manuscript_text = build_property("text", "text added to", AdditionOfTextToManuscript, [*subclasses(TextualWork), *subclasses(CompositeTextualWork)])
+    addition_of_text_to_manuscript_person = build_property("person", "added text to manuscript", AdditionOfTextToManuscript, [Person, GroupOfPersons, Organisation])
+    
     education_type_subtype = build_property(
         "unterkategories von", "is supertype of", EducationType, EducationType
     )
@@ -2983,7 +3108,8 @@ def construct_properties():
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
             PersonGroupHasLocation,
-            UnknownStatementType
+            UnknownStatementType,
+            ParticipationInEvent,
         ],
     )
     ordered_by = build_property(

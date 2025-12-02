@@ -509,20 +509,30 @@ def edit_parse_factoid(data, pk, user=""):
     factoid.save()
 
     reference_data = data["source"]
+    try:
+        # When updating a reference, get the old references
+        reference = Reference.objects.get(object_id=factoid.pk)
 
-    # When updating a reference, get the old references
-    reference = Reference.objects.get(object_id=factoid.pk)
+        # And then change the start and end pages and folio
+        reference.pages_start = reference_data.get("pages_start", None)
+        reference.pages_end = reference_data.get("pages_end", None)
+        reference.folio = reference_data.get("folio", None)
 
-    # And then change the start and end pages and folio
-    reference.pages_start = reference_data.get("pages_start", None)
-    reference.pages_end = reference_data.get("pages_end", None)
-    reference.folio = reference_data.get("folio", None)
-
-    # If in fact we have selected a different source, update the id and bibtex
-    if reference.bibs_url != reference_data["id"]:
-        reference.bibs_url = reference_data["id"]
-        reference.bibtex = get_bibtex_from_url(reference_data["id"])
-    reference.save()
+        # If in fact we have selected a different source, update the id and bibtex
+        if reference.bibs_url != reference_data["id"]:
+            reference.bibs_url = reference_data["id"]
+            reference.bibtex = get_bibtex_from_url(reference_data["id"])
+        reference.save()
+    except:
+        reference = Reference(
+            bibs_url=reference_data["id"],
+            bibtex=get_bibtex_from_url(reference_data["id"]),
+            pages_start=reference_data.get("pages_start", None),
+            pages_end=reference_data.get("pages_end", None),
+            folio=reference_data.get("folio", None),
+            object_id=factoid.pk,
+            content_type=get_contenttype_of_class(Factoid),
+        )
 
     has_statement_prop = Property.objects.get(
         subj_class=get_contenttype_of_class(Factoid), name_forward="has_statement"
@@ -670,32 +680,32 @@ class FactoidViewSet(viewsets.ViewSet):
 
     def create(self, request):
 
-        with transaction.atomic():
-            try:
+        
+        try:
+            with transaction.atomic():
                 factoid = create_parse_factoid(request.data)
-            except Exception as e:
-                print("ERROR CREATING FACTOID", e)
-                # print(traceback.format_exc())
-                return Response(
-                    {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
-                    status=400,
-                )
+        except Exception as e:
+            print("ERROR CREATING FACTOID", e)
+            # print(traceback.format_exc())
+            return Response(
+                {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
+                status=400,
+            )
 
-            return Response(get_unpack_factoid(pk=factoid.pk))
+        return Response(get_unpack_factoid(pk=factoid.pk))
 
-    def update(self, request, pk=None):
-        # print(request.user)
-        print(json.dumps(request.data))
-        with transaction.atomic():
-            try:
+    def update(self, request, pk=None):    
+        
+        try:
+            with transaction.atomic():
                 factoid = edit_parse_factoid(request.data, pk, request.user)
-            except Exception as e:
-                print("error", e)
-                return Response(
-                    {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
-                    status=400,
-                )
-            return Response(get_unpack_factoid(pk=factoid.pk))
+        except Exception as e:
+            print("error", e)
+            return Response(
+                {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
+                status=400,
+            )
+        return Response(get_unpack_factoid(pk=factoid.pk))
 
     def current_dump(self, request):
         with open("FactoidData.DUMP.json") as f:
