@@ -16,8 +16,8 @@ from .viewsets import (
     LeaderboardViewSet,
     PersonViewSet,
     SolidJsView,
+    UnreconciledViewSet,
     UsersViewSet,
-    UnreconciledViewSet
 )
 
 
@@ -27,14 +27,12 @@ def frontend(request):
 
 def login_required(view):
     if settings.DEV_VERSION == True:
-        
+
         return view
     return django_login_required(view)
-   
 
 
 custom_url_patterns = [
-    
     path(
         "ediarum/organisation/",
         EdiarumOrganisationViewset.as_view(
@@ -125,7 +123,7 @@ custom_url_patterns = [
     path(
         "manmax/factoids/edit/<int:pk>",
         login_required(FactoidViewSet.as_view({"post": "update"})),
-        name="factoid",
+        name="edit_factoid",
     ),
     path(
         "manmax/factoids/<int:pk>",
@@ -143,12 +141,25 @@ custom_url_patterns = [
         name="create_factoid_api",
     ),
     path(
+        "manmax/factoids/api/edit/<int:pk>",
+        FactoidViewSet.as_view({"put": "update"}),
+        name="edit_factoid_put",
+    ),
+    path(
         "manmax/factoids/api/dump",
         FactoidViewSet.as_view({"get": "current_dump"}),
         name="dump_factoid_data",
     ),
-    path("manmax/api/unreconciled", UnreconciledViewSet.as_view({"get": "list"}), name="unreconciled"),
-    path("manmax/api/unreconciled/update", login_required(UnreconciledViewSet.as_view({"post": "create"})), name="unreconciled_update"),
+    path(
+        "manmax/api/unreconciled",
+        UnreconciledViewSet.as_view({"get": "list"}),
+        name="unreconciled",
+    ),
+    path(
+        "manmax/api/unreconciled/update",
+        login_required(UnreconciledViewSet.as_view({"post": "create"})),
+        name="unreconciled_update",
+    ),
     path(
         "manmax/person/create",
         login_required(PersonViewSet.as_view({"post": "create"})),
