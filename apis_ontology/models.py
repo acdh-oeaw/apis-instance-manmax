@@ -285,6 +285,36 @@ class GroupOfPersons(ManMaxTempEntityClass):
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = ENTITY
 
+@reversion.register(follow=["tempentityclass_ptr"])
+class Salary(ManMaxTempEntityClass):
+    """Represents a "pot of money" from which a person may be paid, for use as a Zahlungsquelle option. 
+    Does *not* express that someone receives a salary — use Zahlung statement"""
+    
+    class Meta:
+        verbose_name = "Gehalt"
+        verbose_name = "Gehälter"
+        
+    __entity_group__ = ROLE_ORGANISATIONS
+    __entity_type__ = ENTITY
+    
+    amount_per_annum = models.CharField(max_length=200, blank=True)
+    currency = models.CharField(max_length=200, blank=True)
+    
+@reversion.register(follow=["tempentityclass_ptr"])
+class Pension(ManMaxTempEntityClass):
+    """Represents a "pot of money" from which a person may be paid, for use as a Zahlungsquelle option. 
+    Does *not* express that someone receives a salary — use Zahlung statement"""
+    
+    class Meta:
+        verbose_name = "Rente"
+        verbose_name = "Renten"
+        
+    __entity_group__ = ROLE_ORGANISATIONS
+    __entity_type__ = ENTITY
+    
+    amount_per_annum = models.CharField(max_length=200, blank=True)
+    currency = models.CharField(max_length=200, blank=True)  
+
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class Organisation(ManMaxTempEntityClass):
@@ -372,6 +402,17 @@ class PhysicalObject(ManMaxTempEntityClass):
     class Meta:
         verbose_name = "Physisches Objekt"
         verbose_name_plural = "Physische Objekte"
+        
+@reversion.register(follow=["physicalobject_ptr"])
+class IndeterminatePhysicalObject(PhysicalObject):
+    """A non-specific or generic physical object, e.g. 'some candles', 'Birnenkompott', rather than a single, specific entity"""
+    
+    __entity_group__ = OTHER
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "indeterminate physical object"
+        verbose_name_plural = "unbestimmte physische Objekte"
 
 
 @reversion.register(follow=["physicalobject_ptr"])
@@ -999,6 +1040,8 @@ class ArmourAssemblyAct(AssemblyOfCompositeObject):
 
 
 # Print
+
+
 
 
 @reversion.register(follow=["conceptualobject_ptr"])
@@ -2377,6 +2420,8 @@ class AdditionOfTextToManuscript(GenericStatement):
     class Meta:
         verbose_name = "Hinzufügung von Text zum Manuskript"
         verbose_name_plural = "Hinzufügung von Text zum Manuskript"
+        
+
 
 overridden_properties = defaultdict(lambda: set())
 
@@ -2577,7 +2622,7 @@ def construct_properties():
         "Streitobjekt",
         "war Streigegenstand von",
         Dispute,
-        [Place, ConceptualObject, PhysicalObject],
+        [Place, ConceptualObject, *subclasses(PhysicalObject)],
     )
 
     rights_to_place_has_rights_to_place_type = build_property(
@@ -3069,6 +3114,11 @@ def construct_properties():
             *subclasses(Activity),
             TransportationOfArmour,
             TransportationOfObject,
+            MusicPerformance,
+            InstrumentalPerformance,
+            SingingPerformance,
+            IndividualMusicalPerformance,
+            ChurchService
             
         ],
     )
@@ -3088,7 +3138,21 @@ def construct_properties():
         "Zahlungsquelle",
         "was source of money for payment",
         Payment,
-        [Person, PersonWithProxy, *subclasses(Organisation), Family],
+        [Person, PersonWithProxy, *subclasses(Organisation), Family, Salary, Pension],
+    )
+    
+    salary_for_person = build_property(
+        "Gehaltsempfänger",
+        "is recipient of salary",
+        Salary,
+        Person
+    )
+    
+    pension_for_person = build_property(
+        "Rentenempfänger",
+        "is recipient of pension",
+        Pension,
+        Person
     )
 
     order_for = build_property(
