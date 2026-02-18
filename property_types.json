@@ -1,0 +1,6763 @@
+[
+    {
+        "name": "Principal person",
+        "reverse_name": "is principal person in",
+        "domain": [
+            "PersonWithProxy"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Proxy",
+        "reverse_name": "is proxy in",
+        "domain": [
+            "PersonWithProxy"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Streitparteien",
+        "reverse_name": "war Streitpartei in",
+        "domain": [
+            "Dispute"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "andere vom Streit betroffene",
+        "reverse_name": "war auch beteiligt an Streit",
+        "domain": [
+            "Dispute"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "vorsitzende Person",
+        "reverse_name": "war vorsitzende Person in",
+        "domain": [
+            "Dispute"
+        ],
+        "range": [
+            "Person",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Streitobjekt",
+        "reverse_name": "war Streigegenstand von",
+        "domain": [
+            "Dispute"
+        ],
+        "range": [
+            "ConceptualObject",
+            "PhysicalObject",
+            "Place",
+            "ArtisticWork",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "FictionalPerson",
+            "Image",
+            "MusicWork",
+            "TextualWork",
+            "CompositeTextualWork",
+            "DedicatoryText",
+            "Manuscript",
+            "Poem",
+            "Preface",
+            "PrintedWork",
+            "Woodcut",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "FictionalPlace",
+            "RightsToPlace",
+            "Inventory",
+            "Epitaph",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "Rechte am Orts-typ",
+        "reverse_name": "instantiates type",
+        "domain": [
+            "RightsToPlace"
+        ],
+        "range": [
+            "RightsToPlaceType",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort",
+        "reverse_name": "has rights to",
+        "domain": [
+            "RightsToPlace"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "ist Aufenthalt von",
+        "reverse_name": "hält sich auf",
+        "domain": [
+            "PersonGroupHasLocation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "is Ort in",
+        "reverse_name": "ist Ort von",
+        "domain": [
+            "PersonGroupHasLocation"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Verwandte Personen",
+        "reverse_name": "has relationship",
+        "domain": [
+            "GenericRelationship"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Mitglied",
+        "reverse_name": "has membership",
+        "domain": [
+            "GroupMembership"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Organisation oder Gruppe",
+        "reverse_name": "has membership",
+        "domain": [
+            "GroupMembership"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Harnisches-Waffentyp",
+        "reverse_name": "instantiates type",
+        "domain": [
+            "Arms",
+            "Armour",
+            "ArmourPart"
+        ],
+        "range": [
+            "ArmsType",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "unterkategories von",
+        "reverse_name": "is supertype of",
+        "domain": [
+            "ArmsType"
+        ],
+        "range": [
+            "ArmsType",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "amtstyp",
+        "reverse_name": "instantiates type",
+        "domain": [
+            "Role"
+        ],
+        "range": [
+            "RoleType",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "unterkategorie von",
+        "reverse_name": "is supertype of",
+        "domain": [
+            "RoleType"
+        ],
+        "range": [
+            "RoleType",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "teil einer körperschaft",
+        "reverse_name": "organisation has role",
+        "domain": [
+            "Role"
+        ],
+        "range": [
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "has_statement",
+        "reverse_name": "is_statement_of",
+        "domain": [
+            "Factoid"
+        ],
+        "range": [
+            "GenericStatement",
+            "Activity",
+            "AssignmentToRole",
+            "Birth",
+            "Death",
+            "Dedication",
+            "Election",
+            "FamilialRelation",
+            "Gendering",
+            "MusicPerformance",
+            "Naming",
+            "Order",
+            "OrganisationLocation",
+            "Payment",
+            "RemovalFromRole",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "OwnershipTransfer",
+            "ParentalRelation",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "SiblingRelation",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "TransportationOfObject",
+            "ParticipationInEvent",
+            "UtilisationInEvent",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "FamilyMembership",
+            "AcceptanceOfOrder",
+            "Verschreibung",
+            "GroupMembership",
+            "GenericRelationship",
+            "TextualPerformance",
+            "DebtOwed",
+            "DepicitionOfPersonInArt",
+            "TextualCitationAllusion",
+            "ArtworkHasAdditionalName",
+            "Dispute",
+            "PersonGroupHasLocation",
+            "Baptism",
+            "Burial",
+            "Ennoblement",
+            "EventCharacterisation",
+            "GrantingPermission",
+            "InventoryCreation",
+            "Invitation",
+            "Journey",
+            "ObjectHasLocation",
+            "OrganisationIsPartOfOrganisation",
+            "TextReferencesObject",
+            "GenericEducation",
+            "Graduation",
+            "Matriculation",
+            "AssociationWithPlace",
+            "CancellationOfDebt",
+            "ChurchService",
+            "Contract",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "LegitimacyOfBirth",
+            "PersonHasIllness",
+            "PresentationForRole",
+            "Promise",
+            "Request",
+            "ResignationFromRole",
+            "SingingPerformance",
+            "SiblingInLawRelation",
+            "Guardianship",
+            "IsCousinOf",
+            "IsUncleOf",
+            "PersonReportsToPerson",
+            "RoleOrOrganisationInServiceOfPerson",
+            "UnknownStatementType",
+            "ParentInLawRelation",
+            "Heir",
+            "ApologyForNonAttendance",
+            "DeliveryOfText",
+            "WitnessToSigning",
+            "AdditionOfTextToManuscript",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent"
+        ]
+    },
+    {
+        "name": "Handlung ausgeführt von",
+        "reverse_name": "carried out activity",
+        "domain": [
+            "Activity",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TextualPerformance",
+            "InventoryCreation"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort der Handlung",
+        "reverse_name": "activity took place in",
+        "domain": [
+            "Activity",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TextualPerformance",
+            "InventoryCreation"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ausgeführt von",
+        "reverse_name": "person/org carrying out act",
+        "domain": [
+            "CreationAct",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "InventoryCreation"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Produkt",
+        "reverse_name": "was created in",
+        "domain": [
+            "CreationAct",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "InventoryCreation"
+        ],
+        "range": [
+            "ConceptualObject",
+            "PhysicalObject",
+            "ArtisticWork",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "FictionalPerson",
+            "Image",
+            "MusicWork",
+            "TextualWork",
+            "CompositeTextualWork",
+            "DedicatoryText",
+            "Manuscript",
+            "Poem",
+            "Preface",
+            "PrintedWork",
+            "Woodcut",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "FictionalPlace",
+            "RightsToPlace",
+            "Inventory",
+            "Epitaph",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "erstellter Text",
+        "reverse_name": "was created in",
+        "domain": [
+            "TextualCreationAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "InventoryCreation"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "verfasster Text",
+        "reverse_name": "was authored in",
+        "domain": [
+            "Authoring"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "gedrucktes Werk",
+        "reverse_name": "was printed in",
+        "domain": [
+            "Printing"
+        ],
+        "range": [
+            "PrintedWork",
+            "Book",
+            "Leaflet",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "betreffender Text",
+        "reverse_name": "was concerned in secretarial act",
+        "domain": [
+            "SecretarialAct"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "betreffender Text",
+        "reverse_name": "was concerned in redacting",
+        "domain": [
+            "Redacting"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "betreffender Text",
+        "reverse_name": "was prepared as conceptual text in",
+        "domain": [
+            "PreparationOfConceptualText"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "zusammengesetztes Objekt",
+        "reverse_name": "was assembled in",
+        "domain": [
+            "AssemblyOfCompositeObject",
+            "ArmourAssemblyAct"
+        ],
+        "range": [
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "Manuscript",
+            "PrintedWork",
+            "Book",
+            "Leaflet",
+            "Armour",
+            "Inventory",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "überstragenes Objekt",
+        "reverse_name": "had ownership transferred in",
+        "domain": [
+            "OwnershipTransfer",
+            "GiftGiving"
+        ],
+        "range": [
+            "PhysicalObject",
+            "ArtisticWork",
+            "CompositePhysicalObject",
+            "Manuscript",
+            "PrintedWork",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "RightsToPlace",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "vorbesitzer",
+        "reverse_name": "was previous owner in transfer",
+        "domain": [
+            "OwnershipTransfer",
+            "GiftGiving"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "empfänger",
+        "reverse_name": "new owner in transfer",
+        "domain": [
+            "OwnershipTransfer",
+            "GiftGiving"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "genannte Person",
+        "reverse_name": "was named in",
+        "domain": [
+            "Naming"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "person",
+        "reverse_name": "was gendered in",
+        "domain": [
+            "Gendering"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "enthalten in",
+        "reverse_name": "contains dedictation",
+        "domain": [
+            "Dedication"
+        ],
+        "range": [
+            "DedicatoryText",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "adressat der Widmung",
+        "reverse_name": "has dedication",
+        "domain": [
+            "Dedication"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "geborene Person",
+        "reverse_name": "was born in",
+        "domain": [
+            "Birth"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort der Geburt",
+        "reverse_name": "is location of birth",
+        "domain": [
+            "Birth"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "verstorbene Person",
+        "reverse_name": "died in",
+        "domain": [
+            "Death"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort des Todes",
+        "reverse_name": "is location of death",
+        "domain": [
+            "Death"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Körperschaft",
+        "reverse_name": "was located in",
+        "domain": [
+            "OrganisationLocation"
+        ],
+        "range": [
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort",
+        "reverse_name": "is location of organisation",
+        "domain": [
+            "OrganisationLocation"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Körperschaft",
+        "reverse_name": "was created by",
+        "domain": [
+            "CreationOfOrganisation"
+        ],
+        "range": [
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "election by",
+        "reverse_name": "was responsible for election of",
+        "domain": [
+            "Election"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amt",
+        "reverse_name": "was occupied by election",
+        "domain": [
+            "Election"
+        ],
+        "range": [
+            "Role",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "gewählte Person",
+        "reverse_name": "was elected in",
+        "domain": [
+            "Election"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "bekleidetes Amt",
+        "reverse_name": "was begun by election",
+        "domain": [
+            "Election"
+        ],
+        "range": [
+            "RoleOccupation"
+        ]
+    },
+    {
+        "name": "ausgeführte Tätigkeit",
+        "reverse_name": "was performed in",
+        "domain": [
+            "PerformanceOfTask"
+        ],
+        "range": [
+            "Task",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ausführende",
+        "reverse_name": "involved in task performance",
+        "domain": [
+            "PerformanceOfTask"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "aufgeführtes Werk",
+        "reverse_name": "was performed in",
+        "domain": [
+            "MusicPerformance"
+        ],
+        "range": [
+            "MusicWork",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort der Aufführung",
+        "reverse_name": "is location of performance",
+        "domain": [
+            "MusicPerformance"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "aufgeführtes Text",
+        "reverse_name": "was performed in",
+        "domain": [
+            "TextualPerformance"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Aufführende",
+        "reverse_name": "involved in performance of work",
+        "domain": [
+            "PerformanceOfWork",
+            "TextualPerformance"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Aufführungsteilnehmer",
+        "reverse_name": "attended performance",
+        "domain": [
+            "MusicPerformance"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amt",
+        "reverse_name": "role occupied in",
+        "domain": [
+            "RoleOccupation"
+        ],
+        "range": [
+            "Role",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amtsträger",
+        "reverse_name": "has role occupation",
+        "domain": [
+            "RoleOccupation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amt",
+        "reverse_name": "was assigned in",
+        "domain": [
+            "AssignmentToRole"
+        ],
+        "range": [
+            "Role",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amtsverleiher",
+        "reverse_name": "assigned role in",
+        "domain": [
+            "AssignmentToRole"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amtsempfänger",
+        "reverse_name": "was assigned role in",
+        "domain": [
+            "AssignmentToRole"
+        ],
+        "range": [
+            "Person",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "bekleidetes Amt",
+        "reverse_name": "was started by",
+        "domain": [
+            "AssignmentToRole"
+        ],
+        "range": [
+            "RoleOccupation"
+        ]
+    },
+    {
+        "name": "enthobenes Amt",
+        "reverse_name": "was removed from person in",
+        "domain": [
+            "RemovalFromRole"
+        ],
+        "range": [
+            "Role",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amtsentheber",
+        "reverse_name": "removed role in",
+        "domain": [
+            "RemovalFromRole"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "betroffene Person",
+        "reverse_name": "removed from role in",
+        "domain": [
+            "RemovalFromRole"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "bekleidetes Amt",
+        "reverse_name": "was ended by",
+        "domain": [
+            "ResignationFromRole"
+        ],
+        "range": [
+            "RoleOccupation"
+        ]
+    },
+    {
+        "name": "Elternteil",
+        "reverse_name": "is parent in relationship",
+        "domain": [
+            "ParentalRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Kind",
+        "reverse_name": "is child in relationship",
+        "domain": [
+            "ParentalRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Person mit Geschwisterteil",
+        "reverse_name": "has sibling in relationship",
+        "domain": [
+            "SiblingRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Geschwisterteil",
+        "reverse_name": "has sibling_in_relationship",
+        "domain": [
+            "SiblingRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ehepartner",
+        "reverse_name": "has marriage beginning in",
+        "domain": [
+            "MarriageBeginning"
+        ],
+        "range": [
+            "Person",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort der Eheschließung",
+        "reverse_name": "is place of marriage",
+        "domain": [
+            "MarriageBeginning"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ehemalige Ehepartner",
+        "reverse_name": "has marriage ending in",
+        "domain": [
+            "MarriageEnd"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Familie",
+        "reverse_name": "is member of family",
+        "domain": [
+            "FamilyMembership"
+        ],
+        "range": [
+            "Family",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Person",
+        "reverse_name": "has family membership",
+        "domain": [
+            "FamilyMembership"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zahlungsgrund",
+        "reverse_name": "was paid for in",
+        "domain": [
+            "Payment"
+        ],
+        "range": [
+            "Activity",
+            "MusicPerformance",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "TransportationOfObject",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "TextualPerformance",
+            "InventoryCreation",
+            "ChurchService",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "SingingPerformance"
+        ]
+    },
+    {
+        "name": "Zahlender",
+        "reverse_name": "made payment in",
+        "domain": [
+            "Payment"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zahlungsempfänger",
+        "reverse_name": "received payment in",
+        "domain": [
+            "Payment"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zahlungsquelle",
+        "reverse_name": "was source of money for payment",
+        "domain": [
+            "Payment"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled",
+            "Pension",
+            "Salary"
+        ]
+    },
+    {
+        "name": "befohlene Tätigkeit",
+        "reverse_name": "was ordered in",
+        "domain": [
+            "Order"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "Death",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "TransportationOfObject",
+            "ParticipationInEvent",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "PersonGroupHasLocation",
+            "InventoryCreation",
+            "UnknownStatementType"
+        ]
+    },
+    {
+        "name": "Befehlsgeber",
+        "reverse_name": "gave order",
+        "domain": [
+            "Order"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Befehlsempfänger",
+        "reverse_name": "received order",
+        "domain": [
+            "Order"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Hergestellter Harnisch",
+        "reverse_name": "was created in",
+        "domain": [
+            "ArmourCreationAct"
+        ],
+        "range": [
+            "Armour",
+            "ArmourPart",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Rüstungsteile",
+        "reverse_name": "was assembled to suit in",
+        "domain": [
+            "ArmourAssemblyAct"
+        ],
+        "range": [
+            "ArmourPart",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Endprodukt",
+        "reverse_name": "was assembled in",
+        "domain": [
+            "ArmourAssemblyAct"
+        ],
+        "range": [
+            "Armour",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Beauftragte Herstellung",
+        "reverse_name": "was commissioned in",
+        "domain": [
+            "CreationCommission"
+        ],
+        "range": [
+            "CreationAct",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "angenommener Befehl",
+        "reverse_name": "was accepted in",
+        "domain": [
+            "AcceptanceOfOrder"
+        ],
+        "range": [
+            "Order"
+        ]
+    },
+    {
+        "name": "Befehlsempfänger",
+        "reverse_name": "was accepted by",
+        "domain": [
+            "AcceptanceOfOrder"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Schlacht",
+        "reverse_name": "has use in",
+        "domain": [
+            "UtilisationInEvent"
+        ],
+        "range": [
+            "Battle",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Verwendetes Objekt",
+        "reverse_name": "had use in",
+        "domain": [
+            "UtilisationInEvent"
+        ],
+        "range": [
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ereignis",
+        "reverse_name": "has participation",
+        "domain": [
+            "ParticipationInEvent"
+        ],
+        "range": [
+            "GenericEvent",
+            "Battle",
+            "Festivity",
+            "MilitaryCampaign",
+            "Tournament",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Teilnehmer",
+        "reverse_name": "has participation",
+        "domain": [
+            "ParticipationInEvent"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "repariertes Objekt",
+        "reverse_name": "was repaired in",
+        "domain": [
+            "RepairOfArmour"
+        ],
+        "range": [
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Reparateur",
+        "reverse_name": "was involved in repair",
+        "domain": [
+            "RepairOfArmour"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "verziertes Objekt",
+        "reverse_name": "was decorated in",
+        "domain": [
+            "DecorationOfArmour"
+        ],
+        "range": [
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Verzierer",
+        "reverse_name": "was involved in decoration",
+        "domain": [
+            "DecorationOfArmour"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Absender",
+        "reverse_name": "is sender of communication",
+        "domain": [
+            "CommunicatesWith"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Empfänger",
+        "reverse_name": "is receiver of communication",
+        "domain": [
+            "CommunicatesWith"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Betreff",
+        "reverse_name": "is subject of commuication",
+        "domain": [
+            "CommunicatesWith"
+        ],
+        "range": [
+            "GenericStatement",
+            "Activity",
+            "AssignmentToRole",
+            "Birth",
+            "Death",
+            "Dedication",
+            "Election",
+            "FamilialRelation",
+            "Gendering",
+            "MusicPerformance",
+            "Naming",
+            "Order",
+            "OrganisationLocation",
+            "Payment",
+            "RemovalFromRole",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "OwnershipTransfer",
+            "ParentalRelation",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "SiblingRelation",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "TransportationOfObject",
+            "ParticipationInEvent",
+            "UtilisationInEvent",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "FamilyMembership",
+            "AcceptanceOfOrder",
+            "Verschreibung",
+            "GroupMembership",
+            "GenericRelationship",
+            "TextualPerformance",
+            "DebtOwed",
+            "DepicitionOfPersonInArt",
+            "TextualCitationAllusion",
+            "ArtworkHasAdditionalName",
+            "Dispute",
+            "PersonGroupHasLocation",
+            "Baptism",
+            "Burial",
+            "Ennoblement",
+            "EventCharacterisation",
+            "GrantingPermission",
+            "InventoryCreation",
+            "Invitation",
+            "Journey",
+            "ObjectHasLocation",
+            "OrganisationIsPartOfOrganisation",
+            "TextReferencesObject",
+            "GenericEducation",
+            "Graduation",
+            "Matriculation",
+            "AssociationWithPlace",
+            "CancellationOfDebt",
+            "ChurchService",
+            "Contract",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "LegitimacyOfBirth",
+            "PersonHasIllness",
+            "PresentationForRole",
+            "Promise",
+            "Request",
+            "ResignationFromRole",
+            "SingingPerformance",
+            "SiblingInLawRelation",
+            "Guardianship",
+            "IsCousinOf",
+            "IsUncleOf",
+            "PersonReportsToPerson",
+            "RoleOrOrganisationInServiceOfPerson",
+            "UnknownStatementType",
+            "ParentInLawRelation",
+            "Heir",
+            "ApologyForNonAttendance",
+            "DeliveryOfText",
+            "WitnessToSigning",
+            "AdditionOfTextToManuscript",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent"
+        ]
+    },
+    {
+        "name": "Ausstellungsort",
+        "reverse_name": "is origin place of communication",
+        "domain": [
+            "CommunicatesWith"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zielort",
+        "reverse_name": "is reception place of communication",
+        "domain": [
+            "CommunicatesWith"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Transportiertes Objekt",
+        "reverse_name": "was transported in",
+        "domain": [
+            "TransportationOfObject",
+            "TransportationOfArmour"
+        ],
+        "range": [
+            "PhysicalObject",
+            "ArtisticWork",
+            "CompositePhysicalObject",
+            "Manuscript",
+            "PrintedWork",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "Transporteur",
+        "reverse_name": "was involved in transportation",
+        "domain": [
+            "TransportationOfObject",
+            "TransportationOfArmour"
+        ],
+        "range": [
+            "Family",
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Absender",
+        "reverse_name": "object transported from",
+        "domain": [
+            "TransportationOfObject",
+            "TransportationOfArmour"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ausgangsort",
+        "reverse_name": "object transported from place",
+        "domain": [
+            "TransportationOfObject",
+            "TransportationOfArmour"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Empfänger",
+        "reverse_name": "object transported to",
+        "domain": [
+            "TransportationOfObject",
+            "TransportationOfArmour"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zielort",
+        "reverse_name": "object transported to place",
+        "domain": [
+            "TransportationOfObject",
+            "TransportationOfArmour"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Transportierte Harnische/Waffen",
+        "reverse_name": "was transported in",
+        "domain": [
+            "TransportationOfArmour"
+        ],
+        "range": [
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Aussteller",
+        "reverse_name": "gave Verschreibung",
+        "domain": [
+            "Verschreibung"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Empfänger",
+        "reverse_name": "received Verschreibung",
+        "domain": [
+            "Verschreibung"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Verschreibungsobjekt",
+        "reverse_name": "is object of Verschreibung",
+        "domain": [
+            "Verschreibung"
+        ],
+        "range": [
+            "Person",
+            "PhysicalObject",
+            "Place",
+            "ArtisticWork",
+            "CompositePhysicalObject",
+            "Manuscript",
+            "PrintedWork",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "TaxesAndIncome",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "Grund für die Verschreibung",
+        "reverse_name": "is reason for Verschreibung",
+        "domain": [
+            "Verschreibung"
+        ],
+        "range": [
+            "DebtOwed"
+        ]
+    },
+    {
+        "name": "aus dem Ort",
+        "reverse_name": "place is source of incoming",
+        "domain": [
+            "TaxesAndIncome"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Schuldner",
+        "reverse_name": "owes debt",
+        "domain": [
+            "DebtOwed"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Gläubiger",
+        "reverse_name": "is owed debt",
+        "domain": [
+            "DebtOwed"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zitat oder Anspielung auf Text",
+        "reverse_name": "text references other text in",
+        "domain": [
+            "TextualCitationAllusion"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "zitierter oder referenzierter Text",
+        "reverse_name": "text referenced in",
+        "domain": [
+            "TextualCitationAllusion"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Kunstwerk",
+        "reverse_name": "contains depiction",
+        "domain": [
+            "DepicitionOfPersonInArt"
+        ],
+        "range": [
+            "ArtisticWork",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "dargestellte Person",
+        "reverse_name": "has depiction",
+        "domain": [
+            "DepicitionOfPersonInArt"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Person dargestellt als",
+        "reverse_name": "is depicted in",
+        "domain": [
+            "DepicitionOfPersonInArt"
+        ],
+        "range": [
+            "Person",
+            "FictionalPerson",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort an dem die Person dargestellt ist",
+        "reverse_name": "is location of depiction",
+        "domain": [
+            "DepicitionOfPersonInArt"
+        ],
+        "range": [
+            "Place",
+            "FictionalPlace",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Kunstwerk",
+        "reverse_name": "has alternative naming",
+        "domain": [
+            "ArtworkHasAdditionalName"
+        ],
+        "range": [
+            "ArtisticWork",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Kunstwerk benannt von",
+        "reverse_name": "involved in naming artwork",
+        "domain": [
+            "ArtworkHasAdditionalName"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Inventar erstellt",
+        "reverse_name": "War erstellt in",
+        "domain": [
+            "InventoryCreation"
+        ],
+        "range": [
+            "Inventory",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Erstellung betreut von",
+        "reverse_name": "Betreute einer Erstellung",
+        "domain": [
+            "InventoryCreation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Text",
+        "reverse_name": "Referenz",
+        "domain": [
+            "TextReferencesObject"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Objekt referenziert",
+        "reverse_name": "wurde referenziert in",
+        "domain": [
+            "TextReferencesObject"
+        ],
+        "range": [
+            "ConceptualObject",
+            "PhysicalObject",
+            "ArtisticWork",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "FictionalPerson",
+            "Image",
+            "MusicWork",
+            "TextualWork",
+            "CompositeTextualWork",
+            "DedicatoryText",
+            "Manuscript",
+            "Poem",
+            "Preface",
+            "PrintedWork",
+            "Woodcut",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "FictionalPlace",
+            "RightsToPlace",
+            "Inventory",
+            "Epitaph",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "betreffender Text",
+        "reverse_name": "ist der betreffende Text in",
+        "domain": [
+            "Printing"
+        ],
+        "range": [
+            "TextualWork",
+            "CompositeTextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Book",
+            "Leaflet",
+            "Inventory",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Teilobjekte",
+        "reverse_name": "ist Teilobjekt in",
+        "domain": [
+            "AssemblyOfCompositeObject",
+            "ArmourAssemblyAct"
+        ],
+        "range": [
+            "ConceptualObject",
+            "PhysicalObject",
+            "ArtisticWork",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "FictionalPerson",
+            "Image",
+            "MusicWork",
+            "TextualWork",
+            "CompositeTextualWork",
+            "DedicatoryText",
+            "Manuscript",
+            "Poem",
+            "Preface",
+            "PrintedWork",
+            "Woodcut",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "FictionalPlace",
+            "RightsToPlace",
+            "Inventory",
+            "Epitaph",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "Teil eines Ereignisses",
+        "reverse_name": "war Teil eines Ereingnisses",
+        "domain": [
+            "Ennoblement"
+        ],
+        "range": [
+            "GenericEvent",
+            "Battle",
+            "Festivity",
+            "MilitaryCampaign",
+            "Tournament",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Schuldensgrund",
+        "reverse_name": "ist Schuldensgrund in",
+        "domain": [
+            "DebtOwed"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "TransportationOfObject",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "übergeordnete Organisation",
+        "reverse_name": "ist übergeordnete Organisation",
+        "domain": [
+            "OrganisationIsPartOfOrganisation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "untergeordnete Organisation",
+        "reverse_name": "ist untergeordnete Organisation",
+        "domain": [
+            "OrganisationIsPartOfOrganisation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Objekt",
+        "reverse_name": "Objekt befindet sich in Ort",
+        "domain": [
+            "ObjectHasLocation"
+        ],
+        "range": [
+            "PhysicalObject",
+            "ArtisticWork",
+            "CompositePhysicalObject",
+            "Manuscript",
+            "PrintedWork",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "Unreconciled",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "Ort",
+        "reverse_name": "Ist Ort von",
+        "domain": [
+            "ObjectHasLocation"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Erlaubnis erteilt von",
+        "reverse_name": "die Erlaubnis erteilt",
+        "domain": [
+            "GrantingPermission"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "erhaltene Erlaubnis",
+        "reverse_name": "erhielt die Erlaubnis in",
+        "domain": [
+            "GrantingPermission"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Erlaubnis zur Tätigkeit",
+        "reverse_name": "war erlaubt in",
+        "domain": [
+            "GrantingPermission"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "TransportationOfObject",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "Getaufte Person",
+        "reverse_name": "wurde getauft in",
+        "domain": [
+            "Baptism"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Pate/Patin",
+        "reverse_name": "war Pate/Patin in",
+        "domain": [
+            "Baptism"
+        ],
+        "range": [
+            "Person",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "An der Taufe beteiligt",
+        "reverse_name": "war an der Taufe beteiligt",
+        "domain": [
+            "Baptism"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort der Taufe",
+        "reverse_name": "was Ort einer Taufe",
+        "domain": [
+            "Baptism"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "geadelte Person",
+        "reverse_name": "wurde geadelt in",
+        "domain": [
+            "Ennoblement"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "geadelt durch",
+        "reverse_name": "führte die Veredelung in",
+        "domain": [
+            "Ennoblement"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort",
+        "reverse_name": "war Ort der Veredelung",
+        "domain": [
+            "Ennoblement"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ereignis",
+        "reverse_name": "Ereignis charakterisiert in",
+        "domain": [
+            "EventCharacterisation"
+        ],
+        "range": [
+            "GenericEvent",
+            "Battle",
+            "Festivity",
+            "MilitaryCampaign",
+            "Tournament",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort des Ereignisses",
+        "reverse_name": "ist der Ort des Ereignisses",
+        "domain": [
+            "EventCharacterisation"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Begrabener",
+        "reverse_name": "wurde begraben bei",
+        "domain": [
+            "Burial"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Beteiligte Personen",
+        "reverse_name": "carried out burial",
+        "domain": [
+            "Burial"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort des Begräbnisses",
+        "reverse_name": "war Ort eines Begräbnisses",
+        "domain": [
+            "Burial"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Einladung von",
+        "reverse_name": "war Emittent einer Einladung",
+        "domain": [
+            "Invitation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Eingeladung an",
+        "reverse_name": "war eingeladen",
+        "domain": [
+            "Invitation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort",
+        "reverse_name": "war Ort einer Einladung",
+        "domain": [
+            "Invitation"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Einladung zu",
+        "reverse_name": "Objekt einer Einladung",
+        "domain": [
+            "Invitation"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "Death",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "TransportationOfObject",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "Reisende Person/Gruppe",
+        "reverse_name": "reiste auf Reise",
+        "domain": [
+            "Journey"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ursprung der Reise",
+        "reverse_name": "war Ursprung einer Reise",
+        "domain": [
+            "Journey"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ziel der Reise",
+        "reverse_name": "war Ziel einer Reise",
+        "domain": [
+            "Journey"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zweck der Reise",
+        "reverse_name": "war Zweck einer Reise",
+        "domain": [
+            "Journey"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "Birth",
+            "Death",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "MarriageBeginning",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "Grabmal",
+        "reverse_name": "ist Grabmal von",
+        "domain": [
+            "Burial"
+        ],
+        "range": [
+            "ArtisticWork",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Epitaph",
+        "reverse_name": "ist Epitaph von",
+        "domain": [
+            "Burial"
+        ],
+        "range": [
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Immatrikulierende Person",
+        "reverse_name": "hat immatrikuliert",
+        "domain": [
+            "Matriculation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Institution",
+        "reverse_name": "Immatrikulationsanstalt",
+        "domain": [
+            "Matriculation"
+        ],
+        "range": [
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Graduierender",
+        "reverse_name": "hat graduieren",
+        "domain": [
+            "Graduation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Institution",
+        "reverse_name": "Graduierungsanstalt",
+        "domain": [
+            "Graduation"
+        ],
+        "range": [
+            "Organisation",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Abschlusstyp",
+        "reverse_name": "Is type of",
+        "domain": [
+            "Graduation"
+        ],
+        "range": [
+            "DegreeType",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Studienfach",
+        "reverse_name": "ist Studienfach von",
+        "domain": [
+            "GenericEducation"
+        ],
+        "range": [
+            "EducationSubject",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ausgebildete Person",
+        "reverse_name": "hat Ausbildung",
+        "domain": [
+            "GenericEducation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ausbilder",
+        "reverse_name": "hat Ausbildung",
+        "domain": [
+            "GenericEducation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort",
+        "reverse_name": "ist Ausbildungsort von",
+        "domain": [
+            "GenericEducation"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ausbildungstyp",
+        "reverse_name": "ist Ausbildungstyp von",
+        "domain": [
+            "GenericEducation"
+        ],
+        "range": [
+            "EducationType",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Studientfach",
+        "reverse_name": "ist Studienfach von",
+        "domain": [
+            "Graduation"
+        ],
+        "range": [
+            "EducationSubject",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amt zurückgetreten von",
+        "reverse_name": "was removed from person in",
+        "domain": [
+            "ResignationFromRole"
+        ],
+        "range": [
+            "Role",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "zurücktretende Person",
+        "reverse_name": "removed from role in",
+        "domain": [
+            "ResignationFromRole"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Objekt der Bitte",
+        "reverse_name": "was requested in",
+        "domain": [
+            "Request"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "TransportationOfObject",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "PersonGroupHasLocation",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "Bittsteller",
+        "reverse_name": "made request",
+        "domain": [
+            "Request"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Bittschriftempfänger",
+        "reverse_name": "received request",
+        "domain": [
+            "Request"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort der Bittstellung",
+        "reverse_name": "was place of request in",
+        "domain": [
+            "Request"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Person",
+        "reverse_name": "ist assoziiert mit",
+        "domain": [
+            "AssociationWithPlace"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort",
+        "reverse_name": "is associated place in",
+        "domain": [
+            "AssociationWithPlace"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Schuldenerlassender",
+        "reverse_name": "cancelling debt in",
+        "domain": [
+            "CancellationOfDebt"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "zu erlassende Schuld",
+        "reverse_name": "debt cancelled in",
+        "domain": [
+            "CancellationOfDebt"
+        ],
+        "range": [
+            "DebtOwed"
+        ]
+    },
+    {
+        "name": "Versprechen gebende Person",
+        "reverse_name": "made promise in",
+        "domain": [
+            "Promise"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "versprochenes Objekt",
+        "reverse_name": "was promised in",
+        "domain": [
+            "Promise"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "TransportationOfObject",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "die Person der etwas versprochen wird",
+        "reverse_name": "was promised to in",
+        "domain": [
+            "Promise"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort des Versprechens",
+        "reverse_name": "was place of promise in",
+        "domain": [
+            "Promise"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ablassanbieter",
+        "reverse_name": "granted indulgence in",
+        "domain": [
+            "GrantingOfIndulgence"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ablassnehmer",
+        "reverse_name": "recipient of indulgence in",
+        "domain": [
+            "GrantingOfIndulgence"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Person",
+        "reverse_name": "has birth legitimacy",
+        "domain": [
+            "LegitimacyOfBirth"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Dispens erteilt von",
+        "reverse_name": "granted dispensation in",
+        "domain": [
+            "GrantingOfDispensation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Empfänger der Dispens",
+        "reverse_name": "recipient of dispensation in",
+        "domain": [
+            "GrantingOfDispensation"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Objekt des Dispenses",
+        "reverse_name": "is type of dispensation in",
+        "domain": [
+            "GrantingOfDispensation"
+        ],
+        "range": [
+            "RoleOccupation",
+            "MarriageBeginning",
+            "OwnershipTransfer",
+            "GiftGiving",
+            "Burial",
+            "LegitimacyOfBirth"
+        ]
+    },
+    {
+        "name": "präsentierte Person",
+        "reverse_name": "was presented in",
+        "domain": [
+            "PresentationForRole"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "präsentierende Person",
+        "reverse_name": "was presenter in",
+        "domain": [
+            "PresentationForRole"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amt",
+        "reverse_name": "was presented in",
+        "domain": [
+            "PresentationForRole"
+        ],
+        "range": [
+            "Role",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Kranker",
+        "reverse_name": "has illness",
+        "domain": [
+            "PersonHasIllness"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Krankheitstyp",
+        "reverse_name": "is type of illness",
+        "domain": [
+            "PersonHasIllness"
+        ],
+        "range": [
+            "Unreconciled",
+            "IllnessType"
+        ]
+    },
+    {
+        "name": "Ort der Erkrankung",
+        "reverse_name": "is place of illness",
+        "domain": [
+            "PersonHasIllness"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Musikaufführungstyp",
+        "reverse_name": "is type of music performance",
+        "domain": [
+            "MusicPerformance"
+        ],
+        "range": [
+            "Unreconciled",
+            "MusicPerformanceType"
+        ]
+    },
+    {
+        "name": "enthält Individuelle Musikaufführungen",
+        "reverse_name": "is individual performance in",
+        "domain": [
+            "MusicPerformance"
+        ],
+        "range": [
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "SingingPerformance"
+        ]
+    },
+    {
+        "name": "Ort der Musikaufführung",
+        "reverse_name": "is location of individual music performance",
+        "domain": [
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "SingingPerformance"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Musikant",
+        "reverse_name": "was performer in individual music performance",
+        "domain": [
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "SingingPerformance"
+        ],
+        "range": [
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Gesangstyp",
+        "reverse_name": "is type of singing performance",
+        "domain": [
+            "SingingPerformance"
+        ],
+        "range": [
+            "Unreconciled",
+            "SingingType"
+        ]
+    },
+    {
+        "name": "Instrumententyp",
+        "reverse_name": "is type of instrumental performance",
+        "domain": [
+            "InstrumentalPerformance"
+        ],
+        "range": [
+            "Unreconciled",
+            "InstrumentType"
+        ]
+    },
+    {
+        "name": "Gottesdiensttyp",
+        "reverse_name": "is type of church service",
+        "domain": [
+            "ChurchService"
+        ],
+        "range": [
+            "Unreconciled",
+            "ChurchServiceType"
+        ]
+    },
+    {
+        "name": "Gottesdienstteilnehmer",
+        "reverse_name": "attended church service",
+        "domain": [
+            "ChurchService"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ort des Gottesdienstes",
+        "reverse_name": "is location of church service",
+        "domain": [
+            "ChurchService"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Teil eines Gottesdienstes",
+        "reverse_name": "war Teil eines Gottesdienstes",
+        "domain": [
+            "ChurchService"
+        ],
+        "range": [
+            "MusicPerformance",
+            "PerformanceOfWork",
+            "TextualPerformance",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "SingingPerformance"
+        ]
+    },
+    {
+        "name": "Anlass des Gottesdienstes",
+        "reverse_name": "is reason for church service",
+        "domain": [
+            "ChurchService"
+        ],
+        "range": [
+            "Death",
+            "MarriageBeginning",
+            "Baptism"
+        ]
+    },
+    {
+        "name": "Tag in Kirchenjahr",
+        "reverse_name": "is religious calendar date of church service",
+        "domain": [
+            "ChurchService"
+        ],
+        "range": [
+            "Unreconciled",
+            "DayInReligiousCalendar"
+        ]
+    },
+    {
+        "name": "Vertragspartner",
+        "reverse_name": "are parties in contract",
+        "domain": [
+            "Contract"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Vertragsgegenstand",
+        "reverse_name": "is object of contract",
+        "domain": [
+            "Contract"
+        ],
+        "range": [
+            "AssignmentToRole",
+            "MusicPerformance",
+            "Order",
+            "Payment",
+            "RemovalFromRole",
+            "CreationAct",
+            "CreationCommission",
+            "OwnershipTransfer",
+            "PerformanceOfTask",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "GiftGiving",
+            "TransportationOfObject",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "InventoryCreation"
+        ]
+    },
+    {
+        "name": "Ort des Vertragsabschlusses",
+        "reverse_name": "is place of contract",
+        "domain": [
+            "Contract"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zeugen des Vertrags",
+        "reverse_name": "are witnesses of contract",
+        "domain": [
+            "Contract"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Amt oder Organisation",
+        "reverse_name": "organisation/role in service of",
+        "domain": [
+            "RoleOrOrganisationInServiceOfPerson"
+        ],
+        "range": [
+            "Organisation",
+            "Role",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Person",
+        "reverse_name": "is served by role/organisation",
+        "domain": [
+            "RoleOrOrganisationInServiceOfPerson"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Vorgesetzter",
+        "reverse_name": "is superior in",
+        "domain": [
+            "PersonReportsToPerson"
+        ],
+        "range": [
+            "Family",
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Untergeben",
+        "reverse_name": "is subordinate in",
+        "domain": [
+            "PersonReportsToPerson"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Person mit Schwager oder Schwägerin",
+        "reverse_name": "has in-law in relation",
+        "domain": [
+            "SiblingInLawRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Schwager oder Schwägerin",
+        "reverse_name": "is in-law in relation",
+        "domain": [
+            "SiblingInLawRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Sachwalter",
+        "reverse_name": "is guardian in",
+        "domain": [
+            "Guardianship"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Mündel",
+        "reverse_name": "is ward in",
+        "domain": [
+            "Guardianship"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Onkel oder Tante",
+        "reverse_name": "is uncle/aunt in",
+        "domain": [
+            "IsUncleOf"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Neffe oder Nichte",
+        "reverse_name": "is nephew/niece in",
+        "domain": [
+            "IsUncleOf"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Cousins",
+        "reverse_name": "is cousin in",
+        "domain": [
+            "IsCousinOf"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "corrected statements",
+        "reverse_name": "is corrected statement of",
+        "domain": [
+            "UnknownStatementType"
+        ],
+        "range": [
+            "GenericStatement",
+            "Activity",
+            "AssignmentToRole",
+            "Birth",
+            "Death",
+            "Dedication",
+            "Election",
+            "FamilialRelation",
+            "Gendering",
+            "MusicPerformance",
+            "Naming",
+            "Order",
+            "OrganisationLocation",
+            "Payment",
+            "RemovalFromRole",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "OwnershipTransfer",
+            "ParentalRelation",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "SiblingRelation",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "TransportationOfObject",
+            "ParticipationInEvent",
+            "UtilisationInEvent",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "FamilyMembership",
+            "AcceptanceOfOrder",
+            "Verschreibung",
+            "GroupMembership",
+            "GenericRelationship",
+            "TextualPerformance",
+            "DebtOwed",
+            "DepicitionOfPersonInArt",
+            "TextualCitationAllusion",
+            "ArtworkHasAdditionalName",
+            "Dispute",
+            "PersonGroupHasLocation",
+            "Baptism",
+            "Burial",
+            "Ennoblement",
+            "EventCharacterisation",
+            "GrantingPermission",
+            "InventoryCreation",
+            "Invitation",
+            "Journey",
+            "ObjectHasLocation",
+            "OrganisationIsPartOfOrganisation",
+            "TextReferencesObject",
+            "GenericEducation",
+            "Graduation",
+            "Matriculation",
+            "AssociationWithPlace",
+            "CancellationOfDebt",
+            "ChurchService",
+            "Contract",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "LegitimacyOfBirth",
+            "PersonHasIllness",
+            "PresentationForRole",
+            "Promise",
+            "Request",
+            "ResignationFromRole",
+            "SingingPerformance",
+            "SiblingInLawRelation",
+            "Guardianship",
+            "IsCousinOf",
+            "IsUncleOf",
+            "PersonReportsToPerson",
+            "RoleOrOrganisationInServiceOfPerson",
+            "UnknownStatementType",
+            "ParentInLawRelation",
+            "Heir",
+            "ApologyForNonAttendance",
+            "DeliveryOfText",
+            "WitnessToSigning",
+            "AdditionOfTextToManuscript",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent"
+        ]
+    },
+    {
+        "name": "unknown relation",
+        "reverse_name": "has unknown relation to",
+        "domain": [
+            "UnknownStatementType"
+        ],
+        "range": [
+            "ConceptualObject",
+            "Family",
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "PhysicalObject",
+            "Place",
+            "Role",
+            "Task",
+            "ArtisticWork",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "FictionalPerson",
+            "Foundation",
+            "Image",
+            "MusicWork",
+            "TextualWork",
+            "CompositeTextualWork",
+            "DedicatoryText",
+            "Manuscript",
+            "Poem",
+            "Preface",
+            "PrintedWork",
+            "Woodcut",
+            "Book",
+            "Leaflet",
+            "Arms",
+            "Armour",
+            "ArmourPart",
+            "FictionalPlace",
+            "TaxesAndIncome",
+            "RightsToPlace",
+            "PersonWithProxy",
+            "Inventory",
+            "Epitaph",
+            "Unreconciled",
+            "DayInReligiousCalendar",
+            "IndeterminatePhysicalObject"
+        ]
+    },
+    {
+        "name": "Schwiegereltern",
+        "reverse_name": "is parent-in-law in",
+        "domain": [
+            "ParentInLawRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Schwiegersohn oder Schwiegertochter",
+        "reverse_name": "is child-in-law in",
+        "domain": [
+            "ParentInLawRelation"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Erblasser",
+        "reverse_name": "ist Erblasser in",
+        "domain": [
+            "Heir"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Erbe",
+        "reverse_name": "ist Erbe in",
+        "domain": [
+            "Heir"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ereignis",
+        "reverse_name": "is event in nonattendance",
+        "domain": [
+            "ApologyForNonAttendance"
+        ],
+        "range": [
+            "GenericEvent",
+            "Battle",
+            "Festivity",
+            "MilitaryCampaign",
+            "Tournament",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Abwesende Person",
+        "reverse_name": "is person not attending",
+        "domain": [
+            "ApologyForNonAttendance"
+        ],
+        "range": [
+            "Family",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "PersonWithProxy",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Unterfertigungszeuge",
+        "reverse_name": "is document in witnessing",
+        "domain": [
+            "WitnessToSigning"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Manuscript",
+            "Poem",
+            "Preface",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Zeuge",
+        "reverse_name": "is withness to signing of document",
+        "domain": [
+            "WitnessToSigning"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Text",
+        "reverse_name": "is text delivered in",
+        "domain": [
+            "DeliveryOfText"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Manuscript",
+            "Poem",
+            "Preface",
+            "Book",
+            "Leaflet",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Absender von Text",
+        "reverse_name": "is sender of text in delivery of text",
+        "domain": [
+            "DeliveryOfText"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Überbringer von Text",
+        "reverse_name": "is deliverer in delivery of text",
+        "domain": [
+            "DeliveryOfText"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Empfänger des Textes",
+        "reverse_name": "is recipient of text",
+        "domain": [
+            "DeliveryOfText"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Absendeort",
+        "reverse_name": "is place of origin of delivery of text",
+        "domain": [
+            "DeliveryOfText"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Standort des Empfängers",
+        "reverse_name": "is place of destination of delivery of text",
+        "domain": [
+            "DeliveryOfText"
+        ],
+        "range": [
+            "Place",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "text",
+        "reverse_name": "makes positive statement about",
+        "domain": [
+            "TextMakesPositiveStatementAboutPerson"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Book",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "person",
+        "reverse_name": "positive statement made about",
+        "domain": [
+            "TextMakesPositiveStatementAboutPerson"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "text",
+        "reverse_name": "makes negative statement about",
+        "domain": [
+            "TextMakesNegativeStatementAboutPerson"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Book",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "person",
+        "reverse_name": "negative statement made about",
+        "domain": [
+            "TextMakesNegativeStatementAboutPerson"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "text",
+        "reverse_name": "expresses thanks",
+        "domain": [
+            "TextExpressesThanks"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Book",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Danke für",
+        "reverse_name": "thanks expressed for",
+        "domain": [
+            "TextExpressesThanks"
+        ],
+        "range": [
+            "GenericStatement",
+            "Activity",
+            "AssignmentToRole",
+            "Birth",
+            "Death",
+            "Dedication",
+            "Election",
+            "FamilialRelation",
+            "Gendering",
+            "MusicPerformance",
+            "Naming",
+            "Order",
+            "OrganisationLocation",
+            "Payment",
+            "RemovalFromRole",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "OwnershipTransfer",
+            "ParentalRelation",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "SiblingRelation",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "TransportationOfObject",
+            "ParticipationInEvent",
+            "UtilisationInEvent",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "FamilyMembership",
+            "AcceptanceOfOrder",
+            "Verschreibung",
+            "GroupMembership",
+            "GenericRelationship",
+            "TextualPerformance",
+            "DebtOwed",
+            "DepicitionOfPersonInArt",
+            "TextualCitationAllusion",
+            "ArtworkHasAdditionalName",
+            "Dispute",
+            "PersonGroupHasLocation",
+            "Baptism",
+            "Burial",
+            "Ennoblement",
+            "EventCharacterisation",
+            "GrantingPermission",
+            "InventoryCreation",
+            "Invitation",
+            "Journey",
+            "ObjectHasLocation",
+            "OrganisationIsPartOfOrganisation",
+            "TextReferencesObject",
+            "GenericEducation",
+            "Graduation",
+            "Matriculation",
+            "AssociationWithPlace",
+            "CancellationOfDebt",
+            "ChurchService",
+            "Contract",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "LegitimacyOfBirth",
+            "PersonHasIllness",
+            "PresentationForRole",
+            "Promise",
+            "Request",
+            "ResignationFromRole",
+            "SingingPerformance",
+            "SiblingInLawRelation",
+            "Guardianship",
+            "IsCousinOf",
+            "IsUncleOf",
+            "PersonReportsToPerson",
+            "RoleOrOrganisationInServiceOfPerson",
+            "UnknownStatementType",
+            "ParentInLawRelation",
+            "Heir",
+            "ApologyForNonAttendance",
+            "DeliveryOfText",
+            "WitnessToSigning",
+            "AdditionOfTextToManuscript",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent"
+        ]
+    },
+    {
+        "name": "text",
+        "reverse_name": "expresses lamentation",
+        "domain": [
+            "TextAsksForPatronage"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Book",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "statement",
+        "reverse_name": "statement is lamented",
+        "domain": [
+            "TextExpressesLamentation"
+        ],
+        "range": [
+            "GenericStatement",
+            "Activity",
+            "AssignmentToRole",
+            "Birth",
+            "Death",
+            "Dedication",
+            "Election",
+            "FamilialRelation",
+            "Gendering",
+            "MusicPerformance",
+            "Naming",
+            "Order",
+            "OrganisationLocation",
+            "Payment",
+            "RemovalFromRole",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "OwnershipTransfer",
+            "ParentalRelation",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "SiblingRelation",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "TransportationOfObject",
+            "ParticipationInEvent",
+            "UtilisationInEvent",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "FamilyMembership",
+            "AcceptanceOfOrder",
+            "Verschreibung",
+            "GroupMembership",
+            "GenericRelationship",
+            "TextualPerformance",
+            "DebtOwed",
+            "DepicitionOfPersonInArt",
+            "TextualCitationAllusion",
+            "ArtworkHasAdditionalName",
+            "Dispute",
+            "PersonGroupHasLocation",
+            "Baptism",
+            "Burial",
+            "Ennoblement",
+            "EventCharacterisation",
+            "GrantingPermission",
+            "InventoryCreation",
+            "Invitation",
+            "Journey",
+            "ObjectHasLocation",
+            "OrganisationIsPartOfOrganisation",
+            "TextReferencesObject",
+            "GenericEducation",
+            "Graduation",
+            "Matriculation",
+            "AssociationWithPlace",
+            "CancellationOfDebt",
+            "ChurchService",
+            "Contract",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "LegitimacyOfBirth",
+            "PersonHasIllness",
+            "PresentationForRole",
+            "Promise",
+            "Request",
+            "ResignationFromRole",
+            "SingingPerformance",
+            "SiblingInLawRelation",
+            "Guardianship",
+            "IsCousinOf",
+            "IsUncleOf",
+            "PersonReportsToPerson",
+            "RoleOrOrganisationInServiceOfPerson",
+            "UnknownStatementType",
+            "ParentInLawRelation",
+            "Heir",
+            "ApologyForNonAttendance",
+            "DeliveryOfText",
+            "WitnessToSigning",
+            "AdditionOfTextToManuscript",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent"
+        ]
+    },
+    {
+        "name": "patron",
+        "reverse_name": "asked for patronage in text",
+        "domain": [
+            "TextAsksForPatronage"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "text",
+        "reverse_name": "event referenced in",
+        "domain": [
+            "TextReferencesEvent"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Book",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Ereignis",
+        "reverse_name": "referenced in text",
+        "domain": [
+            "TextReferencesEvent"
+        ],
+        "range": [
+            "GenericEvent",
+            "Battle",
+            "Festivity",
+            "MilitaryCampaign",
+            "Tournament",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "text",
+        "reverse_name": "makes announcement",
+        "domain": [
+            "TextExpressesLamentation"
+        ],
+        "range": [
+            "TextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Book",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "statement",
+        "reverse_name": "statement is announced",
+        "domain": [
+            "TextExpressesLamentation"
+        ],
+        "range": [
+            "GenericStatement",
+            "Activity",
+            "AssignmentToRole",
+            "Birth",
+            "Death",
+            "Dedication",
+            "Election",
+            "FamilialRelation",
+            "Gendering",
+            "MusicPerformance",
+            "Naming",
+            "Order",
+            "OrganisationLocation",
+            "Payment",
+            "RemovalFromRole",
+            "RoleOccupation",
+            "CreationAct",
+            "CreationCommission",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "OwnershipTransfer",
+            "ParentalRelation",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "SiblingRelation",
+            "ArmourCreationAct",
+            "ArtworkCreationAct",
+            "AssemblyOfCompositeObject",
+            "CreationOfOrganisation",
+            "TextualCreationAct",
+            "ArmourAssemblyAct",
+            "Authoring",
+            "PreparationOfConceptualText",
+            "Printing",
+            "Redacting",
+            "SecretarialAct",
+            "CommunicatesWith",
+            "GiftGiving",
+            "TransportationOfObject",
+            "ParticipationInEvent",
+            "UtilisationInEvent",
+            "DecorationOfArmour",
+            "RepairOfArmour",
+            "TransportationOfArmour",
+            "FamilyMembership",
+            "AcceptanceOfOrder",
+            "Verschreibung",
+            "GroupMembership",
+            "GenericRelationship",
+            "TextualPerformance",
+            "DebtOwed",
+            "DepicitionOfPersonInArt",
+            "TextualCitationAllusion",
+            "ArtworkHasAdditionalName",
+            "Dispute",
+            "PersonGroupHasLocation",
+            "Baptism",
+            "Burial",
+            "Ennoblement",
+            "EventCharacterisation",
+            "GrantingPermission",
+            "InventoryCreation",
+            "Invitation",
+            "Journey",
+            "ObjectHasLocation",
+            "OrganisationIsPartOfOrganisation",
+            "TextReferencesObject",
+            "GenericEducation",
+            "Graduation",
+            "Matriculation",
+            "AssociationWithPlace",
+            "CancellationOfDebt",
+            "ChurchService",
+            "Contract",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "LegitimacyOfBirth",
+            "PersonHasIllness",
+            "PresentationForRole",
+            "Promise",
+            "Request",
+            "ResignationFromRole",
+            "SingingPerformance",
+            "SiblingInLawRelation",
+            "Guardianship",
+            "IsCousinOf",
+            "IsUncleOf",
+            "PersonReportsToPerson",
+            "RoleOrOrganisationInServiceOfPerson",
+            "UnknownStatementType",
+            "ParentInLawRelation",
+            "Heir",
+            "ApologyForNonAttendance",
+            "DeliveryOfText",
+            "WitnessToSigning",
+            "AdditionOfTextToManuscript",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent"
+        ]
+    },
+    {
+        "name": "Manuskript",
+        "reverse_name": "text added in",
+        "domain": [
+            "AdditionOfTextToManuscript"
+        ],
+        "range": [
+            "Manuscript",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "text",
+        "reverse_name": "text added to",
+        "domain": [
+            "AdditionOfTextToManuscript"
+        ],
+        "range": [
+            "TextualWork",
+            "CompositeTextualWork",
+            "DedicatoryText",
+            "Poem",
+            "Preface",
+            "Inventory",
+            "Epitaph",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "person",
+        "reverse_name": "added text to manuscript",
+        "domain": [
+            "AdditionOfTextToManuscript"
+        ],
+        "range": [
+            "GroupOfPersons",
+            "Organisation",
+            "Person",
+            "Foundation",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Gehaltsempfänger",
+        "reverse_name": "is recipient of salary",
+        "domain": [
+            "Salary"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "Rentenempfänger",
+        "reverse_name": "is recipient of pension",
+        "domain": [
+            "Pension"
+        ],
+        "range": [
+            "Person",
+            "Unreconciled"
+        ]
+    },
+    {
+        "name": "id",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "int"
+        ]
+    },
+    {
+        "name": "name",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "start_date",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "date"
+        ]
+    },
+    {
+        "name": "start_start_date",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "date"
+        ]
+    },
+    {
+        "name": "start_end_date",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "date"
+        ]
+    },
+    {
+        "name": "end_date",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "date"
+        ]
+    },
+    {
+        "name": "end_start_date",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "date"
+        ]
+    },
+    {
+        "name": "end_end_date",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "date"
+        ]
+    },
+    {
+        "name": "start_date_written",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "end_date_written",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "notes",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "AllowanceType",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArmsType",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "ChurchServiceType",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "DayInReligiousCalendarType",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DegreeType",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "EducationSubject",
+            "EducationType",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "IllnessType",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentType",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicPerformanceType",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "RightsToPlaceType",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "RoleType",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "SingingType",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "Typology",
+            "UnknownStatementType",
+            "Unreconciled",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "internal_notes",
+        "domain": [
+            "AcceptanceOfOrder",
+            "Activity",
+            "AdditionOfTextToManuscript",
+            "ApologyForNonAttendance",
+            "Armour",
+            "ArmourAssemblyAct",
+            "ArmourCreationAct",
+            "ArmourPart",
+            "Arms",
+            "ArtisticWork",
+            "ArtworkCreationAct",
+            "ArtworkHasAdditionalName",
+            "AssemblyOfCompositeObject",
+            "AssignmentToRole",
+            "AssociationWithPlace",
+            "Authoring",
+            "Baptism",
+            "Battle",
+            "Birth",
+            "Book",
+            "Burial",
+            "CancellationOfDebt",
+            "ChurchService",
+            "CommunicatesWith",
+            "CompositeConceptualObject",
+            "CompositePhysicalObject",
+            "CompositeTextualWork",
+            "ConceptualObject",
+            "Contract",
+            "CreationAct",
+            "CreationCommission",
+            "CreationOfOrganisation",
+            "DayInReligiousCalendar",
+            "Death",
+            "DebtOwed",
+            "DecorationOfArmour",
+            "Dedication",
+            "DedicatoryText",
+            "DeliveryOfText",
+            "DepicitionOfPersonInArt",
+            "Dispute",
+            "Election",
+            "Ennoblement",
+            "Epitaph",
+            "EventCharacterisation",
+            "Factoid",
+            "FamilialRelation",
+            "Family",
+            "FamilyMembership",
+            "Festivity",
+            "FictionalPerson",
+            "FictionalPlace",
+            "Foundation",
+            "Gendering",
+            "GenericEducation",
+            "GenericEvent",
+            "GenericRelationship",
+            "GenericStatement",
+            "GiftGiving",
+            "Graduation",
+            "GrantingOfDispensation",
+            "GrantingOfIndulgence",
+            "GrantingPermission",
+            "GroupMembership",
+            "GroupOfPersons",
+            "Guardianship",
+            "Heir",
+            "Image",
+            "IndeterminatePhysicalObject",
+            "IndividualMusicalPerformance",
+            "InstrumentalPerformance",
+            "Inventory",
+            "InventoryCreation",
+            "Invitation",
+            "IsCousinOf",
+            "IsUncleOf",
+            "Journey",
+            "Leaflet",
+            "LegitimacyOfBirth",
+            "Manuscript",
+            "MarriageBeginning",
+            "MarriageEnd",
+            "Matriculation",
+            "MilitaryCampaign",
+            "MusicPerformance",
+            "MusicWork",
+            "Naming",
+            "ObjectHasLocation",
+            "Order",
+            "Organisation",
+            "OrganisationIsPartOfOrganisation",
+            "OrganisationLocation",
+            "OwnershipTransfer",
+            "ParentInLawRelation",
+            "ParentalRelation",
+            "ParticipationInEvent",
+            "Payment",
+            "Pension",
+            "PerformanceOfTask",
+            "PerformanceOfWork",
+            "Person",
+            "PersonGroupHasLocation",
+            "PersonHasIllness",
+            "PersonReportsToPerson",
+            "PersonWithProxy",
+            "PhysicalObject",
+            "Place",
+            "Poem",
+            "Preface",
+            "PreparationOfConceptualText",
+            "PresentationForRole",
+            "PrintedWork",
+            "Printing",
+            "Promise",
+            "Redacting",
+            "ReifiedRelation",
+            "RemovalFromRole",
+            "RepairOfArmour",
+            "Request",
+            "ResignationFromRole",
+            "RightsToPlace",
+            "Role",
+            "RoleOccupation",
+            "RoleOrOrganisationInServiceOfPerson",
+            "Salary",
+            "SecretarialAct",
+            "SiblingInLawRelation",
+            "SiblingRelation",
+            "SingingPerformance",
+            "Task",
+            "TaxesAndIncome",
+            "TextAnnounces",
+            "TextAsksForPatronage",
+            "TextExpressesLamentation",
+            "TextExpressesThanks",
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson",
+            "TextReferencesEvent",
+            "TextReferencesObject",
+            "TextualCitationAllusion",
+            "TextualCreationAct",
+            "TextualPerformance",
+            "TextualWork",
+            "Tournament",
+            "TransportationOfArmour",
+            "TransportationOfObject",
+            "UnknownStatementType",
+            "UtilisationInEvent",
+            "Verschreibung",
+            "WitnessToSigning",
+            "Woodcut"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "armour_type",
+        "domain": [
+            "ArmourPart"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "additional_name",
+        "domain": [
+            "ArtworkHasAdditionalName"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "method",
+        "domain": [
+            "CommunicatesWith"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "moveable_or_immoveable_feast",
+        "domain": [
+            "DayInReligiousCalendar"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "amount",
+        "domain": [
+            "DebtOwed",
+            "Payment"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "currency",
+        "domain": [
+            "DebtOwed",
+            "Payment",
+            "Pension",
+            "Salary",
+            "TaxesAndIncome"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "reason_for_debt",
+        "domain": [
+            "DebtOwed"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "nature_of_dispute",
+        "domain": [
+            "Dispute"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "reviewed",
+        "domain": [
+            "Factoid"
+        ],
+        "range": [
+            "Boolean"
+        ]
+    },
+    {
+        "name": "review_notes",
+        "domain": [
+            "Factoid"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "review_by",
+        "domain": [
+            "Factoid"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "problem_flagged",
+        "domain": [
+            "Factoid"
+        ],
+        "range": [
+            "Boolean"
+        ]
+    },
+    {
+        "name": "contains_unreconciled",
+        "domain": [
+            "Factoid"
+        ],
+        "range": [
+            "Boolean"
+        ]
+    },
+    {
+        "name": "family_name",
+        "domain": [
+            "Family"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "gender",
+        "domain": [
+            "Gendering"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "dispensation_description",
+        "domain": [
+            "GrantingOfDispensation"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "description_of_indulgence",
+        "domain": [
+            "GrantingOfIndulgence"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "legitimacy",
+        "domain": [
+            "LegitimacyOfBirth"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "forename",
+        "domain": [
+            "Naming"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "surname",
+        "domain": [
+            "Naming"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "gen_name",
+        "domain": [
+            "Naming"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "role_name",
+        "domain": [
+            "Naming"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "add_name",
+        "domain": [
+            "Naming"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "parent_in_law_type",
+        "domain": [
+            "ParentInLawRelation"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "parental_type",
+        "domain": [
+            "ParentalRelation"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "frequency",
+        "domain": [
+            "Payment"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "amount_per_annum",
+        "domain": [
+            "Pension",
+            "Salary"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "role_obtained",
+        "domain": [
+            "PresentationForRole"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "in_law_type",
+        "domain": [
+            "SiblingInLawRelation"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "sibling_type",
+        "domain": [
+            "SiblingRelation"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "value",
+        "domain": [
+            "TaxesAndIncome"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "statement_description",
+        "domain": [
+            "TextMakesNegativeStatementAboutPerson",
+            "TextMakesPositiveStatementAboutPerson"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "part_of_alluding_text",
+        "domain": [
+            "TextualCitationAllusion"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "part_of_alluded_to_text",
+        "domain": [
+            "TextualCitationAllusion"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "autosuggested_statement_name",
+        "domain": [
+            "UnknownStatementType"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "suggested_statement",
+        "domain": [
+            "UnknownStatementType"
+        ],
+        "range": [
+            "string"
+        ]
+    },
+    {
+        "name": "unreconciled_type",
+        "domain": [
+            "Unreconciled"
+        ],
+        "range": [
+            "string"
+        ]
+    }
+]

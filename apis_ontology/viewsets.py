@@ -578,6 +578,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
             ]
 
         search_items = request.query_params["q"].lower().split(" ")
+        count = int(request.query_params.get("count", 100))
 
         q = Q()
         for si in search_items:
@@ -591,7 +592,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
         results = []
         for model in relatable_models:
-            if len(results) < 100:
+            if len(results) < count:
                 matches = [
                     {
                         "label": match.name,
@@ -610,8 +611,10 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
         # TODO: figure out why this sort does not work...
         results.sort(key=sort_func)
+        
+        
 
-        return Response(results)
+        return Response(results[0:count])
 
 
 PAGE_SIZE = 200
