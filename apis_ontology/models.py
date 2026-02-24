@@ -237,6 +237,7 @@ class ManMaxTempEntityClass(TempEntityClass):
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class Factoid(ManMaxTempEntityClass):
+    factoid_text = models.TextField(null=True, blank=True, default="", verbose_name="Full Factoid Text")
     reviewed = models.BooleanField(default=False)
     review_notes = models.TextField(blank=True, null=True)
     review_by = models.CharField(blank=True, max_length=50)
@@ -245,6 +246,17 @@ class Factoid(ManMaxTempEntityClass):
 
     class Meta:
         pass
+    
+    def save(self, *args, **kwargs):
+        
+      
+        if len(self.name) > 1000:
+            if not self.factoid_text:
+                self.factoid_text = f"{self.name}"
+            self.name = f"{self.name[0:999]}"
+            
+            
+        super().save(*args, **kwargs)
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -614,6 +626,9 @@ class GenericStatement(ManMaxTempEntityClass):
 
     def save(self, *args, **kwargs):
         from apis_ontology.model_config import build_certainty_value_template
+        
+        if len(self.name) > 1000:
+            self.name = f"{self.name[0:999]}"
 
         if not self.certainty:
             self.certainty = {"certainty": 4, "notes": ""}

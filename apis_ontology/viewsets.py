@@ -114,6 +114,7 @@ def get_unpack_factoid(pk):
             "contains_unreconciled": obj.contains_unreconciled,
         },
         "name": obj.name,
+        "factoid_text": obj.factoid_text,
         "source": reference,
         "has_statements": statements["has_statement"],
         "created_by": obj.created_by,
@@ -276,7 +277,7 @@ def contains_unreconciled(data):
 def create_parse_factoid(data):
 
     factoid = Factoid(
-        name=data["name"], contains_unreconciled=contains_unreconciled(data)
+        name=data["name"], factoid_text=data.get("factoid_text", ""), contains_unreconciled=contains_unreconciled(data)
     )
     factoid.save()
 
@@ -482,6 +483,7 @@ def edit_parse_factoid(data, pk, user=""):
         raise Exception
     factoid = Factoid.objects.get(pk=data["id"])
     factoid.name = data["name"]
+    factoid.factoid_text = data.get("factoid_text", "")
     factoid.contains_unreconciled = contains_unreconciled(data)
 
     if data.get("review", {}).get("reviewed") and (
@@ -589,6 +591,7 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
             if hasattr(relatable_models, "reconcile_text"):
                 q |= Q(reconcile_text__icontains=si)
+                
 
         results = []
         for model in relatable_models:
@@ -629,7 +632,8 @@ class FactoidViewSet(viewsets.ViewSet):
 
         q = Q()
         for search_token in search_tokens:
-            q &= Q(name__icontains=search_token)
+            q &= (Q(name__icontains=search_token) | Q(factoid_text__icontains=search_token))
+            
 
         factoids = Factoid.objects.filter(q)
 
