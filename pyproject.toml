@@ -28,6 +28,7 @@ apis-override-select2js = { git="https://github.com/acdh-oeaw/apis-override-sele
 icecream = "^2.1.3"
 citeproc-py = "^0.6.0"
 pydantic = "^2.9.2"
+drf-yasg = "^1.21.14"
 
 [tool.poetry.group.dev.dependencies]
 icecream = "^2.1.3"
