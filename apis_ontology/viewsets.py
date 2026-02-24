@@ -611,8 +611,6 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
         # TODO: figure out why this sort does not work...
         results.sort(key=sort_func)
-        
-        
 
         return Response(results[0:count])
 
@@ -621,6 +619,9 @@ PAGE_SIZE = 200
 
 
 class FactoidViewSet(viewsets.ViewSet):
+    def ids(self, request):
+        return Response([f.pk for f in Factoid.objects.all()])
+    
     def list(self, request):
         search_tokens = request.query_params.get("q", "").lower().split(" ")
         if not search_tokens:

@@ -285,35 +285,37 @@ class GroupOfPersons(ManMaxTempEntityClass):
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = ENTITY
 
+
 @reversion.register(follow=["tempentityclass_ptr"])
 class Salary(ManMaxTempEntityClass):
-    """Represents a "pot of money" from which a person may be paid, for use as a Zahlungsquelle option. 
+    """Represents a "pot of money" from which a person may be paid, for use as a Zahlungsquelle option.
     Does *not* express that someone receives a salary — use Zahlung statement"""
-    
+
     class Meta:
         verbose_name = "Gehalt"
         verbose_name = "Gehälter"
-        
+
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = ENTITY
-    
+
     amount_per_annum = models.CharField(max_length=200, blank=True)
     currency = models.CharField(max_length=200, blank=True)
-    
+
+
 @reversion.register(follow=["tempentityclass_ptr"])
 class Pension(ManMaxTempEntityClass):
-    """Represents a "pot of money" from which a person may be paid, for use as a Zahlungsquelle option. 
+    """Represents a "pot of money" from which a person may be paid, for use as a Zahlungsquelle option.
     Does *not* express that someone receives a salary — use Zahlung statement"""
-    
+
     class Meta:
         verbose_name = "Rente"
         verbose_name = "Renten"
-        
+
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = ENTITY
-    
+
     amount_per_annum = models.CharField(max_length=200, blank=True)
-    currency = models.CharField(max_length=200, blank=True)  
+    currency = models.CharField(max_length=200, blank=True)
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -402,11 +404,12 @@ class PhysicalObject(ManMaxTempEntityClass):
     class Meta:
         verbose_name = "Physisches Objekt"
         verbose_name_plural = "Physische Objekte"
-        
+
+
 @reversion.register(follow=["physicalobject_ptr"])
 class IndeterminatePhysicalObject(PhysicalObject):
     """A non-specific or generic physical object, e.g. 'some candles', 'Birnenkompott', rather than a single, specific entity"""
-    
+
     __entity_group__ = OTHER
     __entity_type__ = ENTITY
 
@@ -639,16 +642,19 @@ class GenericStatement(ManMaxTempEntityClass):
 class UnknownStatementType(GenericStatement):
     """Fallback statement type when the correct type does not exist or cannot by identified. This should be
     used primarily by AutoAPIS, not manually created."""
-    
+
     __entity_group__ = OTHER
     __entity_type__ = STATEMENT
-    
-    autosuggested_statement_name = models.CharField(blank=True, null=True, max_length=500)
+
+    autosuggested_statement_name = models.CharField(
+        blank=True, null=True, max_length=500
+    )
     suggested_statement = models.TextField(blank=True, null=True)
-    
+
     class Meta:
         verbose_name = "Unknown Statement Type"
         verbose_name_plural = "Unknown Statement Type"
+
 
 @reversion.register(follow=["genericstatement_ptr"])
 class CommunicatesWith(GenericStatement):
@@ -943,15 +949,18 @@ class ParticipationInEvent(GenericStatement):
         verbose_name = "Teilnahme"
         verbose_name_plural = "Teilnahmen"
 
+
 @reversion.register(follow=["genericstatement_ptr"])
 class ApologyForNonAttendance(GenericStatement):
     """Person apologises for not attending event"""
+
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Bitte um Entschuldigung für Abwesenheit"
         verbose_name_plural = "Bitten um Entschuldigung für Abwesenheit"
+
 
 @reversion.register(follow=["genericstatement_ptr"])
 class UtilisationInEvent(GenericStatement):
@@ -1040,8 +1049,6 @@ class ArmourAssemblyAct(AssemblyOfCompositeObject):
 
 
 # Print
-
-
 
 
 @reversion.register(follow=["conceptualobject_ptr"])
@@ -1459,13 +1466,15 @@ class FamilialRelation(GenericStatement):
     class Meta:
         verbose_name = "Familiäre Verbindung"
         verbose_name_plural = "Familiäre Verbindungen"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class Heir(GenericStatement):
     """Describes a Person (or Group) being the heir of a Person (or Group)"""
+
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Erbe"
         verbose_name_plural = "Erbe"
@@ -1497,23 +1506,29 @@ class ParentalRelation(FamilialRelation):
         verbose_name = "Elternschaft"
         verbose_name_plural = "Elternschaften"
 
+
 @reversion.register(follow=["familialrelation_ptr"])
 class ParentInLawRelation(FamilialRelation):
     """Describes a Parent-in-Law relationship (father-in-law or mother-in-law). Use two precise relations where known (X is spouse of Y; Y is child of Z)"""
+
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
-    
-    PARENT_IN_LAW_TYPES = (("schwiegermutter", "Schwiegermutter"), ("schwiegervater", "Schwiegervater"))
+
+    PARENT_IN_LAW_TYPES = (
+        ("schwiegermutter", "Schwiegermutter"),
+        ("schwiegervater", "Schwiegervater"),
+    )
     parent_in_law_type = models.CharField(
         max_length=16,
         choices=PARENT_IN_LAW_TYPES,
         blank=True,
         verbose_name="Art des Verhältnisses",
     )
-    
+
     class Meta:
         verbose_name = "Schwiegerelternverhältnis"
         verbose_name_plural = "Schwiegerelternverhältnisse"
+
 
 @reversion.register(follow=["familialrelation_ptr"])
 class SiblingRelation(FamilialRelation):
@@ -2296,74 +2311,79 @@ class Contract(GenericStatement):
     class Meta:
         verbose_name = "Vertrag"
         verbose_name_plural = "Verträge"
-        
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class WitnessToSigning(GenericStatement):
     """Describes the witnessing of the signing (or other act in the creation of) a document"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Unterfertigungszeuge"
         verbose_name_plural = "Unterfertigungszeuge"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class DeliveryOfText(GenericStatement):
     """Describes the delivery of a text/manuscript/document to an intended recipient"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Überbringung von Text"
         verbose_name_plural = "Überbringungen von Texten"
 
+
 @reversion.register(follow=["genericstatement_ptr"])
 class TextMakesPositiveStatementAboutPerson(GenericStatement):
     """Records a positive description of a person given by a text (to link this to the author of the text, use Autorenschaft)"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     statement_description = models.CharField(
         max_length=500,
         blank=True,
         verbose_name="Beschreibung der Aussage",
     )
-    
+
     class Meta:
         verbose_name = "Text macht eine positive Aussage über die Person"
         verbose_name_plural = "Texte machen positive Aussage über Personen"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class TextMakesNegativeStatementAboutPerson(GenericStatement):
     """Records a positive description of a person given by a text (to link the text to the author of the text, use Autorenschaft)"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     statement_description = models.CharField(
         max_length=500,
         blank=True,
         verbose_name="Beschreibung der Aussage",
     )
-    
+
     class Meta:
         verbose_name = "Text macht eine negative Aussage über die Person"
         verbose_name_plural = "Texte machen negative Aussage über Personen"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class TextExpressesLamentation(GenericStatement):
     """Records a text lamenting a situation (to link the text to the author of the text, use Autorenschaft)"""
-    
+
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Text drückt Klage aus"
         verbose_name_plural = "Text drückt Klage aus"
+
 
 @reversion.register(follow=["genericstatement_ptr"])
 class TextAsksForPatronage(GenericStatement):
@@ -2371,33 +2391,35 @@ class TextAsksForPatronage(GenericStatement):
 
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Text bittet um Unterstützung"
         verbose_name_plural = "Text bittet um Unterstützung"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class TextExpressesThanks(GenericStatement):
     """Records a text asking a person for patronage for the author (to link the text to the author, use Autorenschaft)"""
 
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Text drückt Dankbarkeit aus"
         verbose_name_plural = "Text drückt Dankbarkeit aus"
-        
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class TextReferencesEvent(GenericStatement):
     """Records a text referring to an event (to link the text to the author, use Autorenschaft; to describe the event, use Charakterisierung von Ereignis)"""
 
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Text bezieht sich auf ein Ereignis"
         verbose_name_plural = "Text bezieht sich auf ein Ereignis"
+
 
 @reversion.register(follow=["genericstatement_ptr"])
 class TextAnnounces(GenericStatement):
@@ -2405,22 +2427,22 @@ class TextAnnounces(GenericStatement):
 
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Text kündigt an"
         verbose_name_plural = "Text kündigt an"
-        
+
+
 @reversion.register(follow=["genericstatement_ptr"])
 class AdditionOfTextToManuscript(GenericStatement):
     """Describes the addition of text to a manuscript (analogous to printing: i.e. Text 1 was written by hand in Manuscript A)"""
 
     __entity_group__ = TEXT
     __entity_type__ = STATEMENT
-    
+
     class Meta:
         verbose_name = "Hinzufügung von Text zum Manuskript"
         verbose_name_plural = "Hinzufügung von Text zum Manuskript"
-        
 
 
 overridden_properties = defaultdict(lambda: set())
@@ -2497,32 +2519,111 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
-    
-    text_makes_positive_statement_about_person_text= build_property("text", "makes positive statement about", TextMakesPositiveStatementAboutPerson, [Book, *subclasses(TextualWork), DedicatoryText])
-    text_makes_positive_statement_about_person_person = build_property("person", "positive statement made about", TextMakesPositiveStatementAboutPerson, [Person, GroupOfPersons])
 
-    text_makes_negative_statement_about_person_text= build_property("text", "makes negative statement about", TextMakesNegativeStatementAboutPerson, [Book, *subclasses(TextualWork), DedicatoryText])
-    text_makes_negative_statement_about_person_person = build_property("person", "negative statement made about", TextMakesNegativeStatementAboutPerson, [Person, GroupOfPersons])
+    text_makes_positive_statement_about_person_text = build_property(
+        "text",
+        "makes positive statement about",
+        TextMakesPositiveStatementAboutPerson,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_makes_positive_statement_about_person_person = build_property(
+        "person",
+        "positive statement made about",
+        TextMakesPositiveStatementAboutPerson,
+        [Person, GroupOfPersons],
+    )
 
-    text_expresses_thanks_text = build_property("text", "expresses thanks", TextExpressesThanks, [Book, *subclasses(TextualWork), DedicatoryText])
-    text_expresses_thanks_object = build_property("Danke für", "thanks expressed for", TextExpressesThanks, subclasses(GenericStatement))
+    text_makes_negative_statement_about_person_text = build_property(
+        "text",
+        "makes negative statement about",
+        TextMakesNegativeStatementAboutPerson,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_makes_negative_statement_about_person_person = build_property(
+        "person",
+        "negative statement made about",
+        TextMakesNegativeStatementAboutPerson,
+        [Person, GroupOfPersons],
+    )
 
-    text_expresses_lamentation_text = build_property("text", "expresses lamentation", TextExpressesLamentation, [Book, *subclasses(TextualWork), DedicatoryText])
-    text_expresses_lamentation_object = build_property("statement", "statement is lamented", TextExpressesLamentation, subclasses(GenericStatement))
-    
-    text_asks_for_patronage_text = build_property("text", "expresses lamentation", TextAsksForPatronage, [Book, *subclasses(TextualWork), DedicatoryText])
-    text_asks_for_patronage_person = build_property("patron", "asked for patronage in text", TextAsksForPatronage, [Person, GroupOfPersons])
-    
-    text_references_event_text = build_property("text", "event referenced in", TextReferencesEvent, [Book, *subclasses(TextualWork), DedicatoryText])
-    text_references_event_event = build_property("Ereignis", "referenced in text", TextReferencesEvent, subclasses(GenericEvent))
-    
-    text_announces_text = build_property("text", "makes announcement", TextExpressesLamentation, [Book, *subclasses(TextualWork), DedicatoryText])
-    text_announcement_thing_announced = build_property("statement", "statement is announced", TextExpressesLamentation, subclasses(GenericStatement))
-    
-    addition_of_text_to_manuscript_manuscript = build_property("Manuskript", "text added in", AdditionOfTextToManuscript, [Manuscript])
-    addition_of_text_to_manuscript_text = build_property("text", "text added to", AdditionOfTextToManuscript, [*subclasses(TextualWork), *subclasses(CompositeTextualWork)])
-    addition_of_text_to_manuscript_person = build_property("person", "added text to manuscript", AdditionOfTextToManuscript, [Person, GroupOfPersons, Organisation])
-    
+    text_expresses_thanks_text = build_property(
+        "text",
+        "expresses thanks",
+        TextExpressesThanks,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_expresses_thanks_object = build_property(
+        "Danke für",
+        "thanks expressed for",
+        TextExpressesThanks,
+        subclasses(GenericStatement),
+    )
+
+    text_expresses_lamentation_text = build_property(
+        "text",
+        "expresses lamentation",
+        TextExpressesLamentation,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_expresses_lamentation_object = build_property(
+        "statement",
+        "statement is lamented",
+        TextExpressesLamentation,
+        subclasses(GenericStatement),
+    )
+
+    text_asks_for_patronage_text = build_property(
+        "text",
+        "expresses lamentation",
+        TextAsksForPatronage,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_asks_for_patronage_person = build_property(
+        "patron",
+        "asked for patronage in text",
+        TextAsksForPatronage,
+        [Person, GroupOfPersons],
+    )
+
+    text_references_event_text = build_property(
+        "text",
+        "event referenced in",
+        TextReferencesEvent,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_references_event_event = build_property(
+        "Ereignis", "referenced in text", TextReferencesEvent, subclasses(GenericEvent)
+    )
+
+    text_announces_text = build_property(
+        "text",
+        "makes announcement",
+        TextExpressesLamentation,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_announcement_thing_announced = build_property(
+        "statement",
+        "statement is announced",
+        TextExpressesLamentation,
+        subclasses(GenericStatement),
+    )
+
+    addition_of_text_to_manuscript_manuscript = build_property(
+        "Manuskript", "text added in", AdditionOfTextToManuscript, [Manuscript]
+    )
+    addition_of_text_to_manuscript_text = build_property(
+        "text",
+        "text added to",
+        AdditionOfTextToManuscript,
+        [*subclasses(TextualWork), *subclasses(CompositeTextualWork)],
+    )
+    addition_of_text_to_manuscript_person = build_property(
+        "person",
+        "added text to manuscript",
+        AdditionOfTextToManuscript,
+        [Person, GroupOfPersons, Organisation],
+    )
+
     education_type_subtype = build_property(
         "unterkategories von", "is supertype of", EducationType, EducationType
     )
@@ -3037,10 +3138,16 @@ def construct_properties():
     parental_relation_child = build_property(
         "Kind", "is child in relationship", ParentalRelation, Person
     )
-    
-    parent_in_law_relation_parent = build_property("Schwiegereltern", "is parent-in-law in", ParentInLawRelation, Person)
-    parent_in_law_relation_child = build_property("Schwiegersohn oder Schwiegertochter", "is child-in-law in", ParentInLawRelation, Person)
 
+    parent_in_law_relation_parent = build_property(
+        "Schwiegereltern", "is parent-in-law in", ParentInLawRelation, Person
+    )
+    parent_in_law_relation_child = build_property(
+        "Schwiegersohn oder Schwiegertochter",
+        "is child-in-law in",
+        ParentInLawRelation,
+        Person,
+    )
 
     sibling_relation_person_a = build_property(
         "Person mit Geschwisterteil",
@@ -3118,8 +3225,7 @@ def construct_properties():
             InstrumentalPerformance,
             SingingPerformance,
             IndividualMusicalPerformance,
-            ChurchService
-            
+            ChurchService,
         ],
     )
     payment_by_person = build_property(
@@ -3140,19 +3246,13 @@ def construct_properties():
         Payment,
         [Person, PersonWithProxy, *subclasses(Organisation), Family, Salary, Pension],
     )
-    
+
     salary_for_person = build_property(
-        "Gehaltsempfänger",
-        "is recipient of salary",
-        Salary,
-        Person
+        "Gehaltsempfänger", "is recipient of salary", Salary, Person
     )
-    
+
     pension_for_person = build_property(
-        "Rentenempfänger",
-        "is recipient of pension",
-        Pension,
-        Person
+        "Rentenempfänger", "is recipient of pension", Pension, Person
     )
 
     order_for = build_property(
@@ -3251,9 +3351,19 @@ def construct_properties():
         ParticipationInEvent,
         [Person, Organisation, Family, PersonWithProxy],
     )
-    
-    apology_for_non_attendance_event = build_property("Ereignis", "is event in nonattendance", ApologyForNonAttendance, subclasses(GenericEvent))
-    apology_for_non_attendance_person = build_property("Abwesende Person", "is person not attending", ApologyForNonAttendance, [Person, Organisation, Family, PersonWithProxy])
+
+    apology_for_non_attendance_event = build_property(
+        "Ereignis",
+        "is event in nonattendance",
+        ApologyForNonAttendance,
+        subclasses(GenericEvent),
+    )
+    apology_for_non_attendance_person = build_property(
+        "Abwesende Person",
+        "is person not attending",
+        ApologyForNonAttendance,
+        [Person, Organisation, Family, PersonWithProxy],
+    )
 
     repair_of_armour_object = build_property(
         "repariertes Objekt",
@@ -4042,20 +4152,86 @@ def construct_properties():
         Contract,
         [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
     )
-    
-    witness_to_signature_document = build_property("Unterfertigungszeuge", "is document in witnessing", WitnessToSigning, [TextualWork, Manuscript])
-    witness_to_signature_witness = build_property("Zeuge", "is withness to signing of document", WitnessToSigning, [Person, *subclasses(GroupOfPersons), Organisation])
-    
-    heir_testator = build_property("Erblasser", "ist Erblasser in", Heir, [Person, *subclasses(GroupOfPersons), Organisation])
-    heir_erbe = build_property("Erbe", "ist Erbe in", Heir, [Person, *subclasses(GroupOfPersons), Organisation])
-    
-    delivery_of_text_text = build_property("Text", "is text delivered in", DeliveryOfText, [TextualWork, Manuscript, Book, Leaflet])
-    delivery_of_text_sender = build_property("Absender von Text", "is sender of text in delivery of text", DeliveryOfText, [Person, *subclasses(GroupOfPersons), Organisation])
-    delivery_of_text_deliverer = build_property("Überbringer von Text", "is deliverer in delivery of text", DeliveryOfText, [Person, *subclasses(GroupOfPersons), Organisation])
-    delivery_of_text_recipient = build_property("Empfänger des Textes", "is recipient of text", DeliveryOfText, [Person, *subclasses(GroupOfPersons), Organisation])
-    delivery_of_text_origin = build_property("Absendeort", "is place of origin of delivery of text", DeliveryOfText, Place)
-    delivery_of_text_destination = build_property("Standort des Empfängers", "is place of destination of delivery of text", DeliveryOfText, Place)
-    
 
-    unknown_statement_type_unknown_relation = build_property("unknown relation", "has unknown relation to", UnknownStatementType, [Person, *subclasses(Organisation), *subclasses(Place), Family, *subclasses(GroupOfPersons), *subclasses(ConceptualObject), *subclasses(PhysicalObject), *subclasses(Role), *subclasses(Task), PersonWithProxy, TaxesAndIncome, DayInReligiousCalendar ])
-    unknown_statement_type_statements = build_property("corrected statements", "is corrected statement of", UnknownStatementType, subclasses(GenericStatement))
+    witness_to_signature_document = build_property(
+        "Unterfertigungszeuge",
+        "is document in witnessing",
+        WitnessToSigning,
+        [TextualWork, Manuscript],
+    )
+    witness_to_signature_witness = build_property(
+        "Zeuge",
+        "is withness to signing of document",
+        WitnessToSigning,
+        [Person, *subclasses(GroupOfPersons), Organisation],
+    )
+
+    heir_testator = build_property(
+        "Erblasser",
+        "ist Erblasser in",
+        Heir,
+        [Person, *subclasses(GroupOfPersons), Organisation],
+    )
+    heir_erbe = build_property(
+        "Erbe", "ist Erbe in", Heir, [Person, *subclasses(GroupOfPersons), Organisation]
+    )
+
+    delivery_of_text_text = build_property(
+        "Text",
+        "is text delivered in",
+        DeliveryOfText,
+        [TextualWork, Manuscript, Book, Leaflet],
+    )
+    delivery_of_text_sender = build_property(
+        "Absender von Text",
+        "is sender of text in delivery of text",
+        DeliveryOfText,
+        [Person, *subclasses(GroupOfPersons), Organisation],
+    )
+    delivery_of_text_deliverer = build_property(
+        "Überbringer von Text",
+        "is deliverer in delivery of text",
+        DeliveryOfText,
+        [Person, *subclasses(GroupOfPersons), Organisation],
+    )
+    delivery_of_text_recipient = build_property(
+        "Empfänger des Textes",
+        "is recipient of text",
+        DeliveryOfText,
+        [Person, *subclasses(GroupOfPersons), Organisation],
+    )
+    delivery_of_text_origin = build_property(
+        "Absendeort", "is place of origin of delivery of text", DeliveryOfText, Place
+    )
+    delivery_of_text_destination = build_property(
+        "Standort des Empfängers",
+        "is place of destination of delivery of text",
+        DeliveryOfText,
+        Place,
+    )
+
+    unknown_statement_type_unknown_relation = build_property(
+        "unknown relation",
+        "has unknown relation to",
+        UnknownStatementType,
+        [
+            Person,
+            *subclasses(Organisation),
+            *subclasses(Place),
+            Family,
+            *subclasses(GroupOfPersons),
+            *subclasses(ConceptualObject),
+            *subclasses(PhysicalObject),
+            *subclasses(Role),
+            *subclasses(Task),
+            PersonWithProxy,
+            TaxesAndIncome,
+            DayInReligiousCalendar,
+        ],
+    )
+    unknown_statement_type_statements = build_property(
+        "corrected statements",
+        "is corrected statement of",
+        UnknownStatementType,
+        subclasses(GenericStatement),
+    )

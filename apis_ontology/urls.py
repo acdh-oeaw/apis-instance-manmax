@@ -116,6 +116,11 @@ custom_url_patterns = [
         name="list_users",
     ),
     path(
+        "manmax/factoids/ids",
+        login_required(FactoidViewSet.as_view({"get": "ids"})),
+        name="factoid_ids",
+    ),
+    path(
         "manmax/factoids/",
         login_required(FactoidViewSet.as_view({"get": "list"})),
         name="list_factoid",
