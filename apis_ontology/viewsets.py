@@ -728,7 +728,7 @@ class SolidJsView(TemplateView):
 
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
-        print(">>", request.data)
+      
 
         object_model_config = model_config[entity_type]
 
@@ -760,7 +760,8 @@ class EntityViewSet(viewsets.ViewSet):
                 tt.save()
 
         if object_model_config["zotero_reference"]:
-            if source_id := request.data.get("source", {}).get("id"):
+            
+            if request.data and request.data.get("source", None) and (source_id := request.data.get("source", {}).get("id")):
                 ref = Reference(
                     bibs_url=source_id,
                     bibtex=get_bibtex_from_url(source_id),

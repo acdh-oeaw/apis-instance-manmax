@@ -237,7 +237,9 @@ class ManMaxTempEntityClass(TempEntityClass):
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class Factoid(ManMaxTempEntityClass):
-    factoid_text = models.TextField(null=True, blank=True, default="", verbose_name="Full Factoid Text")
+    factoid_text = models.TextField(
+        null=True, blank=True, default="", verbose_name="Full Factoid Text"
+    )
     reviewed = models.BooleanField(default=False)
     review_notes = models.TextField(blank=True, null=True)
     review_by = models.CharField(blank=True, max_length=50)
@@ -246,16 +248,14 @@ class Factoid(ManMaxTempEntityClass):
 
     class Meta:
         pass
-    
+
     def save(self, *args, **kwargs):
-        
-      
+
         if len(self.name) > 1000:
             if not self.factoid_text:
                 self.factoid_text = f"{self.name}"
             self.name = f"{self.name[0:999]}"
-            
-            
+
         super().save(*args, **kwargs)
 
 
@@ -626,7 +626,7 @@ class GenericStatement(ManMaxTempEntityClass):
 
     def save(self, *args, **kwargs):
         from apis_ontology.model_config import build_certainty_value_template
-        
+
         if len(self.name) > 1000:
             self.name = f"{self.name[0:999]}"
 
@@ -1162,7 +1162,7 @@ class Poem(TextualWork):
         verbose_name_plural = "Gedichte"
 
 
-@reversion.register(follow=["compositetextualwork_ptr"])
+@reversion.register(follow=["conceptualobject_ptr"])
 class CompositeTextualWork(CompositeConceptualObject):
     """Any textual work comprising multiple parts (e.g. an ideal book comprising a main text, preface, dedicatory text, etc.)"""
 
@@ -2463,6 +2463,18 @@ class AdditionOfTextToManuscript(GenericStatement):
 overridden_properties = defaultdict(lambda: set())
 
 
+@reversion.register(follow=["genericstatement_ptr"])
+class CompositeTextualWorkIsComposedOf(GenericStatement):
+    """Describes a composite text being composed of its part texts"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Sammelwerk ist zusammengestellt aus"
+        verbose_name_plural = "Sammelwerk ist zusammengestellt aus"
+
+
 def build_property(
     name: str,
     name_reverse: str,
@@ -2534,6 +2546,20 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+
+    composite_textual_work_is_composed_of_composite_textual_work = build_property(
+        "Sammelwerk",
+        "is composed in",
+        CompositeTextualWorkIsComposedOf,
+        subclasses(CompositeTextualWork),
+    )
+
+    composite_textual_work_is_composed_of_textual_work = build_property(
+        "Texte",
+        "is part text in",
+        CompositeTextualWorkIsComposedOf,
+        subclasses(TextualWork),
+    )
 
     text_makes_positive_statement_about_person_text = build_property(
         "text",
@@ -2912,7 +2938,7 @@ def construct_properties():
         "betreffender Text",
         "was concerned in secretarial act",
         SecretarialAct,
-        subclasses(TextualWork),
+        [*subclasses(TextualWork), *subclasses(CompositeTextualWork)],
         overrides=[creation_act_thing_created, textual_creation_act_text_created],
     )
 
@@ -2928,7 +2954,7 @@ def construct_properties():
         "betreffender Text",
         "was prepared as conceptual text in",
         PreparationOfConceptualText,
-        subclasses(TextualWork),
+        [*subclasses(TextualWork), *subclasses(CompositeTextualWork)],
         overrides=[creation_act_thing_created, textual_creation_act_text_created],
     )
 
