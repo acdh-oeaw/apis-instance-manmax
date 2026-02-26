@@ -69,6 +69,16 @@ class Typology(TempEntityClass):
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
+class Language(Typology):
+    __entity_type__ = GENERIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Sprache"
+        verbose_name_plural = "Sprachen"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
 class DayInReligiousCalendarType(Typology):
     __entity_group__ = GENERIC
     __entity_type__ = ENTITY
@@ -264,6 +274,11 @@ class Person(ManMaxTempEntityClass):
     """Person: a real person, identified by a label and (one or more) URIs. All information about Persons derived from sources
     should be added as types of Statement, with the Person added as a Related Entity to the Statement.
     """
+
+    person_outside_timeframe = models.BooleanField(
+        default=False,
+        help_text="Person lived well outside the timeframe of the project and should not be part of, e.g. social/relational networks. E.g. Aristotle",
+    )
 
     class Meta:
         verbose_name = "Person"
@@ -2460,9 +2475,6 @@ class AdditionOfTextToManuscript(GenericStatement):
         verbose_name_plural = "Hinzufügung von Text zum Manuskript"
 
 
-overridden_properties = defaultdict(lambda: set())
-
-
 @reversion.register(follow=["genericstatement_ptr"])
 class CompositeTextualWorkIsComposedOf(GenericStatement):
     """Describes a composite text being composed of its part texts"""
@@ -2473,6 +2485,30 @@ class CompositeTextualWorkIsComposedOf(GenericStatement):
     class Meta:
         verbose_name = "Sammelwerk ist zusammengestellt aus"
         verbose_name_plural = "Sammelwerk ist zusammengestellt aus"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Translation(GenericStatement):
+    """Describes the translation of a work into another language by a translator"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Übersetzung"
+        verbose_name_plural = "Übersetzungen"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Editing(GenericStatement):
+    """Describes the editing of a textual work by a person"""
+
+    class Meta:
+        verbose_name = "Herausgeberschaft"
+        verbose_name_plural = "Herausgeberschaften"
+
+
+overridden_properties = defaultdict(lambda: set())
 
 
 def build_property(
@@ -2546,6 +2582,73 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+
+    editing_text_edited = build_property(
+        "Text",
+        "was edited in",
+        Editing,
+        [
+            *subclasses(TextualWork),
+            *subclasses(CompositeTextualWork),
+            Book,
+            Poem,
+            Leaflet,
+        ],
+    )
+
+    editing_editor = build_property(
+        "Herausgeber",
+        "was editor in",
+        Editing,
+        [Person, GroupOfPersons, Organisation],
+    )
+
+    translation_translator = build_property(
+        "Übersetzer",
+        "was translator in",
+        Translation,
+        [Person, GroupOfPersons, Organisation],
+    )
+
+    translation_original_work = build_property(
+        "Originalwerk",
+        "is original work in translation",
+        Translation,
+        [
+            *subclasses(TextualWork),
+            *subclasses(CompositeTextualWork),
+            Book,
+            Poem,
+            Leaflet,
+        ],
+    )
+
+    translation_original_language = build_property(
+        "Original language",
+        "is original language of translaiton",
+        Translation,
+        Language,
+    )
+
+    translation_translated_work = build_property(
+        "übersetztes Werk",
+        "is translated work in",
+        Translation,
+        [
+            *subclasses(TextualWork),
+            *subclasses(CompositeTextualWork),
+            Book,
+            Poem,
+            Leaflet,
+        ],
+    )
+
+    translation_translated_langauge = build_property(
+        "Translation language",
+        "is translation langauge of translation",
+        Translation,
+        Language,
+    )
 
     composite_textual_work_is_composed_of_composite_textual_work = build_property(
         "Sammelwerk",
@@ -3315,6 +3418,7 @@ def construct_properties():
             PersonGroupHasLocation,
             UnknownStatementType,
             ParticipationInEvent,
+            Journey,
         ],
     )
     ordered_by = build_property(
