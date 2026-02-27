@@ -792,6 +792,10 @@ class PersonViewSet(viewsets.ViewSet):
         fields = {
             k: v for k, v in request.data.items() if k in object_model_config["fields"]
         }
+        
+        if fields["person_outside_timeframe"] == "":
+            fields["person_outside_timeframe"] = False
+        
         related_entities = {
             k: v
             for k, v in request.data.items()

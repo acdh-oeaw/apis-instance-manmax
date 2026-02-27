@@ -277,6 +277,8 @@ class Person(ManMaxTempEntityClass):
 
     person_outside_timeframe = models.BooleanField(
         default=False,
+        blank=True,
+        null=True,
         help_text="Person lived well outside the timeframe of the project and should not be part of, e.g. social/relational networks. E.g. Aristotle",
     )
 
