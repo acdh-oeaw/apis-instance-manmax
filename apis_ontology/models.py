@@ -2505,9 +2505,25 @@ class Translation(GenericStatement):
 class Editing(GenericStatement):
     """Describes the editing of a textual work by a person"""
 
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+
     class Meta:
         verbose_name = "Herausgeberschaft"
         verbose_name_plural = "Herausgeberschaften"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class EstablishmentOfEndowment(GenericStatement):
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Errichtung einer Stiftung"
+        verbose_name_plural = "Errichtungen von Stiftungen"
+
+    monetary_amount = models.CharField(max_length=200, blank=True, null=True)
+    currency = models.CharField(max_length=200, blank=True, null=True)
 
 
 overridden_properties = defaultdict(lambda: set())
@@ -2584,6 +2600,31 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+
+    establishment_of_endowment_endowment_created = build_property(
+        "Stiftung errichtet", "was estbalished in", EstablishmentOfEndowment, Foundation
+    )
+
+    establishment_of_endowment_created_by = build_property(
+        "errichtet von",
+        "established endowment in",
+        EstablishmentOfEndowment,
+        [Person, GroupOfPersons, Organisation, PersonWithProxy],
+    )
+
+    establishment_of_endowment_other_contents = build_property(
+        "zusätzliche Inhalte der Stiftung",
+        "is endowed in",
+        EstablishmentOfEndowment,
+        [Person, Place, *subclasses(PhysicalObject), TaxesAndIncome],
+    )
+
+    establishment_of_endowment_purpose = build_property(
+        "Zweck der Stiftung",
+        "is purpose of endowment",
+        EstablishmentOfEndowment,
+        subclasses(GenericStatement),
+    )
 
     editing_text_edited = build_property(
         "Text",
@@ -3107,7 +3148,10 @@ def construct_properties():
     gendering_of_person = build_property("person", "was gendered in", Gendering, Person)
 
     dedication_to_dedicatory_text = build_property(
-        "enthalten in", "contains dedictation", Dedication, DedicatoryText
+        "enthalten in",
+        "contains dedictation",
+        Dedication,
+        [DedicatoryText, *subclasses(TextualWork)],
     )
     dedication_to_person = build_property(
         "adressat der Widmung", "has dedication", Dedication, Person
