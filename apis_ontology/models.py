@@ -2370,6 +2370,23 @@ class DeliveryOfText(GenericStatement):
 
 
 @reversion.register(follow=["genericstatement_ptr"])
+class TextRefersToPerson(GenericStatement):
+    """Records a description of a person given by a text (to link this to the author of the text, use Autorenschaft)"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+
+    statement_description = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name="Beschreibung der Aussage",
+    )
+
+    class Meta:
+        verbose_name = "Text macht eine Aussage über die Person"
+        verbose_name_plural = "Texte machen Aussage über Personen"
+
+@reversion.register(follow=["genericstatement_ptr"])
 class TextMakesPositiveStatementAboutPerson(GenericStatement):
     """Records a positive description of a person given by a text (to link this to the author of the text, use Autorenschaft)"""
 
@@ -2705,6 +2722,19 @@ def construct_properties():
         "is part text in",
         CompositeTextualWorkIsComposedOf,
         subclasses(TextualWork),
+    )
+    
+    text_makes_statement_about_person_text = build_property(
+        "text",
+        "makes statement about person in",
+        TextRefersToPerson,
+        [Book, *subclasses(TextualWork), DedicatoryText],
+    )
+    text_makes_statement_about_person_person = build_property(
+        "person",
+        "statement made about",
+        TextRefersToPerson,
+        [Person, GroupOfPersons],
     )
 
     text_makes_positive_statement_about_person_text = build_property(
