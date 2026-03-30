@@ -3962,7 +3962,7 @@ def construct_properties():
     )
 
     journey_person_travelling = build_property(
-        "Reisende Person/Gruppe",
+        "Reisende Person oder Gruppe",
         "reiste auf Reise",
         Journey,
         [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
