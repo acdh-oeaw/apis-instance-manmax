@@ -19,6 +19,7 @@ from apis_ontology.models import (
     Example,
     Factoid,
     Gendering,
+    GroupOfPersons,
     Naming,
     Organisation,
     Person,
@@ -277,7 +278,9 @@ def contains_unreconciled(data):
 def create_parse_factoid(data):
 
     factoid = Factoid(
-        name=data["name"], factoid_text=data.get("factoid_text", ""), contains_unreconciled=contains_unreconciled(data)
+        name=data["name"],
+        factoid_text=data.get("factoid_text", ""),
+        contains_unreconciled=contains_unreconciled(data),
     )
     factoid.save()
 
@@ -591,7 +594,6 @@ class AutocompleteViewSet(viewsets.ViewSet):
 
             if hasattr(relatable_models, "reconcile_text"):
                 q |= Q(reconcile_text__icontains=si)
-                
 
         results = []
         for model in relatable_models:
@@ -624,7 +626,7 @@ PAGE_SIZE = 200
 class FactoidViewSet(viewsets.ViewSet):
     def ids(self, request):
         return Response([f.pk for f in Factoid.objects.all()])
-    
+
     def list(self, request):
         search_tokens = request.query_params.get("q", "").lower().split(" ")
         if not search_tokens:
@@ -632,8 +634,9 @@ class FactoidViewSet(viewsets.ViewSet):
 
         q = Q()
         for search_token in search_tokens:
-            q &= (Q(name__icontains=search_token) | Q(factoid_text__icontains=search_token))
-            
+            q &= Q(name__icontains=search_token) | Q(
+                factoid_text__icontains=search_token
+            )
 
         factoids = Factoid.objects.filter(q)
 
@@ -728,7 +731,6 @@ class SolidJsView(TemplateView):
 
 class EntityViewSet(viewsets.ViewSet):
     def create(self, request, entity_type=None):
-      
 
         object_model_config = model_config[entity_type]
 
@@ -760,8 +762,12 @@ class EntityViewSet(viewsets.ViewSet):
                 tt.save()
 
         if object_model_config["zotero_reference"]:
-            
-            if request.data and request.data.get("source", None) and (source_id := request.data.get("source", {}).get("id")):
+
+            if (
+                request.data
+                and request.data.get("source", None)
+                and (source_id := request.data.get("source", {}).get("id"))
+            ):
                 ref = Reference(
                     bibs_url=source_id,
                     bibtex=get_bibtex_from_url(source_id),
@@ -792,10 +798,10 @@ class PersonViewSet(viewsets.ViewSet):
         fields = {
             k: v for k, v in request.data.items() if k in object_model_config["fields"]
         }
-        
+
         if fields["person_outside_timeframe"] == "":
             fields["person_outside_timeframe"] = False
-        
+
         related_entities = {
             k: v
             for k, v in request.data.items()
@@ -1013,6 +1019,27 @@ class EdiarumOrganisationViewset(viewsets.ViewSet):
         places = [
             model_to_dict(p)
             for p in Organisation.objects.filter(name__icontains=q)[0:100]
+        ]
+
+        places.sort(key=lambda match: match["name"].lower().index(q))
+        response = render(request, "ediarum/list.xml", context={"data": places})
+        response["content-type"] = "application/xml"
+        return response
+
+
+@authentication_classes([])
+@permission_classes([])
+class EdiarumGroupOfPersonsViewset(viewsets.ViewSet):
+    def list(self, request):
+        if not request.query_params.get("q", None):
+            return Response(
+                {"message": "A query parameter must be provided"}, status=401
+            )
+
+        q = request.query_params["q"].lower()
+        places = [
+            model_to_dict(p)
+            for p in GroupOfPersons.objects.filter(name__icontains=q)[0:100]
         ]
 
         places.sort(key=lambda match: match["name"].lower().index(q))

@@ -7,6 +7,7 @@ from django.urls import path, re_path
 
 from .viewsets import (
     AutocompleteViewSet,
+    EdiarumGroupOfPersonsViewset,
     EdiarumOrganisationViewset,
     EdiarumPersonViewset,
     EdiarumPlaceViewset,
@@ -46,6 +47,12 @@ custom_url_patterns = [
     path(
         "ediarum/place/",
         EdiarumPlaceViewset.as_view({"get": "list"}, name="ediarum-place"),
+    ),
+    path(
+        "ediarum/personGroup/",
+        EdiarumGroupOfPersonsViewset.as_view(
+            {"get": "list"}, name="ediarum-group-of-persons"
+        ),
     ),
     path(
         "manmax/factoid-builder/create",
