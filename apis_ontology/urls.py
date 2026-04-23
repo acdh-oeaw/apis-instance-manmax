@@ -182,6 +182,11 @@ custom_url_patterns = [
         login_required(EntityViewSet.as_view({"post": "create"})),
         name="create_entity",
     ),
+    path(
+        "manmax/api/<str:entity_type>",
+        EntityViewSet.as_view({"get": "list"}),
+        name="view_entity",
+    ),
 ]
 
 urlpatterns += custom_url_patterns

@@ -730,6 +730,10 @@ class SolidJsView(TemplateView):
 
 
 class EntityViewSet(viewsets.ViewSet):
+    def list(self, request, entity_type=None):
+        entity_class = get_entity_class_of_name(entity_type)
+        return Response([{"id": e.pk, "label": e.name} for e in entity_class.objects.all()])
+    
     def create(self, request, entity_type=None):
 
         object_model_config = model_config[entity_type]
