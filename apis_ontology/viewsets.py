@@ -153,7 +153,7 @@ def create_inline_reified_relation(data):
     return new_entity
 
 
-def create_parse_statements(statements):
+def create_parse_statements(statements, current_factoid):
     created_statements = []
     for statement in statements:
         try:
@@ -224,6 +224,7 @@ def create_parse_statements(statements):
                     unreconciled_object = Unreconciled(
                         name=unreconciled_name,
                         unreconciled_type=unreconciled_entity["unreconciled_type"],
+                        is_in_factoid=current_factoid
                     )
                     unreconciled_object.save()
                     tt = TempTriple(
@@ -244,7 +245,7 @@ def create_parse_statements(statements):
                                 "entity_type"
                             ]
                             == "Statements"
-                        ]
+                        ], current_factoid
                     )
 
                     for related_statement in related_statements:
@@ -289,7 +290,7 @@ def create_parse_factoid(data):
 
             raise Exception("A statement type must be selected")
 
-    statements = create_parse_statements(data["has_statements"])
+    statements = create_parse_statements(data["has_statements"], factoid)
     for statement in statements:
         statement_class = statement.__class__
         property_class = Property.objects.get(
@@ -340,7 +341,7 @@ def recursive_delete_statements(statement):
     statement.delete()
 
 
-def edit_parse_statements(related_entities, temp_triples_in_db):
+def edit_parse_statements(related_entities, temp_triples_in_db, current_factoid):
     # temp_triples_in_db are for only one field!!!
     # print("==========")
     incoming_statements = {
@@ -450,7 +451,7 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
                 )
                 # Just call recursively
                 statements_to_create = edit_parse_statements(
-                    v, inner_temp_triples_in_db
+                    v, inner_temp_triples_in_db, current_factoid
                 )
                 for statement in statements_to_create:
                     itt = TempTriple(subj=tt.obj, obj=statement, prop=property)
@@ -476,7 +477,7 @@ def edit_parse_statements(related_entities, temp_triples_in_db):
     new_related_statements = [st for st in related_entities if not st.get("id", None)]
 
     # TODO: uncomment line below
-    created_statements = create_parse_statements(new_related_statements)
+    created_statements = create_parse_statements(new_related_statements, current_factoid)
 
     return created_statements
 
@@ -547,7 +548,7 @@ def edit_parse_factoid(data, pk, user=""):
     temp_triples_in_db = TempTriple.objects.filter(
         subj_id=factoid.pk, prop=has_statement_prop
     )
-    new_statements = edit_parse_statements(data["has_statements"], temp_triples_in_db)
+    new_statements = edit_parse_statements(data["has_statements"], temp_triples_in_db, factoid)
     for statement in new_statements:
         tt = TempTriple(subj=factoid, obj=statement, prop=has_statement_prop)
         tt.save()
@@ -1108,8 +1109,8 @@ class UnreconciledViewSet(viewsets.ViewSet):
                 tt.delete()
                 ur.delete()
 
-                factoid_data = get_unpack_factoid(factoid_id)
-                factoid.contains_unreconciled = contains_unreconciled(factoid_data)
+             
+                factoid.contains_unreconciled = bool(factoid.unreconciled_set.all())
 
                 factoid.save()
 

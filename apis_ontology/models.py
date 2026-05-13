@@ -11,6 +11,7 @@ from django.db import models
 from apis_core.apis_entities.models import TempEntityClass
 from apis_core.apis_relations.models import Property
 from apis_ontology.middleware.get_request import current_request
+from apis_core.apis_relations.models import TempTriple
 
 
 class Example(models.Model):
@@ -51,12 +52,15 @@ group_order = [
 ]
 
 
+
+
 @reversion.register(follow=["tempentityclass_ptr"])
 class Unreconciled(TempEntityClass):
     __entity_group__ = None
     __entity_type__ = UNRECONCILED
 
     unreconciled_type = models.CharField(max_length=200)
+    is_in_factoid = models.ForeignKey("Factoid", on_delete=models.CASCADE, blank=True, null=True)
 
 
 @reversion.register(follow=["tempentityclass_ptr"])
@@ -260,8 +264,9 @@ class Factoid(ManMaxTempEntityClass):
         pass
 
     def save(self, *args, **kwargs):
-
+        print(self.name)
         if len(self.name) > 1000:
+            print("updating", self.name)
             if not self.factoid_text:
                 self.factoid_text = f"{self.name}"
             self.name = f"{self.name[0:999]}"
@@ -857,6 +862,7 @@ class CreationOfOrganisation(CreationAct):
 
 @reversion.register(follow="genericstatement_ptr")
 class OrganisationIsPartOfOrganisation(GenericStatement):
+    """Describes an organisation being a part of another organisation"""
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
 
@@ -1406,7 +1412,10 @@ class Election(GenericStatement):
 
 @reversion.register(follow=["activity_ptr"])
 class PerformanceOfTask(Activity):
-    """Describes the carrying out of a repeatable Task by a Person (e.g. "cleaning Maximilian's shoes")"""
+    """Describes the carrying out of a repeatable Task by a Person (e.g. "cleaning Maximilian's shoes" — on one day, this
+    was carried out by Person X in the court; Person X left the court; Person Y took over the cleaning of shoes).
+    DO NOT use this as a catch-all to express "a thing that happened".
+    """
 
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
@@ -1694,8 +1703,8 @@ class Payment(GenericStatement):
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
 
-    amount = models.CharField(max_length=200, blank=True)
-    currency = models.CharField(max_length=200, blank=True)
+    amount = models.CharField(max_length=200, blank=True, null=True)
+    currency = models.CharField(max_length=200, blank=True, null=True)
 
     FREQUENCY = (
         ("einmalig", "einmalig"),
@@ -2129,6 +2138,7 @@ class RoleOrOrganisationInServiceOfPerson(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class PersonReportsToPerson(GenericStatement):
+    """Describes a person reporting to (e.g. by having as a superior in an organisation)"""
 
     __entity_group__ = ROLE_ORGANISATIONS
     __entity_type__ = STATEMENT
@@ -2542,6 +2552,82 @@ class EstablishmentOfEndowment(GenericStatement):
     monetary_amount = models.CharField(max_length=200, blank=True, null=True)
     currency = models.CharField(max_length=200, blank=True, null=True)
 
+@reversion.register(follow=["genericstatement_ptr"])
+class ExpressionOfIntention(GenericStatement):
+    """Describes the expression of an intention by a Person to do something 
+    (implies a lesser commitment than a Promise, and does not imply that the
+    thing happened)
+    """
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Äußerung eines Vorhabens"
+        verbose_name_plural = "Äußerungen von Vorhaben"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class RecommendationOfPerson(GenericStatement):
+    """Describes the 'generic' recommendation of a person, by a person, to person. 
+    (e.g. "The Emperor recommends the Lord of Aymeries to his daughter"). For recommendation 
+    to a position, use "Besetzungsvorschlag für Amt". For recommendations of a 
+    course of action, use "Empfehlung einer Handlung"
+    """
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Empfehlung von einer Person"
+        verbose_name_plural = "Empfehlungen von Personen"
+
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class RecommendationOfAction(GenericStatement):
+    """Describes one person recommending a course of action to another person. 
+    (e.g. "He recommends that she have the letters signed by Archduke Charles.")
+    For recommendation to a position, use "Besetzungsvorschlag für Amt". For a 
+    'generic' representation of a person (e.g. "The Emperor recommends the Lord of Aymeries to his daughter") 
+    use "Empfehlung von einer Person"
+    """
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Empfehlung einer Handlung"
+        verbose_name_plural = "Empfehlungen von Handlungen"
+
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Refusal(GenericStatement):
+    """Describes the refusal of a person to carry out a course of action."""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Weigerung"
+        verbose_name_plural = "Weigerungen"
+
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Imprisonment(GenericStatement):
+    """Describes the imprisonment of a person by another person in a given location, 
+    for a specified reason"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Gefangenschaft"
+        verbose_name_plural = "Gefangenschaften"
+
+
+
 
 overridden_properties = defaultdict(lambda: set())
 
@@ -2617,6 +2703,27 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+
+   
+
+    imprisonment_person_imprisoning = build_property("Person die verantwortlich für Gefangenschaft fällt", "was responsible for imprisonment", Imprisonment, [Person, GroupOfPersons, Organisation])
+    imprisonment_person_imprisoned = build_property("Person die sich in Gefangenschaft befindet", "was imprisoned in", Imprisonment, [Person, GroupOfPersons])
+    imprisonment_place_of_imprisonment = build_property("Ort der Gefangenschaft", "was place of imprisonment", Imprisonment, Place)
+    imprisonment_reason_for_imprisonment = build_property("Grund der Gefangenschaft", "was reason for imprisonment", Imprisonment, subclasses(GenericStatement))
+
+    refusal_person_refusing = build_property("Person die die Weigerung äußert", "refused action in", Refusal, [Person, GroupOfPersons, Organisation])
+    refusal_action_refused = build_property("Geweigerte Handlung", "was refused in", Refusal, subclasses(GenericStatement))
+
+    recommendation_of_action_person_recommending = build_property("Person die die Empfehlung äußert", "recommended action in", RecommendationOfAction, [Person, GroupOfPersons, Organisation])
+    recommendation_of_action_recommended_to = build_property("Person die die Empfelung empfängt", "received recommendation to carry out action in", RecommendationOfAction, [Person, GroupOfPersons, Organisation])
+    recommendation_of_action_recommended_action = build_property("Handlung die Empfohlen wurde", "was recommended in", RecommendationOfAction, subclasses(GenericStatement))
+
+    recommendation_of_person_person_recommending = build_property("Person die die Empfehlung äußert", "made recommendation of person in", RecommendationOfPerson, [Person, GroupOfPersons, Organisation])
+    recommendation_of_person_person_recommended_to = build_property("Person die die Empfelung empfängt", "received recommendation for person in", RecommendationOfPerson, [Person, GroupOfPersons, Organisation])
+    recommendation_of_person_person_recommended = build_property("Person die Empfohlen wird", "was recommended in", RecommendationOfPerson, Person)
+
+    expression_of_intent_person_expressing = build_property("Person die das Vorhaben ausdrückt", "person expressed plan", ExpressionOfIntention, [Person, GroupOfPersons, Organisation])
+    expression_of_intent_intention_expressed = build_property("Ausgedrücktes Vorhaben", "expressed as plan in", ExpressionOfIntention, subclasses(GenericStatement))
 
     establishment_of_endowment_endowment_created = build_property(
         "Stiftung errichtet", "was estbalished in", EstablishmentOfEndowment, Foundation
@@ -3712,7 +3819,7 @@ def construct_properties():
         "Grund für die Verschreibung",
         "is reason for Verschreibung",
         Verschreibung,
-        [DebtOwed],
+        subclasses(GenericStatement),
     )
 
     taxes_and_income_from_place = build_property(

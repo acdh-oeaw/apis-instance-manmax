@@ -114,6 +114,7 @@ def build_relation_to_types(model_class):
             raise Exception(
                 f"Model class {model_class} on field {rel_name} is related to Entities and Statements: {rel_def['allowed_types']}"
             )
+      
         related_type = related_types.pop()
 
         if related_type == "Entities":

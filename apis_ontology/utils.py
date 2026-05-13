@@ -60,8 +60,7 @@ def get_factoids_for_unreconciled(unreconciled_id, source_id):
 
     matching_factoids = {}
     for ur in unreconcileds_with_same_name:
-        if factoids := list(direct_statements_until_factoid(ur.pk, source_id)):
-            factoid = factoids[0]
+        if factoid := ur.is_in_factoid:
             matching_factoids[ur.pk] = {"id": factoid.pk, "name": factoid.name}
         
     return matching_factoids
