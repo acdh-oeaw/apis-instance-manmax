@@ -49,7 +49,7 @@ class Command(BaseCommand):
                 ur.is_in_factoid = factoid
                 ur.save()
             except Exception as e:
-                print("Error with", ur.pk, factoid.pk, e)
+                print("Error:", e)
             
             
        
