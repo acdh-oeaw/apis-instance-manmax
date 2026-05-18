@@ -1064,8 +1064,15 @@ class UnreconciledViewSet(viewsets.ViewSet):
             return Response(
                 {"message": "A source, id and type must be provided"}, status=401
             )
+        
+        current_factoid_id = request.query_params.get("currentFactoidId", None)
+        if not current_factoid_id:
+            return Response(
+                {"message": "Current factoid id must be provided"}, status=401
+            )
+
         factoids = get_factoids_for_unreconciled(
-            request.query_params["id"], request.query_params["source"]
+            request.query_params["id"], request.query_params["source"], current_factoid_id
         )
 
         return Response(factoids)

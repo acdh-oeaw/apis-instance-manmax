@@ -44,10 +44,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for ur in Unreconciled.objects.all():
             try:
-                factoid = direct_statements_until_factoid(ur)
-                print("Adding", factoid.pk, "as factoid for", ur.pk)
-                ur.is_in_factoid = factoid
-                ur.save()
+                if not ur.is_in_factoid:
+                    factoid = direct_statements_until_factoid(ur)
+                    print("Adding", factoid.pk, "as factoid for", ur.pk)
+                    ur.is_in_factoid = factoid
+                    ur.save()
             except Exception as e:
                 print("Error:", e)
             
