@@ -55,9 +55,11 @@ def direct_statements_until_factoid(ur_id, source_id):
 
 def get_factoids_for_unreconciled(unreconciled_id, source_id, current_factoid_id):
     factoids_with_same_source = (r.object_id for r in Reference.objects.filter(bibs_url=source_id))
-
-    unreconcileds_in_same_factoid = Unreconciled.objects.filter(name=Unreconciled.objects.get(id=unreconciled_id).name, is_in_factoid__pk=int(current_factoid_id))
-    unreconcileds_with_same_name = Unreconciled.objects.filter(name=Unreconciled.objects.get(id=unreconciled_id).name, is_in_factoid__pk__in=factoids_with_same_source)[:100]
+    unreconciled_obj = Unreconciled.objects.get(id=unreconciled_id)
+    unreconciled_name = unreconciled_obj.name
+    unreconciled_type = unreconciled_obj.unreconciled_type
+    unreconcileds_in_same_factoid = Unreconciled.objects.filter(name=unreconciled_name, unreconciled_type=unreconciled_type, is_in_factoid__pk=int(current_factoid_id))
+    unreconcileds_with_same_name = Unreconciled.objects.filter(name=unreconciled_name, unreconciled_type=unreconciled_type, is_in_factoid__pk__in=factoids_with_same_source)[:100]
     
 
     matching_factoids = {}
