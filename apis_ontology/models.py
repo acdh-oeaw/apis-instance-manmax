@@ -77,6 +77,7 @@ class Language(Typology):
     __entity_type__ = GENERIC
     __entity_type__ = ENTITY
 
+
     class Meta:
         verbose_name = "Sprache"
         verbose_name_plural = "Sprachen"

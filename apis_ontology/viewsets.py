@@ -1120,10 +1120,10 @@ class UnreconciledViewSet(viewsets.ViewSet):
                 factoid.contains_unreconciled = bool(factoid.unreconciled_set.all())
 
                 factoid.save()
-
-        reconciled_object.reconcile_text = (
-            f"{reconciled_object.reconcile_text} {ur_name}"
-        )
+        if hasattr(reconciled_object, "reconcile_text"):
+            reconciled_object.reconcile_text = (
+                f"{reconciled_object.reconcile_text} {ur_name}"
+            )
         return Response({"message": "Success"}, status=200)
 
 
