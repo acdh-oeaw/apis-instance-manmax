@@ -142,6 +142,14 @@ class SingingType(Typology):
         verbose_name = "Gesangstyp"
         verbose_name_plural = "Gesangstypen"
 
+@reversion.register(follow=["tempentityclass_ptr"])
+class OathType(Typology):
+    __entity_group__ = GENERIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Oath Type"
+        verbose_name_plural = "Oath Types"
 
 @reversion.register(follow=["tempentityclass_ptr"])
 class InstrumentType(Typology):
@@ -2628,6 +2636,36 @@ class Imprisonment(GenericStatement):
         verbose_name_plural = "Gefangenschaften"
 
 
+@reversion.register(follow=["genericstatement_ptr"])
+class UnstructuredStatement(GenericStatement):
+    """A statement not considered prosopographically useful for structuring specifically, e.g.
+    "John Smith had lunch".
+    Allows reference to any entity type, and a descriptive label. 
+    
+    DO NOT USE a) if a proper structured statement type does exist; b) you think a proper
+    structured statement type SHOULD exist (request that a statement type be added, in this case)
+
+    This is not a catch-all!!
+    """
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "UnstructuredStatement"
+        verbose_name_plural = "UnstructuredStatement"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class SwearingOfOath(GenericStatement):
+    """Describes the swearing of an oath by a person to another person"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Swearing of Oath"
+        verbose_name_plural = "Swearing of Oaths"
 
 
 overridden_properties = defaultdict(lambda: set())
@@ -2705,7 +2743,19 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 def construct_properties():
 
-   
+    oath_type_person_swearing_oath = build_property("person swearing oath", "swore oath in", SwearingOfOath, [Person, GroupOfPersons])
+    oath_type_oath_sworn_to = build_property("oath sworn to", "oath sworn to in", SwearingOfOath, [Person, GroupOfPersons, Organisation])
+    contents_of_oath = build_property("contents of oath", "is content of oath", SwearingOfOath, subclasses(GenericStatement))
+    oath_type = build_property("oath type", "is type of oath", SwearingOfOath, OathType)
+    place_of_oath_swearing = build_property("place", "is place of oath swearing", SwearingOfOath, Place)
+    
+
+
+    oath_type_is_subtype_of_role_type = build_property(
+        "unterkategorie von", "is supertype of", OathType, OathType
+    )
+
+    unstructured_statement_to_entities = build_property("Involves entities", "is involved in", UnstructuredStatement, [Person, GroupOfPersons, Organisation, Place, *subclasses(PhysicalObject), IndeterminatePhysicalObject])
 
     imprisonment_person_imprisoning = build_property("Person die verantwortlich für Gefangenschaft fällt", "was responsible for imprisonment", Imprisonment, [Person, GroupOfPersons, Organisation])
     imprisonment_person_imprisoned = build_property("Person die sich in Gefangenschaft befindet", "was imprisoned in", Imprisonment, [Person, GroupOfPersons])
@@ -3554,6 +3604,7 @@ def construct_properties():
             SingingPerformance,
             IndividualMusicalPerformance,
             ChurchService,
+            DebtOwed
         ],
     )
     payment_by_person = build_property(
@@ -3955,6 +4006,8 @@ def construct_properties():
             CommunicatesWith,
         ],
     )
+
+    granting_permission_obligations_of_permission = build_property("Bedingungen", "is obligation of", [GrantingPermission, Verschreibung], subclasses(GenericStatement))
 
     baptism_person_baptised = build_property(
         "Getaufte Person", "wurde getauft in", Baptism, Person
