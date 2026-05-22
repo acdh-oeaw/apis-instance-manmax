@@ -3604,7 +3604,8 @@ def construct_properties():
             SingingPerformance,
             IndividualMusicalPerformance,
             ChurchService,
-            DebtOwed
+            DebtOwed,
+            UnstructuredStatement
         ],
     )
     payment_by_person = build_property(
@@ -3654,6 +3655,7 @@ def construct_properties():
             UnknownStatementType,
             ParticipationInEvent,
             Journey,
+            UnstructuredStatement
         ],
     )
     ordered_by = build_property(
@@ -3904,6 +3906,7 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
+            UnstructuredStatement
         ],
     )
 
@@ -4004,6 +4007,7 @@ def construct_properties():
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
             CommunicatesWith,
+            UnstructuredStatement
         ],
     )
 
@@ -4157,6 +4161,7 @@ def construct_properties():
             MarriageBeginning,
             RoleOccupation,
             AssignmentToRole,
+            UnstructuredStatement
         ],
     )
 
@@ -4616,4 +4621,5 @@ def construct_properties():
         "is corrected statement of",
         UnknownStatementType,
         subclasses(GenericStatement),
+        
     )
