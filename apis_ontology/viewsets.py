@@ -1,5 +1,6 @@
 import json
 from collections import Counter, OrderedDict, defaultdict
+import threading
 
 from apis_bibsonomy.models import Reference
 from apis_bibsonomy.utils import get_bibtex_from_url
@@ -38,46 +39,59 @@ FIELDS_TO_EXCLUDE = [
 ]
 
 
+def unpack_triple(triple, return_dict):
+    rel_name = triple.prop.name_forward.replace(" ", "_")
+
+    rel_obj = triple.obj
+    rel_obj_type = rel_obj.__class__.__name__.lower()
+    related_obj_def = model_config[rel_obj_type]
+    fields_to_get = related_obj_def["fields"].keys()
+
+    current_obj_dict = (
+        {
+            "__object_type__": rel_obj_type,
+            **model_to_dict(
+                rel_obj, fields=fields_to_get, exclude=FIELDS_TO_EXCLUDE
+            ),
+            **get_unpack_statement(rel_obj),
+        }
+        if rel_obj.__entity_type__ == "Statements"
+        else (
+            {
+                "__object_type__": rel_obj_type,
+                "id": rel_obj.id,
+                "label": rel_obj.name,
+                "unreconciled_type": rel_obj.unreconciled_type,
+            }
+            if rel_obj_type == "unreconciled"
+            else {
+                "__object_type__": rel_obj_type,
+                "id": rel_obj.id,
+                "label": rel_obj.name,
+            }
+        )
+    )
+    for related_statement_name in related_obj_def["relations_to_statements"]:
+        if related_statement_name not in current_obj_dict:
+            current_obj_dict[related_statement_name] = [{}]
+
+    return_dict[rel_name].append(current_obj_dict)
+
+
 def get_unpack_statement(obj):
     triples = TempTriple.objects.filter(subj=obj).all()
     return_dict = defaultdict(list)
+    threads = []
     for triple in triples:
-        rel_name = triple.prop.name_forward.replace(" ", "_")
+        t = threading.Thread(target=unpack_triple, args=(triple, return_dict))
+        threads.append(t)
 
-        rel_obj = triple.obj
-        rel_obj_type = rel_obj.__class__.__name__.lower()
-        related_obj_def = model_config[rel_obj_type]
-        fields_to_get = related_obj_def["fields"].keys()
+    for t in threads:
+        t.start()
 
-        current_obj_dict = (
-            {
-                "__object_type__": rel_obj_type,
-                **model_to_dict(
-                    rel_obj, fields=fields_to_get, exclude=FIELDS_TO_EXCLUDE
-                ),
-                **get_unpack_statement(rel_obj),
-            }
-            if rel_obj.__entity_type__ == "Statements"
-            else (
-                {
-                    "__object_type__": rel_obj_type,
-                    "id": rel_obj.id,
-                    "label": rel_obj.name,
-                    "unreconciled_type": rel_obj.unreconciled_type,
-                }
-                if rel_obj_type == "unreconciled"
-                else {
-                    "__object_type__": rel_obj_type,
-                    "id": rel_obj.id,
-                    "label": rel_obj.name,
-                }
-            )
-        )
-        for related_statement_name in related_obj_def["relations_to_statements"]:
-            if related_statement_name not in current_obj_dict:
-                current_obj_dict[related_statement_name] = [{}]
-
-        return_dict[rel_name].append(current_obj_dict)
+    # Wait for all threads to finish
+    for t in threads:
+        t.join()
 
     return return_dict
 
@@ -438,7 +452,7 @@ def edit_parse_statements(related_entities, temp_triples_in_db, current_factoid)
                 for k, v in incoming_statements[tt.obj.id].items()
                 if k in object_type_config["relations_to_statements"]
             }
-            print(relations_to_statements)
+          
             for k, v in relations_to_statements.items():
                 property = Property.objects.get(
                     subj_class=get_contenttype_of_class(
@@ -645,7 +659,7 @@ class FactoidViewSet(viewsets.ViewSet):
             factoids = factoids.filter(created_by=request.user.username)
 
         if statusFilter := request.query_params.get("status"):
-            print(statusFilter)
+       
             if statusFilter == "unchecked":
                 factoids = factoids.filter(reviewed=False)
             elif statusFilter == "checked":

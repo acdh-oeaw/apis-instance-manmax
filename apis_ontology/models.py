@@ -273,9 +273,9 @@ class Factoid(ManMaxTempEntityClass):
         pass
 
     def save(self, *args, **kwargs):
-        print(self.name)
+    
         if len(self.name) > 1000:
-            print("updating", self.name)
+           
             if not self.factoid_text:
                 self.factoid_text = f"{self.name}"
             self.name = f"{self.name[0:999]}"
