@@ -79,6 +79,7 @@ def unpack_triple(triple, return_dict):
 
 
 def get_unpack_statement(obj):
+    """Calls each unpacking of a triple in its own thread"""
     triples = TempTriple.objects.filter(subj=obj).all()
     return_dict = defaultdict(list)
     threads = []
