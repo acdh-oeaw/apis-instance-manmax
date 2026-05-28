@@ -84,15 +84,16 @@ def get_unpack_statement(obj):
     return_dict = defaultdict(list)
     threads = []
     for triple in triples:
-        t = threading.Thread(target=unpack_triple, args=(triple, return_dict))
-        threads.append(t)
+        #t = threading.Thread(target=unpack_triple, args=(triple, return_dict))
+        # threads.append(t)
+        unpack_triple(triple, return_dict)
 
-    for t in threads:
-        t.start()
+    #for t in threads:
+    #    t.start()
 
     # Wait for all threads to finish
-    for t in threads:
-        t.join()
+    #for t in threads:
+    #    t.join()
 
     return return_dict
 
