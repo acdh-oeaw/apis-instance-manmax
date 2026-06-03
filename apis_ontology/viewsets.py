@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.contrib.auth.models import Group
 from rest_framework import viewsets
 from rest_framework.response import Response
 
@@ -130,6 +131,8 @@ def get_unpack_factoid(pk):
             "problem_flagged": obj.problem_flagged,
             "contains_unreconciled": obj.contains_unreconciled,
         },
+        "final_checked": obj.final_checked,
+        "deleted": obj.deleted,
         "name": obj.name,
         "factoid_text": obj.factoid_text,
         "source": reference,
@@ -505,6 +508,8 @@ def edit_parse_factoid(data, pk, user=""):
     factoid.name = data["name"]
     factoid.factoid_text = data.get("factoid_text", "")
     factoid.contains_unreconciled = contains_unreconciled(data)
+    factoid.final_checked = data.get("final_checked", False)
+    factoid.deleted = data.get("deleted", False)
 
     if data.get("review", {}).get("reviewed") and (
         factoid.reviewed != data.get("review", {}).get("reviewed")
@@ -640,6 +645,13 @@ class AutocompleteViewSet(viewsets.ViewSet):
 PAGE_SIZE = 200
 
 
+def is_admin(user):
+    gurus = Group.objects.filter(name="Gurus").first()
+    if gurus in user.groups.all():
+        return True
+    
+    return False
+
 class FactoidViewSet(viewsets.ViewSet):
     def ids(self, request):
         return Response([f.pk for f in Factoid.objects.all()])
@@ -660,6 +672,9 @@ class FactoidViewSet(viewsets.ViewSet):
         if request.query_params.get("currentUser"):
             factoids = factoids.filter(created_by=request.user.username)
 
+        if not request.query_params.get("showDeleted"):
+            factoids = factoids.filter(deleted=False)
+
         if statusFilter := request.query_params.get("status"):
        
             if statusFilter == "unchecked":
@@ -670,6 +685,9 @@ class FactoidViewSet(viewsets.ViewSet):
                 factoids = factoids.filter(reviewed=True, problem_flagged=True)
             elif statusFilter == "containsUnreconciled":
                 factoids = factoids.filter(contains_unreconciled=True)
+            elif statusFilter == "finalChecked":
+                factoids = factoids.filter(final_checked=True)
+
 
         if userFilter := request.query_params.get("user"):
             factoids = factoids.filter(created_by=userFilter)
@@ -687,6 +705,7 @@ class FactoidViewSet(viewsets.ViewSet):
         factoids = factoids.order_by("-modified_when")[lower_bound:upper_bound]
 
         factoids_serializable = {
+            "isAdmin": is_admin(request.user),
             "count": count,
             "factoids": [
                 {
@@ -699,6 +718,8 @@ class FactoidViewSet(viewsets.ViewSet):
                     "reviewed": f.reviewed,
                     "problem_flagged": f.problem_flagged,
                     "contains_unreconciled": f.contains_unreconciled,
+                    "final_checked": f.final_checked,
+                    "deleted": f.deleted,
                 }
                 for f in factoids
             ],
@@ -706,7 +727,9 @@ class FactoidViewSet(viewsets.ViewSet):
         return Response(factoids_serializable)
 
     def retrieve(self, request, pk=None):
-        return Response(get_unpack_factoid(pk=pk))
+        resp = get_unpack_factoid(pk=pk)
+        resp["isAdmin"] = is_admin(request.user)
+        return Response(resp)
 
     def create(self, request):
 

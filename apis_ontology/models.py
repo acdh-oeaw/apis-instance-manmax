@@ -268,6 +268,8 @@ class Factoid(ManMaxTempEntityClass):
     review_by = models.CharField(blank=True, max_length=50)
     problem_flagged = models.BooleanField(default=False)
     contains_unreconciled = models.BooleanField(default=False)
+    final_checked = models.BooleanField(default=False, null=True, blank=True)
+    deleted = models.BooleanField(default=False, null=True, blank=True)
 
     class Meta:
         pass
@@ -614,6 +616,7 @@ class GenericStatement(ManMaxTempEntityClass):
     __entity_type__ = STATEMENT
 
     head_statement = models.BooleanField(default=True)
+    statement_checked = models.BooleanField(default=False, blank=True, null=True)
 
     certainty = models.JSONField(null=True, blank=True, default=None)
     certainty_values = models.JSONField(null=True, blank=True, default=None)
@@ -1726,6 +1729,7 @@ class Payment(GenericStatement):
         choices=FREQUENCY,
         blank=True,
         verbose_name="Häufigkeit der Zahlung",
+        default="einmalig"
     )
 
     class Meta:
@@ -2668,6 +2672,16 @@ class SwearingOfOath(GenericStatement):
         verbose_name_plural = "Swearing of Oaths"
 
 
+@reversion.register(follow=["physicalobject_ptr"])
+class MusicalInstrument(PhysicalObject):
+    __entity_group__ = MUSIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Musikinstrument"
+        verbose_name_plural = "Musikinstrumente"
+
+
 overridden_properties = defaultdict(lambda: set())
 
 
@@ -2749,7 +2763,7 @@ def construct_properties():
     oath_type = build_property("oath type", "is type of oath", SwearingOfOath, OathType)
     place_of_oath_swearing = build_property("place", "is place of oath swearing", SwearingOfOath, Place)
     
-
+    musical_instrument_has_type = build_property("instrumentstyp", "is instrument of type", MusicalInstrument, InstrumentType)
 
     oath_type_is_subtype_of_role_type = build_property(
         "unterkategorie von", "is supertype of", OathType, OathType
@@ -3204,7 +3218,7 @@ def construct_properties():
         "Produkt",
         "was created in",
         subclasses(CreationAct),
-        [*subclasses(PhysicalObject), *subclasses(ConceptualObject)],
+        [*subclasses(PhysicalObject), *subclasses(ConceptualObject), MusicalInstrument],
     )
 
     textual_creation_act_text_created = build_property(
@@ -3655,7 +3669,8 @@ def construct_properties():
             UnknownStatementType,
             ParticipationInEvent,
             Journey,
-            UnstructuredStatement
+            UnstructuredStatement,
+            CommunicatesWith
         ],
     )
     ordered_by = build_property(
