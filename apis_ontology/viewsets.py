@@ -1145,14 +1145,14 @@ class UnreconciledViewSet(viewsets.ViewSet):
                 ur = Unreconciled.objects.get(pk=unreconciled_id)
 
                 ur_name = ur.name
-
-                tt = TempTriple.objects.get(obj__pk=ur.pk)
-
-                tt_new = TempTriple(subj=tt.subj, obj=reconciled_object, prop=tt.prop)
-
-                tt_new.save()
-
-                tt.delete()
+                try:
+                    tt = TempTriple.objects.get(obj__pk=ur.pk)
+                    tt_new = TempTriple(subj=tt.subj, obj=reconciled_object, prop=tt.prop)
+                    tt_new.save()
+                    tt.delete()
+                except TempTriple.DoesNotExist:
+                    pass
+                    
                 ur.delete()
 
              
