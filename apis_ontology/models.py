@@ -1979,8 +1979,8 @@ class Ennoblement(GenericStatement):
     __entity_type__ = STATEMENT
 
     class Meta:
-        verbose_name = "Veredelung"
-        verbose_name_plural = "Veredlungen"
+        verbose_name = "Nobilitierung"
+        verbose_name_plural = "Nobilitierungen"
 
 
 @reversion.register(follow=["genericstatement_ptr"])
@@ -2681,6 +2681,48 @@ class MusicalInstrument(PhysicalObject):
         verbose_name = "Musikinstrument"
         verbose_name_plural = "Musikinstrumente"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class Prohibition(GenericStatement):
+    """Describes the general prohibition of an activity. e.g. "Maximilian prohibits the importation of copper from Venice" """
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Verbot"
+        verbose_name_plural = "Verbote"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class NegativeOrder(GenericStatement):
+    """An explict order given to a person *NOT* to do a thing"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Negative Befehl"
+        verbose_name_plural = "Negative Befehlen"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class AbsenceFromEvent(GenericStatement):
+    """Describes the absence of a person from an event, e.g. Maximilian did not attend a Golden Fleece meeting"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Abwesenheit bei einem Ereignis"
+        verbose_name_plural = "Abwesenheiten von Ereignissen"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class AbsenceFromPlace(GenericStatement):
+    """Describes the absence of a person from an place, e.g. Maximilian was not in Vienna"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Abwesenheit an einem Ort"
+        verbose_name_plural = "Abwesenheiten von Orten"
 
 overridden_properties = defaultdict(lambda: set())
 
@@ -2756,6 +2798,14 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+    absence_from_event_person_absent = build_property("Abwesender oder Abwesende", "was absent from event", AbsenceFromEvent, Person)
+    absence_from_event_event = build_property("Ereignis", "was event from which person was absent", AbsenceFromEvent, subclasses(GenericEvent))
+    absence_from_place_person_absent = build_property("Abwesender oder Abwesende", "was absent from place", AbsenceFromPlace, Person)
+    absence_from_place_place = build_property("Ort", "was place from which person was absent", AbsenceFromPlace, Place)
+
+    prohibition_person_prohibiting = build_property("Verantwortliche Person für das Verbot", "was responsible for prohibition", Prohibition, [Person, GroupOfPersons, Family, Organisation, PersonWithProxy])
+    prohibition_person_prohibited = build_property("Person, für die das Verbot gilt", "was prohibited in", Prohibition, [Person, GroupOfPersons, Family, Organisation, PersonWithProxy])
+    thing_prohibited = build_property("Verbotene Dinge", "was forbidden in", Prohibition, subclasses(GenericStatement))
 
     oath_type_person_swearing_oath = build_property("person swearing oath", "swore oath in", SwearingOfOath, [Person, GroupOfPersons])
     oath_type_oath_sworn_to = build_property("oath sworn to", "oath sworn to in", SwearingOfOath, [Person, GroupOfPersons, Organisation])
@@ -3670,7 +3720,8 @@ def construct_properties():
             ParticipationInEvent,
             Journey,
             UnstructuredStatement,
-            CommunicatesWith
+            CommunicatesWith,
+            SwearingOfOath
         ],
     )
     ordered_by = build_property(
@@ -3683,6 +3734,44 @@ def construct_properties():
         "Befehlsempfänger",
         "received order",
         Order,
+        [Person, PersonWithProxy, *subclasses(Organisation)],
+    )
+
+    negative_order_for = build_property(
+        "befohlene Tätigkeit",
+        "was ordered in",
+         NegativeOrder,
+        [
+            PerformanceOfTask,
+            MusicPerformance,
+            *subclasses(CreationAct),
+            *subclasses(CreationCommission),
+            Death,
+            AssignmentToRole,
+            RemovalFromRole,
+            Payment,
+            Order,
+            OwnershipTransfer,
+            *subclasses(TransportationOfObject),
+            PersonGroupHasLocation,
+            UnknownStatementType,
+            ParticipationInEvent,
+            Journey,
+            UnstructuredStatement,
+            CommunicatesWith,
+            SwearingOfOath
+        ],
+    )
+    negative_ordered_by = build_property(
+        "Befehlsgeber",
+        "gave order",
+        NegativeOrder,
+        [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
+    )
+    negative_order_received_by = build_property(
+        "Befehlsempfänger",
+        "received order",
+        NegativeOrder,
         [Person, PersonWithProxy, *subclasses(Organisation)],
     )
 
@@ -4196,6 +4285,7 @@ def construct_properties():
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
             PersonGroupHasLocation,
+            CommunicatesWith
         ],
     )
     request_made_by = build_property(
