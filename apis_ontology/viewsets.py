@@ -27,6 +27,7 @@ from apis_ontology.models import (
     Person,
     Place,
     Unreconciled,
+    Family
 )
 from apis_ontology.utils import create_html_citation_from_csl_data_string
 
@@ -1022,6 +1023,24 @@ class EdiarumPersonViewset(viewsets.ViewSet):
         q = request.query_params["q"].lower()
         persons = [
             model_to_dict(p) for p in Person.objects.filter(name__icontains=q)[0:100]
+        ]
+
+        persons.sort(key=lambda match: sort_func(q, match))
+        response = render(request, "ediarum/list.xml", context={"data": persons})
+        response["content-type"] = "application/xml"
+        return response
+    
+@authentication_classes([])
+@permission_classes([])
+class EdiarumFamilyViewSet(viewsets.ViewSet):
+    def list(self, request):
+        if not request.query_params.get("q", None):
+            return Response(
+                {"message": "A query parameter must be provided"}, status=401
+            )
+        q = request.query_params["q"].lower()
+        persons = [
+            model_to_dict(p) for p in Family.objects.filter(name__icontains=q)[0:100]
         ]
 
         persons.sort(key=lambda match: sort_func(q, match))

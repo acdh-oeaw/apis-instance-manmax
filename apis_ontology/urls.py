@@ -9,6 +9,7 @@ from .viewsets import (
     AutocompleteViewSet,
     EdiarumGroupOfPersonsViewset,
     EdiarumOrganisationViewset,
+    EdiarumFamilyViewSet,
     EdiarumPersonViewset,
     EdiarumPlaceViewset,
     EntityViewSet,
@@ -38,6 +39,12 @@ custom_url_patterns = [
         "ediarum/organisation/",
         EdiarumOrganisationViewset.as_view(
             {"get": "list"}, name="ediarum-organisation"
+        ),
+    ),
+    path(
+        "ediarum/family/",
+        EdiarumFamilyViewSet.as_view(
+            {"get": "list"}, name="ediarum-family"
         ),
     ),
     path(
