@@ -3738,7 +3738,7 @@ def construct_properties():
     )
 
     negative_order_for = build_property(
-        "befohlene Tätigkeit",
+        "untersagte Tätigkeit",
         "was ordered in",
          NegativeOrder,
         [
@@ -3763,13 +3763,13 @@ def construct_properties():
         ],
     )
     negative_ordered_by = build_property(
-        "Befehlsgeber",
+        "Untersagender",
         "gave order",
         NegativeOrder,
         [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
     negative_order_received_by = build_property(
-        "Befehlsempfänger",
+        "Empfänger der Untersagung",
         "received order",
         NegativeOrder,
         [Person, PersonWithProxy, *subclasses(Organisation)],
