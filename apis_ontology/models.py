@@ -1723,9 +1723,10 @@ class Payment(GenericStatement):
         ("wöchentlich", "wöchentlich"),
         ("monatlich", "monatlich"),
         ("jährlich", "jährlich"),
+        ("regular (unknown frequency)", "regular (unknown frequency)")
     )
     frequency = models.CharField(
-        max_length=16,
+        max_length=30,
         choices=FREQUENCY,
         blank=True,
         verbose_name="Häufigkeit der Zahlung",
@@ -2312,6 +2313,17 @@ class SingingPerformance(IndividualMusicalPerformance):
         verbose_name = "Gesangsaufführung"
         verbose_name_plural = "Gesangsaufführungen"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class DancePerformance(GenericStatement):
+    """Describes the performance of a dance"""
+
+    __entity_group__ = MUSIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Tanzaufführung"
+        verbose_name_plural = "Tanzaufführungen"
+
 
 @reversion.register(follow=["individualmusicalperformance_ptr"])
 class InstrumentalPerformance(IndividualMusicalPerformance):
@@ -2724,6 +2736,21 @@ class AbsenceFromPlace(GenericStatement):
         verbose_name = "Abwesenheit an einem Ort"
         verbose_name_plural = "Abwesenheiten von Orten"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class OrderedNotCarriedOut(GenericStatement):
+    """Describes an Order that, *according to the source itself* was not carried out. Do not use
+    this Statement type to 'speculate' about whether an order was carried out or not — if the source
+    gives an order, use Order. e.g.  Paul von Liechtenstein had been commissioned by KM to purchase several 
+    regiments and suits of armor from the Italians, but since he was unable to receive the necessary funds, 
+    the purchase had to be cancelled."""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Befehl erteilt, aber nicht ausgeführt"
+        verbose_name_plural = "Befehl erteilt, aber nicht ausgeführt"
+
 overridden_properties = defaultdict(lambda: set())
 
 
@@ -2798,6 +2825,11 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+
+    dance_performance_performed_by = build_property("aufgeführt von", "performed in dance performance", DancePerformance, [Person, GroupOfPersons, Organisation])
+    dance_performance_dance_performed = build_property("Tanz aufgeführt", "was performed in", DancePerformance, [*subclasses(TextualWork), CompositeTextualWork])
+    dance_performed_location = build_property("Ort", "was place of dance performance", DancePerformance, Place)
+
     absence_from_event_person_absent = build_property("Abwesender oder Abwesende", "was absent from event", AbsenceFromEvent, Person)
     absence_from_event_event = build_property("Ereignis", "was event from which person was absent", AbsenceFromEvent, subclasses(GenericEvent))
     absence_from_place_person_absent = build_property("Abwesender oder Abwesende", "was absent from place", AbsenceFromPlace, Person)
@@ -3702,7 +3734,7 @@ def construct_properties():
     order_for = build_property(
         "befohlene Tätigkeit",
         "was ordered in",
-        subclasses(Order),
+        [*subclasses(Order), OrderedNotCarriedOut],
         [
             PerformanceOfTask,
             MusicPerformance,
@@ -3727,13 +3759,13 @@ def construct_properties():
     ordered_by = build_property(
         "Befehlsgeber",
         "gave order",
-        Order,
+        [*subclasses(Order), OrderedNotCarriedOut],
         [Person, PersonWithProxy, GroupOfPersons, *subclasses(Organisation)],
     )
     order_received_by = build_property(
         "Befehlsempfänger",
         "received order",
-        Order,
+        [*subclasses(Order), OrderedNotCarriedOut],
         [Person, PersonWithProxy, *subclasses(Organisation)],
     )
 
@@ -4285,7 +4317,8 @@ def construct_properties():
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
             PersonGroupHasLocation,
-            CommunicatesWith
+            CommunicatesWith,
+           
         ],
     )
     request_made_by = build_property(
@@ -4377,6 +4410,7 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
+            PresentationForRole
         ],
     )
     promise_person_promised_to = build_property(
