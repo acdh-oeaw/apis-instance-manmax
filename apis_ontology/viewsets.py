@@ -40,6 +40,21 @@ FIELDS_TO_EXCLUDE = [
     "end_end_date",
 ]
 
+def unpack_obj_details(subj):
+    triples = TempTriple.objects.filter(subj=subj).all()
+    items = defaultdict(list)
+    for triple in triples:
+        rel_obj = triple.obj
+        rel_obj_type = rel_obj.__class__.__name__.lower()
+        obj_dict = {
+            "__object_type__" : rel_obj_type,
+            "id": rel_obj.id,
+            "label": rel_obj.name,
+            **unpack_obj_details(rel_obj)
+        }
+        items[triple.prop.name_forward.replace(" ", "_")].append(obj_dict)
+
+    return items
 
 def unpack_triple(triple, return_dict):
     rel_name = triple.prop.name_forward.replace(" ", "_")
@@ -65,7 +80,7 @@ def unpack_triple(triple, return_dict):
                 "__object_type__": rel_obj_type,
                 "id": rel_obj.id,
                 "label": rel_obj.name,
-                
+                **unpack_obj_details(rel_obj)
             }
         
     elif rel_obj_type == "unreconciled":
