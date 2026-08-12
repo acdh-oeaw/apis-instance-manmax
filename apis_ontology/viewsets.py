@@ -1,6 +1,7 @@
 import json
 from collections import Counter, OrderedDict, defaultdict
 import threading
+import traceback
 
 from apis_bibsonomy.models import Reference
 from apis_bibsonomy.utils import get_bibtex_from_url
@@ -322,7 +323,7 @@ def contains_unreconciled(data):
 
 
 def create_parse_factoid(data):
-
+    print(data)
     factoid = Factoid(
         name=data["name"],
         factoid_text=data.get("factoid_text", ""),
@@ -764,7 +765,7 @@ class FactoidViewSet(viewsets.ViewSet):
                 factoid = create_parse_factoid(request.data)
         except Exception as e:
             print("ERROR CREATING FACTOID", e)
-            # print(traceback.format_exc())
+            print(traceback.format_exc())
             return Response(
                 {"message": f"Erstellung eines Factoids fehlgeschlagen: {str(e)}"},
                 status=400,

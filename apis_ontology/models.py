@@ -872,7 +872,7 @@ class CreationOfOrganisation(CreationAct):
         verbose_name_plural = "Gründungen von Körperschaften"
 
 
-@reversion.register(follow="genericstatement_ptr")
+@reversion.register(follow=["genericstatement_ptr"])
 class OrganisationIsPartOfOrganisation(GenericStatement):
     """Describes an organisation being a part of another organisation"""
     __entity_group__ = ROLE_ORGANISATIONS
