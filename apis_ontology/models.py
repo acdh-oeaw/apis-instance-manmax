@@ -2751,6 +2751,22 @@ class OrderedNotCarriedOut(GenericStatement):
         verbose_name = "Befehl erteilt, aber nicht ausgeführt"
         verbose_name_plural = "Befehl erteilt, aber nicht ausgeführt"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class Theft(GenericStatement):
+    """Describes the theft of money or an object from a person/group by a person/group"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Diebstahl"
+        verbose_name_plural = "Diebstähle"
+
+    amount = models.CharField(max_length=200, blank=True, null=True)
+    currency = models.CharField(max_length=200, blank=True, null=True)
+
+    
+
 overridden_properties = defaultdict(lambda: set())
 
 
@@ -2762,6 +2778,7 @@ def build_property(
     overrides: Property | Iterable[Property] | None = None,
 ):
     """Convenience function for defining properties"""
+ 
     global overridden_properties
     prop = Property.objects.get_or_create(
         name=name,
@@ -2825,6 +2842,12 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+
+    theft_object_stolen = build_property("Gegenstand gestohlen", "was stolen in", Theft, [*subclasses(PhysicalObject), *subclasses(ConceptualObject)])
+    theft_stolen_by = build_property("Dieb", "was thief in", Theft, [Person, GroupOfPersons, Organisation, PersonWithProxy])
+    theft_stolen_from = build_property("bestohlen", "was stolen from in", Theft, [Person, GroupOfPersons, Organisation, PersonWithProxy])
+    theft_location_of_theft = build_property("Ort", "was place of", Theft, Place)
+
 
     dance_performance_performed_by = build_property("aufgeführt von", "performed in dance performance", DancePerformance, [Person, GroupOfPersons, Organisation])
     dance_performance_dance_performed = build_property("Tanz aufgeführt", "was performed in", DancePerformance, [*subclasses(TextualWork), CompositeTextualWork])
@@ -3753,7 +3776,8 @@ def construct_properties():
             Journey,
             UnstructuredStatement,
             CommunicatesWith,
-            SwearingOfOath
+            SwearingOfOath,
+            Burial
         ],
     )
     ordered_by = build_property(
@@ -3867,7 +3891,7 @@ def construct_properties():
         "Teilnehmer",
         "has participation",
         ParticipationInEvent,
-        [Person, Organisation, Family, PersonWithProxy],
+        [Person, Organisation, Family, PersonWithProxy, GroupOfPersons],
     )
 
     apology_for_non_attendance_event = build_property(
@@ -3936,6 +3960,9 @@ def construct_properties():
     )
     communicates_with_recipient_place = build_property(
         "Zielort", "is reception place of communication", CommunicatesWith, Place
+    )
+    communicates_with_communication_document = build_property(
+        "document of communication", "is document of communication", CommunicatesWith, [*subclasses(TextualWork)]
     )
 
     performance_of_work_as_part_of_event = build_property(
@@ -4282,6 +4309,7 @@ def construct_properties():
         "war Zweck einer Reise",
         Journey,
         [
+            *subclasses(GenericStatement),
             CommunicatesWith,
             PerformanceOfTask,
             MusicPerformance,
@@ -4298,6 +4326,7 @@ def construct_properties():
             RoleOccupation,
             AssignmentToRole,
             UnstructuredStatement
+            
         ],
     )
 
@@ -4662,6 +4691,7 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
+            *subclasses(GenericStatement)
         ],
     )
 
