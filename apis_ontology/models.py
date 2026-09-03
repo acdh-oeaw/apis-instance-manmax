@@ -3583,7 +3583,7 @@ def construct_properties():
         "Amt", "role occupied in", RoleOccupation, Role
     )
     role_occupation_person = build_property(
-        "Amtsträger", "has role occupation", RoleOccupation, Person
+        "Amtsträger", "has role occupation", RoleOccupation, [Person, GroupOfPersons]
     )
 
     assignment_to_role_role = build_property(
@@ -3599,7 +3599,7 @@ def construct_properties():
         "Amtsempfänger",
         "was assigned role in",
         AssignmentToRole,
-        [Person, PersonWithProxy],
+        [Person, PersonWithProxy, GroupOfPersons],
     )
     assignment_to_role_starts_role_occupation = build_property(
         "bekleidetes Amt",
@@ -3805,7 +3805,7 @@ def construct_properties():
         "Befehlsempfänger",
         "received order",
         [*subclasses(Order), OrderedNotCarriedOut],
-        [Person, PersonWithProxy, *subclasses(Organisation)],
+        [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
     )
 
     negative_order_for = build_property(
@@ -4623,7 +4623,7 @@ def construct_properties():
         "Musikant",
         "was performer in individual music performance",
         IndividualMusicalPerformance,
-        [Person, PersonWithProxy, *subclasses(Organisation)],
+        [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
     )
 
     singing_performance_singing_type = build_property(
