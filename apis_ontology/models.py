@@ -2855,8 +2855,8 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 def construct_properties():
 
-    artwork_based_on_artwork_original = build_property("Vorlagen", "is basis in", subclasses(ArtisticWork), subclasses(ArtisticWork))
-    artwork_based_on_artwork_derived = build_property("abgeleitet", "is derived in", subclasses(ArtisticWork), subclasses(ArtisticWork))
+    artwork_based_on_artwork_original = build_property("Vorlagen", "is basis in", ArtworkBasedOnArtwork, subclasses(ArtisticWork))
+    artwork_based_on_artwork_derived = build_property("abgeleitet", "is derived in", ArtworkBasedOnArtwork, subclasses(ArtisticWork))
 
     theft_object_stolen = build_property("Gegenstand gestohlen", "was stolen in", Theft, [*subclasses(PhysicalObject), *subclasses(ConceptualObject)])
     theft_stolen_by = build_property("Dieb", "was thief in", Theft, [Person, GroupOfPersons, Organisation, PersonWithProxy])
