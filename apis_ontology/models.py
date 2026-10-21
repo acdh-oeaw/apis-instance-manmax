@@ -759,12 +759,18 @@ class OwnershipTransfer(Activity):
         verbose_name_plural = "Besitztransfere"
 
 
+
+
+
 @reversion.register(follow=["ownershiptransfer_ptr"])
 class GiftGiving(OwnershipTransfer):
     """Describes the giving of an entity as a gift from one person to another"""
 
     __entity_group__ = GENERIC
     __entity_type__ = STATEMENT
+
+    amount = models.CharField(max_length=200, blank=True, null=True)
+    currency = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         verbose_name = "Schenkung"
@@ -1232,6 +1238,28 @@ class DedicatoryText(TextualWork):
         verbose_name = "Werk mit Widmung"
         verbose_name_plural = "Werke mit Widmungen"
 
+@reversion.register(follow=["textualwork_ptr"])
+class Letter(TextualWork):
+    """A letter"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Brief"
+        verbose_name_plural = "Briefe"
+
+@reversion.register(follow=["textualwork_ptr"])
+class Charter(TextualWork):
+    """A Charter"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Urkunde"
+        verbose_name_plural = "Urkunden"
+
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Dedication(GenericStatement):
@@ -1409,6 +1437,18 @@ class AcceptanceOfOrder(GenericStatement):
         verbose_name = "Befehlsannahme"
         verbose_name_plural = "Befehlsannahmen"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class AcceptanceOfInvitationRequestOrRecommendation(GenericStatement):
+    """Describes the acceptance of an invitation or request"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    # AcceptanceOfOrder # Befehlsannahme
+    class Meta:
+        verbose_name = "Annahme einer Einladung, Bitte oder Empfehlung"
+        verbose_name_plural = "Annahme einer Einladung, Bitte oder Empfehlung"
+
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Election(GenericStatement):
@@ -1523,7 +1563,7 @@ class FamilialRelation(GenericStatement):
 
 @reversion.register(follow=["genericstatement_ptr"])
 class Heir(GenericStatement):
-    """Describes a Person (or Group) being the heir of a Person (or Group)"""
+    """Describes the status of Person (or Group) being the heir of a Person (or Group)"""
 
     __entity_group__ = LIFE_FAMILY
     __entity_type__ = STATEMENT
@@ -1945,6 +1985,19 @@ class Dispute(GenericStatement):
     class Meta:
         verbose_name = "Streit"
         verbose_name_plural = "Streite"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class SettlementOfDispute(GenericStatement):
+    """Describes the settlement of a dispute"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+
+    class Meta:
+        verbose_name = "Beendigung eines Streites"
+        verbose_name_plural = "Beendigung eines Streites"
 
 
 @reversion.register(follow=["genericstatement_ptr"])
@@ -2777,6 +2830,363 @@ class ArtworkBasedOnArtwork(GenericStatement):
         verbose_name = "Kunstwerk basierend auf Kunstwerk"
         verbose_name_plural = "Kunstwerk basierend auf Kunstwerk"
 
+@reversion.register(follow=["genericstatement_ptr"])
+class EventDependentTrigger(GenericStatement):
+    """Use to associate a conditional event to its conditions or alternative result 
+    (i.e. IF [thing happens] THEN [this should happen] ELSE [this other thing should happen])"""
+
+    __entity_group__ = OTHER
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Event-Dependent Trigger"
+        verbose_name_plural = "Event-Depedent Triggers"
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class Benefice(ManMaxTempEntityClass):
+    """A benefice that may be given to a person, conferring rights or other possessions/money (use BeneficeConfers)"""
+
+    __entity_type__ = ENTITY
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Benefice"
+        verbose_name_plural = "Benefices"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class RoleLinkedToBenefice(GenericStatement):
+    """Links a Benefice to a specific role"""
+
+    __entity_type__ = STATEMENT
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Role linked to benefice"
+        verbose_name_plural = "Roles linked to benefices"
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class BeneficeRight(ManMaxTempEntityClass):
+    """A right conferred by a benefice"""
+
+    __entity_type__ = ENTITY
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Benefice Right"
+        verbose_name_plural = "Benefice Rights"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class BeneficeConfersRight(GenericStatement):
+    """Links a Benefice to a right conferred by that Benefice"""
+
+    __entity_type__ = STATEMENT
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Benefice confers right"
+        verbose_name_plural = "Benefices confer rights"
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class NoblePosition(ManMaxTempEntityClass):
+    """Describes a specific noble position (e.g. Graf von Führstenberg) not a type (e.g. Graf)"""
+
+    __entity_type__ = ENTITY
+    __entity_group__ = LIFE_FAMILY
+
+    heritable = models.BooleanField(default=True, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Noble position"
+        verbose_name_plural = "Noble positions"
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class NoblePositionType(Typology):
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "Noble Position type"
+        verbose_name_plural = "Noble Position type"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class NoblePositionConfersRight(GenericStatement):
+    """Links a Noble Position to a right conferred by that Noble Position"""
+
+    __entity_type__ = STATEMENT
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Noble position confers right"
+        verbose_name_plural = "Benefices confer rights"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class GrantsProtection(GenericStatement):
+    """A person grants protection for an arbitrary activity (e.g. journey)"""
+
+    __entity_type__ = STATEMENT
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Grants protection"
+        verbose_name_plural = "Grants protection"
+
+
+@reversion.register(follow=["creationact_ptr"])
+class MaintenanceOfObject(CreationAct):
+    """Describes the maintenance of an object (e.g. repair of church organ)"""
+
+    __entity_type__ = STATEMENT
+    __entity_group__ = GENERIC
+
+    class Meta:
+        verbose_name = "Maintenance or repair of object"
+        verbose_name_plural = "Maintenance or repair of objects"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class ObjectBasedOnObject(GenericStatement):
+    """Describes one object being based on another object, n.b. for Artworks use Artwork Based On Artwork"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Object based on object"
+        verbose_name_plural = "Object based on object"
+
+@reversion.register(follow=["creationact_ptr"])
+class DecorationOfObject(CreationAct):
+    """Describes the decoration of an object (for armour, use Verzierung von Harnisch/Waffe)"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Decoration of object"
+        verbose_name_plural = "Decoration of objects"
+
+
+@reversion.register(follow=["compositetextualwork_ptr"])
+class Will(CompositeTextualWork):
+    """A legal will or testament"""
+
+    __entity_type__ = ENTITY
+    __entity_group__ = LIFE_FAMILY
+
+    class Meta:
+        verbose_name = "Testament"
+        verbose_name_plural = "Testament"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class ContentsOfWill(GenericStatement):
+    """Describes the contents of a will"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Contents of will"
+        verbose_name_plural = "Contents of will"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class InheritanceEvent(GenericStatement):
+    """Describes person(s) inheriting from a person according to the terms of a will"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Inheritance Event"
+        verbose_name_plural = "Inheritance Event"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Punishment(GenericStatement):
+    """Describes the punishment of a person, by a person or group, the reason for the punishment and the punishment imposed"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Punishment"
+        verbose_name_plural = "Punishments"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Excommunication(GenericStatement):
+    """Describes the excommunication or interdiction of a person/group from an organisation or place"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Excommunication or Interdiction"
+        verbose_name_plural = "Excommunication or Interdiction"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Expulsion(GenericStatement):
+    """Describes the expulsion of a person/group from an organisation or place"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Expulsion"
+        verbose_name_plural = "Expulsions"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Degradation(GenericStatement):
+    """Describes the degradation of a person, i.e. a person being removed from a role or noble position"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Degradation"
+        verbose_name_plural = "Degradations"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class SuspensionFromRole(GenericStatement):
+    """Describes the suspension of a person from a role or noble position"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Suspension from Role"
+        verbose_name_plural = "Suspensions from Role"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class QuidProQuo(GenericStatement):
+    """Connects any statements which are carried on the agreement/understanding that they all happen (you get this land; I get a big sword)"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "QuidProQuo"
+        verbose_name_plural = "QuidProQuo"
+
+@reversion.register(follow=["ownershiptransfer_ptr"])
+class TemporaryOwnershipTransfer(OwnershipTransfer):
+    """Describes the temporary ownership transfer of an object from a person to a person, for a period, with a reason"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Temporary Ownership Transfer"
+        verbose_name_plural = "Temporary Ownership Transfer"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class ProvisionOfAccommodation(GenericStatement):
+    """Describes someone providing accommodation for another person, in a place"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Provision of Accommodation"
+        verbose_name_plural = "Provision of Accommodation"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class ConfirmationByAuthority(GenericStatement):
+    """Describes an authority confirming the legitimacy of an action (i.e. the same as granting permission, but *after* the action)"""
+
+    __entity_group__ = GENERIC
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Confirmation by Authority"
+        verbose_name_plural = "Confirmation by Authority"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class SigningOfCharter(GenericStatement):
+    """Describes a person being a signatory to a charter"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Signing of Charter"
+        verbose_name_plural = "Signing of Charter"
+
+@reversion.register(follow=["secretarialact_ptr"])
+class RecordingInRegister(SecretarialAct):
+    """Describes the act of recording information in a register"""
+
+    __entity_group__ = TEXT
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Recording in Register"
+        verbose_name_plural = "Recording in Register"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Threat(GenericStatement):
+    """Describes someone threatening a person with positive (I will do this) or negative consequences (I won't do this), 
+    in case of a positive (If you do this) or negative (If you don't do this) cause. PAY VERY CLOSE ATTENTION TO WHICH FIELDS YOU USE!"""
+
+    __entity_group__ = LIFE_FAMILY
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Provision of Accommodation"
+        verbose_name_plural = "Provision of Accommodation"
+
+
+@reversion.register(follow=["genericstatement_ptr"])
+class Undo(GenericStatement):
+    """Used to contain any statement describing a situation that can be reversed, e.g. Maximilian cancels someone's expulsion from a city"""
+
+    __entity_group__ = OTHER
+    __entity_type__ = STATEMENT
+
+    class Meta:
+        verbose_name = "Undo"
+        verbose_name_plural = "Undo"
+
+@reversion.register(follow=["genericstatement_ptr"])
+class LossDamageOfObject(GenericStatement):
+    "Used to describe the loss or damage of an object, and the person 'responsible' (either for the damage or loss, "
+    "or the owner who had responsibility for the object itself when the damage occurred)"
+
+    __entity_group__ = OTHER
+    __entity_type__ = STATEMENT
+
+    loss_or_damage = models.CharField(
+            max_length=12,
+            choices=(("loss", "Loss"), ("damage", "Damage")),
+            blank=True,
+        )
+
+    class Meta:
+        verbose_name = "Loss or Damage of Object"
+        verbose_name_plural = "Loss or Damage of Object"
+
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class RoleInEvent(ManMaxTempEntityClass):
+    """A role in an event (as opposed to a role in an organisation or group), e.g. was served as commander in a battle"""
+
+    __entity_type__ = ENTITY
+    __entity_group__ = GENERIC
+
+    heritable = models.BooleanField(default=True, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Role in Event"
+        verbose_name_plural = "Role in Event"
+
+@reversion.register(follow=["tempentityclass_ptr"])
+class RoleInEventType(Typology):
+    __entity_group__ = GENERIC
+    __entity_type__ = ENTITY
+
+    class Meta:
+        verbose_name = "RoleInEvent Type"
+        verbose_name_plural = "RoleInEvent Type"
 
 
 overridden_properties = defaultdict(lambda: set())
@@ -2790,6 +3200,9 @@ def build_property(
     overrides: Property | Iterable[Property] | None = None,
 ):
     """Convenience function for defining properties"""
+
+    if not obj_class:
+        print(name)
  
     global overridden_properties
     prop = Property.objects.get_or_create(
@@ -2854,6 +3267,101 @@ def subclasses(model: type[TempEntityClass]) -> Iterable[type[TempEntityClass]]:
 
 
 def construct_properties():
+
+    role_in_event_has_type = build_property("role in event type", "is type of", RoleInEvent, RoleInEventType)
+
+    loss_damage_of_object = build_property("object lost or damaged", "was lost or damaged in", LossDamageOfObject, subclasses(PhysicalObject))
+    loss_damage_of_object_person = build_property("was responsible", "was responsible for loss or damage in", LossDamageOfObject, [Person, GroupOfPersons, Organisation])
+
+    settlementofdispute_dispute_settled = build_property("dispute settled", "was settled in", SettlementOfDispute, Dispute)
+    settlementofdispute_dispute_outcome = build_property("outcome of settlement", "was settlement of", SettlementOfDispute, subclasses(GenericStatement))
+    settlementofdispute_settlement_determined_by = build_property("settledment determined by", "was determiner of settlement", SettlementOfDispute, [Person, GroupOfPersons, Organisation])
+
+    undo_thing_undone = build_property("thing undone", "undone in", Undo, subclasses(GenericStatement))
+
+    threat_person_giving_threat = build_property("person threatening", "was threatening in", Threat, [Person, GroupOfPersons, Organisation])
+    threat_person_threatened = build_property("person being threatened", "was threatened in", Threat, [Person, GroupOfPersons, Organisation])
+    threat_thing_threatened_positive_consequences = build_property("positive consequences", "is positive consequence in", Threat, subclasses(GenericStatement))
+    threat_thing_threatened_negative_consequences = build_property("negative consequences", "is negative consequence in", Threat, subclasses(GenericStatement))
+    threat_thing_threatened_positive_cause = build_property("positive cause", "is positive cause in", Threat, subclasses(GenericStatement))
+    threat_thing_threatened_negative_cause = build_property("negative cause", "is negative cause in", Threat, subclasses(GenericStatement))
+
+    recording_in_register_thing_recorded = build_property("thing recorded", "was recorded in", RecordingInRegister, subclasses(GenericStatement))
+
+    signing_of_charter_person = build_property("signer of charter", "signed charter in", SigningOfCharter, [Person, GroupOfPersons, Organisation])
+    signing_of_charter_charter_signed = build_property("charter signed", "was charter signed in", SigningOfCharter, Charter)
+
+    confirmation_of_authority_confirmer = build_property("authority confirming", "was authority confirming in", ConfirmationByAuthority, [Person, GroupOfPersons, Organisation])
+    confirmation_of_authority_action = build_property("action confirmed", "was action confirmed in", ConfirmationByAuthority, subclasses(GenericStatement))
+
+    provision_of_accommodation_provider = build_property("provider of accommodation", "provided accommodation in", ProvisionOfAccommodation, [Person, GroupOfPersons, Organisation])
+    provision_of_accommodation_recipient = build_property("recipient of accommodation", "received accommodation in", ProvisionOfAccommodation, [Person, GroupOfPersons])
+    provision_of_accommodation_location = build_property("location of accommodation", "was location of accommodation in", ProvisionOfAccommodation, Place)
+
+    temporary_ownership_transfer_reason = build_property("reason for transfer", "was reason for ownership transfer in", TemporaryOwnershipTransfer, subclasses(GenericStatement))
+    temporary_ownership_transfer_conditions = build_property("conditions of transfer", "was condition for ownership transfer in", TemporaryOwnershipTransfer, subclasses(GenericStatement))
+
+    quid_pro_quo_statements = build_property("quid pro quo actions", "is quid pro quo action in", QuidProQuo, subclasses(GenericStatement))
+
+    suspension_person_imposing_suspension = build_property("person imposing suspension", "imposed suspension in", SuspensionFromRole, [Person, GroupOfPersons, Organisation])
+    suspension_person_suspended = build_property("person suspended", "was suspended in", SuspensionFromRole, [Person, GroupOfPersons, Organisation])
+    suspension_suspended_from = build_property("suspended from", "was suspended from in", SuspensionFromRole, [Role, NoblePosition])
+    suspension_considition_to_end = build_property("conditions to end suspension", "was condition for ending suspension in", SuspensionFromRole, subclasses(GenericStatement))
+
+    degradation_person_imposing_degradation = build_property("person imposing degradation", "imposed degradation in", Degradation, [Person, GroupOfPersons, Organisation])
+    degradation_person_degraded = build_property("person degraded", "was degraded in", Degradation, [Person, GroupOfPersons, Organisation])
+    degradation_degraded_from = build_property("degraded from", "was degraded from in", Degradation, [Role, NoblePosition])
+
+    excommunication_person_excommunicating = build_property("person imposing excommunication or interdiction", "imposed excommunication", Excommunication, [Person, GroupOfPersons, Organisation])
+    excommunication_person_excommunicated = build_property("person or group excommunicated or inderdicted", "was excommunicated in", Excommunication, [Person, GroupOfPersons, Organisation])
+    excommunication_excommunicated_from = build_property("excommunicated or interdicted from", "was excommunicated from in", Excommunication, [GroupOfPersons, Organisation, Place])
+    excommunication_conditions_to_end = build_property("conditions to end excommunication or interdiction", "was condition for ending excommunication in", Excommunication, subclasses(GenericStatement))
+
+
+    expulsion_person_expelling = build_property("person expelling", "imposed expulsion", Expulsion, [Person, GroupOfPersons, Organisation])
+    expulsion_person_expelled = build_property("person or group expelled", "was expelled in", Expulsion, [Person, GroupOfPersons, Organisation])
+    expulsion_excommunicated_from = build_property("expelled from", "was expelled from in", Expulsion, [GroupOfPersons, Organisation, Place])
+    expulsion_condition_to_end = build_property("conditions to end expulsion", "was condition for ending expulsion in", Expulsion, subclasses(GenericStatement))
+
+    punishment_person_punished = build_property("person punished", "was punished in", Punishment, [Person, GroupOfPersons, Organisation])
+    punishment_punishment_imposed_by = build_property("punishment imposed by", "imposed punishment in", Punishment, [Person, GroupOfPersons, Organisation])
+    punishment_reason_for_punishment = build_property("reason for punishment", "was reason for punishment", Punishment, subclasses(GenericStatement))
+    punishment_punishment_imposed = build_property("punishment imposed", "was punishment imposed in", Punishment, subclasses(GenericStatement))
+
+    inheritance_event_testator = build_property("Testator", "is testator in", InheritanceEvent, Person)
+    inheritance_event_inheritor = build_property("Inheritor", "is inheritor in", InheritanceEvent, Person)
+    inheritance_event_will = build_property("Testament", "is testament in", InheritanceEvent, Will)
+    inheritance_event_executor = build_property("Executor", "is executor in", InheritanceEvent, [Person, GroupOfPersons, Organisation, PersonWithProxy])
+
+    contents_of_will_will = build_property("Testament", "is testament in", ContentsOfWill, Will)
+    contents_of_will_contents = build_property("Contents", "is content of will", ContentsOfWill, subclasses(GenericStatement))
+
+
+    object_based_on_object_original = build_property("Original object", "is basis in", ObjectBasedOnObject, [*subclasses(PhysicalObject), *subclasses(ConceptualObject)])
+    object_based_on_object_derived = build_property("Derived object", "is derived in", ObjectBasedOnObject, [*subclasses(PhysicalObject), *subclasses(ConceptualObject)])
+    
+
+
+    grants_protection_person_granting = build_property("Person granting protection", "grants protection in", GrantsProtection, [Person, GroupOfPersons, PersonWithProxy, Organisation])
+    grants_protection_person_receiving = build_property("Person receiving protection", "grants protection in", GrantsProtection, [Person, GroupOfPersons, PersonWithProxy, Organisation])
+    grants_protection_protection_granted_for = build_property("Protection for", "is granted protection for in", GrantsProtection, subclasses(GenericStatement))
+
+
+    noble_position_has_type = build_property("Noble position type", "is type of", NoblePosition, NoblePositionType)
+
+    noble_position_confers_right_to_entity = build_property("Noble position grants right to thing", "is thing in", NoblePositionConfersRight, [RightsToPlace, BeneficeRight, *subclasses(PhysicalObject), *subclasses(ConceptualObject)])
+    noble_position_confers_right_to_action = build_property("Noble position grants right to action", "is granted in", NoblePositionConfersRight, Payment)
+
+    benefice_confers_right_to_entity = build_property("Right to thing", "is thing in", BeneficeConfersRight, [RightsToPlace, BeneficeRight, *subclasses(PhysicalObject), *subclasses(ConceptualObject)])
+    benefice_confers_right_to_action = build_property("Right to action", "is granted in", BeneficeConfersRight, Payment)
+
+
+    role_linked_to_benefice_role = build_property("Role", "is role in", RoleLinkedToBenefice, Role)
+    role_linked_to_benefice_benefice = build_property("Benefice", "is benefice in", RoleLinkedToBenefice, Benefice)
+
+    event_dependent_trigger_condition = build_property("Condition", "is condition in", EventDependentTrigger, subclasses(GenericStatement))
+    event_dependent_trigger_result = build_property("Result if condition met", "is result in", EventDependentTrigger, subclasses(GenericStatement))
+    event_dependent_trigger_result_if_not = build_property("Result if condition not met", "is result not met in",  EventDependentTrigger, subclasses(GenericStatement))
 
     artwork_based_on_artwork_original = build_property("Vorlagen", "is basis in", ArtworkBasedOnArtwork, subclasses(ArtisticWork))
     artwork_based_on_artwork_derived = build_property("abgeleitet", "is derived in", ArtworkBasedOnArtwork, subclasses(ArtisticWork))
@@ -3255,7 +3763,7 @@ def construct_properties():
     )
 
     membership_of_group_person = build_property(
-        "Mitglied", "has membership", GroupMembership, Person
+        "Mitglied", "has membership", GroupMembership, [Person, GroupOfPersons]
     )
     membership_of_group_group = build_property(
         "Organisation oder Gruppe",
@@ -3707,6 +4215,7 @@ def construct_properties():
     marriage_beginning_place = build_property(
         "Ort der Eheschließung", "is place of marriage", MarriageBeginning, Place
     )
+    marriage_beginning_terms_of_marriage = build_property("terms of marriage", "is term of marriage in", MarriageBeginning, subclasses(GenericStatement))
 
     marriage_end_person = build_property(
         "Ehemalige Ehepartner", "has marriage ending in", MarriageEnd, Person
@@ -3739,7 +4248,9 @@ def construct_properties():
             IndividualMusicalPerformance,
             ChurchService,
             DebtOwed,
-            UnstructuredStatement
+            UnstructuredStatement,
+            Journey,
+            PersonHasIllness
         ],
     )
     payment_by_person = build_property(
@@ -3754,6 +4265,7 @@ def construct_properties():
         Payment,
         [Person, *subclasses(Organisation), GroupOfPersons, PersonWithProxy],
     )
+    payment_via_intermediary_agent = build_property("über einen Vermittler", "is intermediary agent in", Payment, [Person, *subclasses(Organisation), GroupOfPersons, PersonWithProxy],)
     payment_source_of_money = build_property(
         "Zahlungsquelle",
         "was source of money for payment",
@@ -3792,7 +4304,12 @@ def construct_properties():
             UnstructuredStatement,
             CommunicatesWith,
             SwearingOfOath,
-            Burial
+            Burial,
+            GrantsProtection,
+            Refusal,
+            RecommendationOfAction,
+            MarriageBeginning,
+            *subclasses(GenericStatement)
         ],
     )
     ordered_by = build_property(
@@ -3830,7 +4347,8 @@ def construct_properties():
             Journey,
             UnstructuredStatement,
             CommunicatesWith,
-            SwearingOfOath
+            SwearingOfOath,
+            *subclasses(GenericStatement)
         ],
     )
     negative_ordered_by = build_property(
@@ -3889,6 +4407,19 @@ def construct_properties():
         [Person, Organisation, GroupOfPersons, PersonWithProxy],
     )
 
+    acceptance_of_request_generic_statement = build_property(
+            "angenommener Einladung, Bitte oder Empfehlung",
+            "was accepted in",
+            AcceptanceOfInvitationRequestOrRecommendation,
+            [Request, Invitation, RecommendationOfAction, RecommendationOfPerson],
+        )
+    acceptance_of_request_by_person = build_property(
+            "Empfänger",
+            "was accepted by",
+            AcceptanceOfInvitationRequestOrRecommendation,
+            [Person, Organisation, GroupOfPersons, PersonWithProxy],
+        )
+
     use_in_battle_battle = build_property(
         "Schlacht", "has use in", UtilisationInEvent, Battle
     )
@@ -3908,6 +4439,8 @@ def construct_properties():
         ParticipationInEvent,
         [Person, Organisation, Family, PersonWithProxy, GroupOfPersons],
     )
+    participation_in_event_role_type = build_property("Role in event", "is role in event in", ParticipationInEvent, RoleInEventType)
+
 
     apology_for_non_attendance_event = build_property(
         "Ereignis",
@@ -4067,6 +4600,8 @@ def construct_properties():
         DebtOwed,
         [Person, *subclasses(Organisation), Family],
     )
+    debt_owed_guarantor = build_property("Guarantor of debt", "is guarantor in", DebtOwed, [Person, Organisation, GroupOfPersons])
+    debt_owned_object_as_guarantee = build_property("object as guarantree of debt", "is object of guarantee in", DebtOwed, [*subclasses(PhysicalObject), RightsToPlace])
 
     # TODO: check types
     debt_owned_reason_for = build_property(
@@ -4185,7 +4720,8 @@ def construct_properties():
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
             CommunicatesWith,
-            UnstructuredStatement
+            UnstructuredStatement,
+            *subclasses(GenericStatement)
         ],
     )
 
@@ -4224,6 +4760,7 @@ def construct_properties():
     ennoblement_place = build_property(
         "Ort", "war Ort der Veredelung", Ennoblement, Place
     )
+    ennoblement_to_position = build_property("Noble position ennobled to", "is noble position in", Ennoblement, NoblePosition)
 
     performance_of_work_as_part_of_event = build_property(
         "Teil eines Ereignisses",
@@ -4301,6 +4838,7 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
+            *subclasses(GenericStatement)
         ],
     )
 
@@ -4362,7 +4900,8 @@ def construct_properties():
             *subclasses(TransportationOfObject),
             PersonGroupHasLocation,
             CommunicatesWith,
-           
+            GrantsProtection,
+            *subclasses(GenericStatement)
         ],
     )
     request_made_by = build_property(
@@ -4454,7 +4993,8 @@ def construct_properties():
             Order,
             OwnershipTransfer,
             *subclasses(TransportationOfObject),
-            PresentationForRole
+            PresentationForRole,
+            *subclasses(GenericStatement)
         ],
     )
     promise_person_promised_to = build_property(
@@ -4545,8 +5085,10 @@ def construct_properties():
         "präsentierende Person",
         "was presenter in",
         PresentationForRole,
-        [Person, PersonWithProxy, *subclasses(Organisation)],
+        [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons],
     )
+
+    presentation_for_role_addressee = build_property("person to whom presentation is addressed", "was addressee in", PresentationForRole, [Person, PersonWithProxy, *subclasses(Organisation), GroupOfPersons])
 
     presentation_for_role_role = build_property(
         "Amt",
@@ -4807,3 +5349,20 @@ def construct_properties():
         subclasses(GenericStatement),
         
     )
+
+
+    repair_of_object_object = build_property(
+                "repaired or maintained object",
+                "was repaired in",
+                MaintenanceOfObject,
+                subclasses(PhysicalObject),
+                overrides=creation_act_thing_created,
+        )
+
+    decoration_of_object_object = build_property(
+                    "decorated object",
+                    "was decorated in",
+                    DecorationOfObject,
+                    subclasses(PhysicalObject),
+                    overrides=creation_act_thing_created,
+            )

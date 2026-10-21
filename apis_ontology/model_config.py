@@ -107,6 +107,11 @@ def build_relation_to_types(model_class):
                 for rel_type in rel_def["allowed_types"] if rel_type != "unreconciled"
             ]
         )
+
+        print([
+                        (rel_type, getattr(get_entity_class_of_name(rel_type), "__entity_type__", "Entity"))
+                        for rel_type in rel_def["allowed_types"] if rel_type != "unreconciled"
+                    ])
      
         
         
