@@ -3705,6 +3705,10 @@ def construct_properties():
     )
 
     graduation_degree_subject = build_property(
+            "Studientfach", "ist Studienfach von Immatrikulation", Matriculation, EducationSubject
+        )
+
+    graduation_degree_subject = build_property(
         "Studientfach", "ist Studienfach von", Graduation, EducationSubject
     )
 
@@ -3964,13 +3968,13 @@ def construct_properties():
         "vorbesitzer",
         "was previous owner in transfer",
         subclasses(OwnershipTransfer),
-        [Person, *subclasses(Organisation)],
+        [Person, *subclasses(Organisation), GroupOfPersons],
     )
     ownership_transfer_to_whom = build_property(
         "empfänger",
         "new owner in transfer",
         subclasses(OwnershipTransfer),
-        [Person, *subclasses(Organisation)],
+        [Person, *subclasses(Organisation), GroupOfPersons],
     )
 
     naming_of_person = build_property("genannte Person", "was named in", Naming, Person)
@@ -4093,6 +4097,8 @@ def construct_properties():
     role_occupation_person = build_property(
         "Amtsträger", "has role occupation", RoleOccupation, [Person, GroupOfPersons]
     )
+
+    role_occupation_conditions = build_property("Conditions", "is condition of role occupation", RoleOccupation, subclasses(GenericStatement))
 
     assignment_to_role_role = build_property(
         "Amt", "was assigned in", AssignmentToRole, Role
@@ -4250,7 +4256,8 @@ def construct_properties():
             DebtOwed,
             UnstructuredStatement,
             Journey,
-            PersonHasIllness
+            PersonHasIllness,
+            ParticipationInEvent
         ],
     )
     payment_by_person = build_property(
