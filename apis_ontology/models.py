@@ -4543,7 +4543,7 @@ def construct_properties():
         "Absender",
         "object transported from",
         TransportationOfObject,
-        [Person, *subclasses(Organisation), Family],
+        [Person, *subclasses(Organisation), Family, GroupOfPersons],
     )
     transportation_of_object_from_place = build_property(
         "Ausgangsort", "object transported from place", TransportationOfObject, Place
@@ -4552,7 +4552,7 @@ def construct_properties():
         "Empfänger",
         "object transported to",
         TransportationOfObject,
-        [Person, *subclasses(Organisation), Family],
+        [Person, *subclasses(Organisation), Family, GroupOfPersons],
     )
     transportation_of_object_to_place = build_property(
         "Zielort", "object transported to place", TransportationOfObject, Place
@@ -4605,7 +4605,7 @@ def construct_properties():
         "Gläubiger",
         "is owed debt",
         DebtOwed,
-        [Person, *subclasses(Organisation), Family],
+        [Person, *subclasses(Organisation), Family, GroupOfPersons],
     )
     debt_owed_guarantor = build_property("Guarantor of debt", "is guarantor in", DebtOwed, [Person, Organisation, GroupOfPersons])
     debt_owned_object_as_guarantee = build_property("object as guarantree of debt", "is object of guarantee in", DebtOwed, [*subclasses(PhysicalObject), RightsToPlace])
